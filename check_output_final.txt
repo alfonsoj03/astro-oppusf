@@ -1,0 +1,99 @@
+18:49:19 [content] Syncing content
+18:49:19 [content] Synced content
+18:49:19 [types] Generated 43ms
+18:49:19 [check] Getting diagnostics for Astro files in /Users/fonsoo/Documents/proyectos/astro-opplux-web/subsequent-singularity...
+[96msrc/components/Header.tsx[0m:[93m21[0m:[93m9[0m - [93mwarning[0m[90m ts(6133): [0m'isHome' is declared but its value is never read.
+
+[7m21[0m   const isHome = currentPath === "/";
+[7m  [0m [93m        ~~~~~~[0m
+[96msrc/components/Header.tsx[0m:[93m2[0m:[93m31[0m - [93mwarning[0m[90m ts(6133): [0m'ShoppingBag' is declared but its value is never read.
+
+[7m2[0m import { Menu, X, ArrowRight, ShoppingBag, Search } from "lucide-react";
+[7m [0m [93m                              ~~~~~~~~~~~[0m
+
+[96msrc/components/HeroInteractive.tsx[0m:[93m2[0m:[93m26[0m - [93mwarning[0m[90m ts(6133): [0m'MouseEvent' is declared but its value is never read.
+
+[7m2[0m import { useEffect, type MouseEvent } from "react";
+[7m [0m [93m                         ~~~~~~~~~~[0m
+
+[96msrc/components/OurProducts.tsx[0m:[93m3[0m:[93m1[0m - [93mwarning[0m[90m ts(6133): [0m'ArrowRight' is declared but its value is never read.
+
+[7m3[0m import { ArrowRight } from "lucide-react";
+[7m [0m [93m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/ProductShowcase.tsx[0m:[93m200[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m'productData' is declared but its value is never read.
+
+[7m200[0m const productData = {
+[7m   [0m [93m      ~~~~~~~~~~~[0m
+
+[96msrc/components/Solutions.tsx[0m:[93m59[0m:[93m19[0m - [91merror[0m[90m ts(2322): [0mType 'ImageMetadata' is not assignable to type 'string'.
+
+[7m59[0m                   src={product.image}
+[7m  [0m [91m                  ~~~[0m
+
+[96msrc/components/StarProducts.tsx[0m:[93m129[0m:[93m21[0m - [91merror[0m[90m ts(2322): [0mType 'ImageMetadata' is not assignable to type 'string'.
+
+[7m129[0m                     src={product.image}
+[7m   [0m [91m                    ~~~[0m
+[96msrc/components/StarProducts.tsx[0m:[93m83[0m:[93m17[0m - [91merror[0m[90m ts(2322): [0mType 'ImageMetadata' is not assignable to type 'string'.
+
+[7m83[0m                 src={mainProduct.image}
+[7m  [0m [91m                ~~~[0m
+
+[96msrc/components/ui/calendar.tsx[0m:[93m66[0m:[93m23[0m - [91merror[0m[90m ts(7031): [0mBinding element 'className' implicitly has an 'any' type.
+
+[7m66[0m         IconRight: ({ className, ...props }) => (
+[7m  [0m [91m                      ~~~~~~~~~[0m
+[96msrc/components/ui/calendar.tsx[0m:[93m63[0m:[93m22[0m - [91merror[0m[90m ts(7031): [0mBinding element 'className' implicitly has an 'any' type.
+
+[7m63[0m         IconLeft: ({ className, ...props }) => (
+[7m  [0m [91m                     ~~~~~~~~~[0m
+[96msrc/components/ui/calendar.tsx[0m:[93m63[0m:[93m9[0m - [91merror[0m[90m ts(2353): [0mObject literal may only specify known properties, and 'IconLeft' does not exist in type 'Partial<CustomComponents>'.
+
+[7m63[0m         IconLeft: ({ className, ...props }) => (
+[7m  [0m [91m        ~~~~~~~~[0m
+
+[96msrc/components/ui/chart.tsx[0m:[93m278[0m:[93m21[0m - [91merror[0m[90m ts(7006): [0mParameter 'item' implicitly has an 'any' type.
+
+[7m278[0m       {payload.map((item) => {
+[7m   [0m [91m                    ~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m278[0m:[93m16[0m - [91merror[0m[90m ts(2339): [0mProperty 'map' does not exist on type '{}'.
+
+[7m278[0m       {payload.map((item) => {
+[7m   [0m [91m               ~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m266[0m:[93m17[0m - [91merror[0m[90m ts(2339): [0mProperty 'length' does not exist on type '{}'.
+
+[7m266[0m   if (!payload?.length) {
+[7m   [0m [91m                ~~~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m260[0m:[93m39[0m - [91merror[0m[90m ts(2344): [0mType '"verticalAlign" | "payload"' does not satisfy the constraint '"string" | "transform" | "filter" | "fill" | "values" | "children" | "className" | "style" | "mask" | "path" | "clipPath" | "onAnimationStart" | "onDragStart" | "onDragEnd" | ... 432 more ... | "onBBoxUpdate"'.
+  Type '"payload"' is not assignable to type '"string" | "transform" | "filter" | "fill" | "values" | "children" | "className" | "style" | "mask" | "path" | "clipPath" | "onAnimationStart" | "onDragStart" | "onDragEnd" | ... 432 more ... | "onBBoxUpdate"'.
+
+[7m260[0m   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+[7m   [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m182[0m:[93m29[0m - [91merror[0m[90m ts(7006): [0mParameter 'index' implicitly has an 'any' type.
+
+[7m182[0m         {payload.map((item, index) => {
+[7m   [0m [91m                            ~~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m182[0m:[93m23[0m - [91merror[0m[90m ts(7006): [0mParameter 'item' implicitly has an 'any' type.
+
+[7m182[0m         {payload.map((item, index) => {
+[7m   [0m [91m                      ~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m114[0m:[93m3[0m - [91merror[0m[90m ts(2339): [0mProperty 'label' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 17 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+
+[7m114[0m   label,
+[7m   [0m [91m  ~~~~~[0m
+[96msrc/components/ui/chart.tsx[0m:[93m109[0m:[93m3[0m - [91merror[0m[90m ts(2339): [0mProperty 'payload' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 17 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+
+[7m109[0m   payload,
+[7m   [0m [91m  ~~~~~~~[0m
+
+[96msrc/pages/productos/[slug].astro[0m:[93m11[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m'slug' is declared but its value is never read.
+
+[7m11[0m const { slug } = Astro.params;
+[7m  [0m [93m      ~~~~~~~~[0m
+
+Result (73 files): 
+- 14 errors
+- 0 warnings
+- 6 hints
+

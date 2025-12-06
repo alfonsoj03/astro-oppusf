@@ -1,0 +1,33 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	headerTheme?: "transparent" | "black";
+}
+
+const { title = "Oppus Global", headerTheme = "transparent" } = Astro.props;
+---
+
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title}</title>
+	</head>
+
+	<body class="bg-white text-black">
+		<!-- Header Astro -->
+		<Header theme={headerTheme} />
+
+		<!-- Contenido de la página -->
+		<main class="min-h-[60vh]">
+			<slot />
+		</main>
+
+		<!-- Footer Astro -->
+		<Footer />
+	</body>
+</html>

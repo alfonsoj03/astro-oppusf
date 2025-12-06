@@ -1,0 +1,109 @@
+---
+import { Zap, Shield, Users } from "lucide-astro";
+
+const features = [
+    {
+        icon: Zap,
+        title: "Soluciones Escalables",
+        description:
+            "Diseñamos sistemas de iluminación que crecen con tu negocio, adaptándose a tus necesidades actuales y futuras sin complicaciones.",
+    },
+    {
+        icon: Shield,
+        title: "Garantía Extendida",
+        description:
+            "Respaldo técnico completo con garantías extendidas en todos nuestros productos y soporte post-venta continuo.",
+    },
+    {
+        icon: Users,
+        title: "Equipo Especializado",
+        description:
+            "Profesionales certificados en iluminación industrial y arquitectónica listos para asesorarte en cada etapa de tu proyecto.",
+    },
+];
+---
+
+<section class="py-24 bg-black text-white">
+    <div class="container mx-auto px-6">
+        {/* Header Section */}
+        <div
+            class="flex flex-col md:flex-row justify-between items-start gap-12 mb-20"
+        >
+            <div class="max-w-2xl">
+                <p
+                    class="text-[#FF8351] tracking-[0.2em] uppercase text-sm mb-4"
+                >
+                    CRECIMIENTO INTELIGENTE
+                </p>
+                <h2
+                    class="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]"
+                >
+                    Una experiencia que crece con tu escala.
+                </h2>
+            </div>
+            <div class="max-w-md">
+                <p class="text-zinc-400 text-lg leading-relaxed">
+                    Implementamos soluciones de iluminación diseñadas para
+                    negocios en crecimiento con sistemas modulares y gestión
+                    simplificada de proyectos.
+                </p>
+            </div>
+        </div>
+
+        {/* Features Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {
+                features.map((feature) => {
+                    const Icon = feature.icon;
+                    return (
+                        <div class="group animate-fade-in-up">
+                            {/* Icon Container */}
+                            <div class="mb-6 w-16 h-16 flex items-center justify-center border-2 border-zinc-800 rounded-lg group-hover:border-[#FF8351] transition-colors duration-300">
+                                <Icon class="w-8 h-8 text-zinc-400 group-hover:text-[#FF8351] transition-colors duration-300" />
+                            </div>
+
+                            {/* Title */}
+                            <h3 class="text-2xl mb-4 group-hover:text-[#FF8351] transition-colors duration-300">
+                                {feature.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p class="text-zinc-400 leading-relaxed">
+                                {feature.description}
+                            </p>
+                        </div>
+                    );
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0; /* Start hidden */
+    }
+
+    /* Staggered delays for children */
+    .grid > div:nth-child(1) {
+        animation-delay: 0s;
+    }
+    .grid > div:nth-child(2) {
+        animation-delay: 0.15s;
+    }
+    .grid > div:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+</style>

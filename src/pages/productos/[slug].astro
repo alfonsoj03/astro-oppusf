@@ -1,0 +1,72 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductDetail from "../../components/ProductDetail.astro";
+import placeholderImage from "@/assets/OPP-80W-ST.png";
+
+export async function getStaticPaths() {
+    // TODO: Fetch actual products
+    return [{ params: { slug: "1" } }, { params: { slug: "example" } }];
+}
+
+const { slug } = Astro.params;
+
+// Dummy data for now
+const productData = {
+    // Datos de ejemplo para el producto
+    category: "BRACKETS",
+    title: "HIGHBAY VAL BRACKET 63W-83",
+    seriesTitle: "RDX",
+    seriesSubtitle: "ROUND MAX SERIES",
+    description:
+        "Luminaria high-bay diseñada para iluminación interior de gran altura. Perfecta para aplicaciones industriales como refinerías, almacenes, muelles de carga, plantas de manufactura y centros de distribución. Ofrece alta eficiencia luminosa y durabilidad excepcional en entornos exigentes con techos altos.",
+    previousModel: "PEL-K",
+    image: placeholderImage.src,
+    versions: [
+        { id: "1", name: "BRACKET 63W-83", gtin: "4096854203689" },
+        { id: "2", name: "BRACKET 63W-85", gtin: "4096854203690" },
+        { id: "3", name: "BRACKET 63W-87", gtin: "4096854203691" },
+    ],
+    specifications: [
+        { label: "Potencia del LED", value: "40W" },
+        { label: "Potencia Panel Solar", value: "70W" },
+        { label: "Batería", value: "Litio Ferro-fosfato 40AH" },
+        { label: "Flujo Luminoso Máximo", value: "6800 Lm" },
+        { label: "Eficiencia", value: "170 Lm/W" },
+        { label: "Dist. Lumínica", value: "IES II L Simétrica" },
+        { label: "Horas de Vida", value: "100,000 Horas" },
+        { label: "Control", value: "100/30 Configurable 2.4Ghz" },
+        { label: "Tiempo de Carga", value: "4-5 Horas" },
+        { label: "Tiempo de Autonomía", value: "2-3 días nublados" },
+        { label: "Tipo de Cargador", value: "MPPT" },
+        { label: "Instalación", value: "En brazo o punta de poste" },
+        { label: "Altura Recom.", value: "4-5m (20-30ft interposta)" },
+        { label: "Peso Neto/Total", value: "8Kg/10Kg" },
+    ],
+    technicalDescription: [
+        "Luminaria solar LED de 40W para alumbrado público, con panel monocristalino integrado y autonomía superior a 3 días. Equipada con LED Philips 3030 2D (170 lm/W, certificación L70 para 100,000 horas) y lente de policarbonato (pérdida de luz <9%). Incluye batería LiFePO4 (garantía de 3 años) y controlador MPPT con 99% de eficiencia (>2,500 ciclos).",
+        "Ideal para carreteras, parques, autopistas y zonas costeras. Ofrece programación personalizada, soporte de ingeniería (archivos IES/Dialux) y adaptabilidad para montaje en poste. Fabricada en policarbonato e integra una fotocélula solar para mayor durabilidad.",
+    ],
+    technicalImages: [
+        {
+            title: "Dimensiones (mm)",
+            image: "https://images.unsplash.com/photo-1764737734436-7eb904d3a4ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+        },
+        {
+            title: "Diseño",
+            image: "https://images.unsplash.com/photo-1740660281156-435ce0cc1aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+        },
+        {
+            title: "Curva de Distribución",
+            image: "https://images.unsplash.com/photo-1717501217912-933d2792d493?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+        },
+        {
+            title: "Certificaciones",
+            image: "https://images.unsplash.com/photo-1730692504752-c411cf0306ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+        },
+    ],
+};
+---
+
+<Layout headerTheme="black">
+    <ProductDetail {...productData} />
+</Layout>

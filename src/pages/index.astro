@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import { Marquee } from "../components/Marquee.tsx";
+import Features from "../components/Features.astro";
+import Solutions from "../components/Solutions.astro";
+import Projects from "../components/Projects.astro";
+import ScalableFeatures from "../components/ScalableFeatures.astro";
+import TailoredSolutions from "../components/TailoredSolutions.astro";
+import Categories from "../components/Categories.astro";
+---
+
+<Layout>
+	<Hero />
+	<Marquee client:load />
+	<Features />
+	<Solutions />
+	<Projects />
+	{/*<StarProducts />*/}
+	<ScalableFeatures />
+	<TailoredSolutions />
+	{/*<TrustSection />*/}
+	{/*Our Products */}
+	<Categories />
+</Layout>
