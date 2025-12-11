@@ -1,0 +1,304 @@
+---
+interface CoreValue {
+    number: number;
+    title: string;
+    description: string;
+}
+
+const coreValues: CoreValue[] = [
+    {
+        number: 1,
+        title: "Innovación constante",
+        description:
+            "Nos mantenemos a la vanguardia de la tecnología LED, investigando y desarrollando soluciones que superen las expectativas del mercado.",
+    },
+    {
+        number: 2,
+        title: "Calidad sin compromisos",
+        description:
+            "Cada luminaria pasa por rigurosos controles de calidad. No aceptamos menos que la excelencia en cada producto que entregamos.",
+    },
+    {
+        number: 3,
+        title: "Sostenibilidad activa",
+        description:
+            "Diseñamos pensando en el futuro del planeta. Eficiencia energética y materiales sostenibles son el corazón de nuestro desarrollo.",
+    },
+    {
+        number: 4,
+        title: "Cercanía con el cliente",
+        description:
+            "Tu proyecto es nuestro proyecto. Trabajamos codo a codo contigo para entender tus necesidades y superarlas.",
+    },
+    {
+        number: 5,
+        title: "Transparencia total",
+        description:
+            "Comunicación clara, precios justos y procesos transparentes. Lo que ves es lo que obtienes, sin sorpresas.",
+    },
+    {
+        number: 6,
+        title: "Soluciones personalizadas",
+        description:
+            "No hay dos proyectos iguales. Adaptamos nuestra tecnología a tus necesidades específicas con flexibilidad total.",
+    },
+    {
+        number: 7,
+        title: "Compromiso a largo plazo",
+        description:
+            "No terminamos con la instalación. Estamos contigo con soporte, garantías extensas y un compromiso que perdura en el tiempo.",
+    },
+];
+---
+
+<section class="pt-32 pb-12 bg-white text-zinc-950">
+    <div class="container mx-auto px-6">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header Section -->
+            <div class="text-center mb-16 animate-on-scroll" data-delay="0">
+                <h2
+                    class="text-5xl md:text-6xl lg:text-7xl mb-8 leading-tight font-bold"
+                >
+                    Lo que nos hace <span class="italic text-[#FF8351]">diferentes</span>
+                </h2>
+                <div
+                    class="max-w-3xl mx-auto space-y-6 text-lg md:text-xl text-zinc-700 leading-relaxed"
+                >
+                    <p>
+                        En Opplux, combinamos innovación tecnológica con un
+                        profundo compromiso por la sostenibilidad. Desde
+                        nuestros inicios, hemos trabajado para transformar la
+                        manera en que las empresas e instituciones entienden la
+                        iluminación profesional.
+                    </p>
+                    <p>
+                        No solo ofrecemos productos de alta calidad, sino
+                        soluciones integrales que se adaptan a las necesidades
+                        específicas de cada proyecto. Nuestro equipo de
+                        ingenieros y especialistas trabaja día a día para
+                        garantizar que cada luminaria cumpla con los más altos
+                        estándares de eficiencia energética y durabilidad.
+                    </p>
+                    <p>
+                        Creemos que la iluminación va más allá de proporcionar
+                        luz: crea ambientes, mejora la productividad y
+                        contribuye al bienestar de las personas. Por eso, cada
+                        diseño que desarrollamos está pensado para marcar la
+                        diferencia en el mundo real, acompañándote en cada paso
+                        del camino con soporte técnico personalizado y un
+                        compromiso que perdura en el tiempo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Image Section -->
+            <div
+                class="relative rounded-3xl overflow-hidden shadow-2xl animate-on-scroll"
+                data-delay="200"
+            >
+                <img
+                    src="https://images.unsplash.com/photo-1758873268851-feebbfb1d037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjB0ZWFtJTIwY29sbGFib3JhdGlvbnxlbnwxfHx8fDE3NjUzODU2OTF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                    alt="Equipo Opplux"
+                    class="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                />
+                <!-- Optional overlay for better contrast -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"
+                >
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section with Animated Background -->
+<section class="py-32 bg-zinc-950 text-white relative overflow-hidden">
+    <!-- Animated background gradient -->
+    <div class="background-gradient absolute inset-0 opacity-30"></div>
+
+    <!-- Subtle floating orbs -->
+    <div
+        class="floating-orb-1 absolute top-1/4 left-1/4 w-96 h-96 bg-[#FF8351]/5 rounded-full blur-3xl"
+    >
+    </div>
+    <div
+        class="floating-orb-2 absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FF8351]/5 rounded-full blur-3xl"
+    >
+    </div>
+
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <!-- Values Header -->
+            <div class="mb-20 animate-on-scroll" data-delay="0">
+                <p
+                    class="text-zinc-400 tracking-[0.2em] uppercase text-sm mb-6"
+                >
+                    NUESTROS VALORES
+                </p>
+                <h2 class="text-4xl md:text-6xl leading-tight font-bold">
+                    Lo que más importa para nosotros.
+                </h2>
+            </div>
+
+            <!-- Values Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                {
+                    coreValues.map((value, index) => {
+                        const colors = [
+                            '#3b82f6', // blue
+                            '#10b981', // green
+                            '#f59e0b', // amber
+                            '#ef4444', // red
+                            '#8b5cf6', // purple
+                            '#ec4899', // pink
+                            '#14b8a6', // teal
+                        ];
+                        const color = colors[index % colors.length];
+                        return (
+                            <div
+                                class="flex gap-6 animate-on-scroll"
+                                data-delay={index * 100}
+                            >
+                                {/* Number Circle */}
+                                <div class="flex-shrink-0">
+                                    <div 
+                                        class="w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold"
+                                        style={`border-color: ${color}; color: ${color};`}
+                                    >
+                                        {value.number}
+                                    </div>
+                                </div>
+
+                            {/* Content */}
+                            <div class="flex-1">
+                                <h3 class="text-xl md:text-2xl mb-3 text-white font-bold">
+                                    {value.title}
+                                </h3>
+                                <p class="text-zinc-400 leading-relaxed">
+                                    {value.description}
+                                </p>
+                            </div>
+                        </div>
+                        );
+                    })
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Scroll-triggered animations */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+            opacity 0.6s ease-out,
+            transform 0.6s ease-out;
+    }
+
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Background gradient animation */
+    @keyframes gradient-shift {
+        0% {
+            background: radial-gradient(
+                circle at 20% 50%,
+                rgba(161, 161, 170, 0.08) 0%,
+                transparent 50%
+            );
+        }
+        25% {
+            background: radial-gradient(
+                circle at 80% 50%,
+                rgba(161, 161, 170, 0.08) 0%,
+                transparent 50%
+            );
+        }
+        50% {
+            background: radial-gradient(
+                circle at 50% 80%,
+                rgba(161, 161, 170, 0.08) 0%,
+                transparent 50%
+            );
+        }
+        75% {
+            background: radial-gradient(
+                circle at 50% 20%,
+                rgba(161, 161, 170, 0.08) 0%,
+                transparent 50%
+            );
+        }
+        100% {
+            background: radial-gradient(
+                circle at 20% 50%,
+                rgba(161, 161, 170, 0.08) 0%,
+                transparent 50%
+            );
+        }
+    }
+
+    .background-gradient {
+        animation: gradient-shift 20s linear infinite;
+    }
+
+    /* Floating orbs animation */
+    @keyframes float-1 {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+        50% {
+            transform: translate(100px, -50px) scale(1.2);
+        }
+    }
+
+    @keyframes float-2 {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+        50% {
+            transform: translate(-100px, 50px) scale(1.3);
+        }
+    }
+
+    .floating-orb-1 {
+        animation: float-1 15s ease-in-out infinite;
+    }
+
+    .floating-orb-2 {
+        animation: float-2 18s ease-in-out infinite;
+    }
+</style>
+
+<script>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const delay =
+                    parseInt(
+                        entry.target.getAttribute("data-delay") || "0",
+                    ) || 0;
+                setTimeout(() => {
+                    entry.target.classList.add("visible");
+                }, delay);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all elements with animation class
+    document.querySelectorAll(".animate-on-scroll").forEach((el) => {
+        observer.observe(el);
+    });
+</script>

@@ -1,5 +1,5 @@
 ---
-import { Menu, X, ArrowRight, ShoppingBag, Search } from "lucide-astro";
+import { Menu, X, ArrowRight, ShoppingBag, ShoppingCart, Search } from "lucide-astro";
 import oppluxLogo from "../assets/258df82474b849b69ecba8069ce145ec98c5d6b4.png";
 
 interface Props {
@@ -21,9 +21,9 @@ const isBlackTheme = theme === "black";
     ]}
     data-theme={theme}
 >
-    <div class="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <a href="/" class="flex items-center gap-2">
+    <div class="container mx-auto px-6 hidden md:grid grid-cols-3 items-center">
+        {/* Logo - Left */}
+        <a href="/" class="flex items-center gap-2 justify-start">
             <img
                 src={oppluxLogo.src}
                 alt="Opplux"
@@ -35,8 +35,8 @@ const isBlackTheme = theme === "black";
             />
         </a>
 
-        {/* Desktop Nav */}
-        <nav class="hidden md:flex items-center gap-8">
+        {/* Desktop Nav - Center */}
+        <nav class="flex items-center justify-center gap-8">
             <a
                 href="/"
                 class:list={[
@@ -70,45 +70,40 @@ const isBlackTheme = theme === "black";
             >
                 Productos
             </a>
-            <a
-                href="#"
-                class:list={[
-                    "text-sm font-medium transition-colors uppercase tracking-wider nav-link",
-                    isBlackTheme
-                        ? "text-white hover:text-gray-300"
-                        : "text-white/80 hover:text-white",
-                ]}
-            >
-                Soporte
-            </a>
         </nav>
 
-        {/* Actions */}
-        <div class="hidden md:flex items-center gap-4">
-            <button
-                id="search-btn"
-                class:list={[
-                    "p-2 rounded-full transition-colors",
-                    isBlackTheme
-                        ? "hover:bg-gray-800 text-white"
-                        : "hover:bg-white/10 text-white",
-                ]}
-            >
-                <Search class="w-5 h-5" />
-            </button>
-            <button
+        {/* Actions - Right */}
+        <div class="flex items-center justify-end">
+            <a
+                href="/cotizacion"
                 id="cta-btn"
                 class:list={[
-                    "flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-colors",
+                    "relative flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-colors",
                     isBlackTheme
                         ? "bg-white text-black hover:bg-gray-200"
                         : "bg-white text-black hover:bg-gray-200",
                 ]}
             >
+                <ShoppingCart class="w-4 h-4" />
                 Cotizar Ahora
-                <ArrowRight class="w-4 h-4" />
-            </button>
+                <!-- Cart counter badge -->
+                <span class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    3
+                </span>
+            </a>
         </div>
+    </div>
+
+    {/* Mobile Header */}
+    <div class="container mx-auto px-6 flex md:hidden items-center justify-between">
+        {/* Logo */}
+        <a href="/" class="flex items-center gap-2">
+            <img
+                src={oppluxLogo.src}
+                alt="Opplux"
+                class="h-10 w-auto object-contain"
+            />
+        </a>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -140,14 +135,12 @@ const isBlackTheme = theme === "black";
                 href="/productos"
                 class="text-lg font-bold text-gray-900 mobile-link">Productos</a
             >
-            <a href="#" class="text-lg font-bold text-gray-900 mobile-link"
-                >Soporte</a
-            >
-            <button
+            <a
+                href="/cotizacion"
                 class="mt-4 w-full bg-black text-white py-3 rounded-full font-bold"
             >
-                Cotizar Ahora
-            </button>
+                Cotizar Ahora</a
+            >
         </nav>
     </div>
 </header>
@@ -156,7 +149,6 @@ const isBlackTheme = theme === "black";
     const header = document.getElementById("main-header");
     const logo = document.getElementById("header-logo");
     const navLinks = document.querySelectorAll(".nav-link");
-    const searchBtn = document.getElementById("search-btn");
     const ctaBtn = document.getElementById("cta-btn");
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenu = document.getElementById("mobile-menu");
@@ -187,8 +179,7 @@ const isBlackTheme = theme === "black";
                 link.classList.add("text-gray-600", "hover:text-black");
             });
 
-            searchBtn?.classList.remove("hover:bg-white/10", "text-white");
-            searchBtn?.classList.add("hover:bg-gray-100", "text-black");
+
 
             ctaBtn?.classList.remove(
                 "bg-white",
@@ -222,8 +213,7 @@ const isBlackTheme = theme === "black";
                 link.classList.remove("text-gray-600", "hover:text-black");
             });
 
-            searchBtn?.classList.add("hover:bg-white/10", "text-white");
-            searchBtn?.classList.remove("hover:bg-gray-100", "text-black");
+
 
             ctaBtn?.classList.add(
                 "bg-white",
