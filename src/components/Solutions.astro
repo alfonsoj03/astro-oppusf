@@ -30,10 +30,10 @@ const products = [
 ];
 ---
 
-<section class="py-24 bg-[#111111] text-white">
+<section class="lg:py-24 py-16 bg-[#111111] text-white">
     <div class="container mx-auto px-6">
         <div
-            class="flex flex-col md:flex-row md:items-end justify-between mb-16"
+            class="flex flex-col md:flex-row md:items-end justify-between md:mb-10 mb-16 lg:mb-16"
         >
             <div>
                 <h3
@@ -42,12 +42,12 @@ const products = [
                     Nuestras Soluciones
                 </h3>
                 <h2
-                    class="text-4xl md:text-6xl font-bold uppercase tracking-tighter"
+                    class="text-4xl lg:text-6xl font-bold uppercase tracking-tighter"
                 >
                     Innovación en<br />Iluminación
                 </h2>
             </div>
-            <p class="text-gray-400 max-w-md mt-6 md:mt-0">
+            <p class="text-gray-400 max-w-md mt-6 md:mt-0 pl-10 lg:pl-0">
                 Tecnología solar de última generación para alumbrado público,
                 residencial y comercial.
             </p>
@@ -55,8 +55,11 @@ const products = [
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {
-                products.map((product) => (
-                    <div class="group relative bg-[#1a1a1a] border border-gray-800 hover:border-gray-600 transition-colors duration-300 overflow-hidden">
+                products.map((product, index) => (
+                    <div 
+                        class="solution-card group relative bg-[#1a1a1a] border border-gray-800 hover:border-gray-600 transition-colors duration-300 overflow-hidden opacity-0 translate-y-8 transition-all duration-700 ease-out"
+                        style={`transition-delay: ${index * 100}ms`}
+                    >
                         {/* Image Container */}
                         <div class="aspect-square w-full overflow-hidden relative bg-white/5">
                             <img
@@ -71,20 +74,20 @@ const products = [
 
                         {/* Content */}
                         <div class="p-8 relative">
-                            <p class="text-orange-500 text-xs font-bold tracking-wider uppercase mb-2">
+                            <p class="text-orange-500 md:text-[11px] lg:text-xs text-xs font-bold tracking-wider uppercase mb-2">
                                 {product.category}
                             </p>
-                            <h3 class="text-2xl font-bold leading-tight mb-3 group-hover:text-white transition-colors">
+                            <h3 class="md:text-lg lg:text-2xl text-2xl font-bold leading-tight md:mb-1 lg:mb-3 mb-3 group-hover:text-white transition-colors">
                                 {product.title}
                             </h3>
 
-                            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4 md:hidden lg:block block">
                                 Solución de iluminación solar de alta eficiencia
                                 con tecnología LED avanzada y panel fotovoltaico
                                 integrado.
                             </p>
 
-                            <button class="inline-flex items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-xs font-bold uppercase tracking-wider group/btn">
+                            <button class="md:text-zinc-400 lg:text-[#FF8351] inline-flex items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-xs font-bold uppercase tracking-wider group/btn">
                                 Ver Detalles
                                 <ArrowUpRight class="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                             </button>
@@ -95,7 +98,7 @@ const products = [
         </div>
 
         {/* Bottom CTA */}
-        <div class="mt-12">
+        <div class="md:mt-10 mt-12 lg:mt-12">
             <div class="flex items-center justify-between">
                 <div class="text-zinc-600 text-md">
                     Descubre nuestra línea completa de productos
@@ -112,3 +115,24 @@ const products = [
         </div>
     </div>
 </section>
+
+<script>
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.remove('opacity-0', 'translate-y-8');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.solution-card').forEach(card => {
+        observer.observe(card);
+    });
+</script>

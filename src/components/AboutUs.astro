@@ -57,12 +57,12 @@ const coreValues: CoreValue[] = [
             <!-- Header Section -->
             <div class="text-center mb-16 animate-on-scroll" data-delay="0">
                 <h2
-                    class="text-5xl md:text-6xl lg:text-7xl mb-8 leading-tight font-bold"
+                    class="text-5xl lg:text-6xl lg:text-7xl mb-8 leading-tight font-bold"
                 >
                     Lo que nos hace <span class="italic text-[#FF8351]">diferentes</span>
                 </h2>
                 <div
-                    class="max-w-3xl mx-auto space-y-6 text-lg md:text-xl text-zinc-700 leading-relaxed"
+                    class="max-w-3xl mx-auto space-y-6 text-lg lg:text-xl text-zinc-700 leading-relaxed"
                 >
                     <p>
                         En Opplux, combinamos innovación tecnológica con un
@@ -135,13 +135,13 @@ const coreValues: CoreValue[] = [
                 >
                     NUESTROS VALORES
                 </p>
-                <h2 class="text-4xl md:text-6xl leading-tight font-bold">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl leading-tight font-bold">
                     Lo que más importa para nosotros.
                 </h2>
             </div>
 
             <!-- Values Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:gap-x-16 gap-x-16 md:gap-x-8 gap-y-12">
                 {
                     coreValues.map((value, index) => {
                         const colors = [
@@ -171,10 +171,10 @@ const coreValues: CoreValue[] = [
 
                             {/* Content */}
                             <div class="flex-1">
-                                <h3 class="text-xl md:text-2xl mb-3 text-white font-bold">
+                                <h3 class="text-xl lg:text-2xl mb-3 text-white font-bold">
                                     {value.title}
                                 </h3>
-                                <p class="text-zinc-400 leading-relaxed">
+                                <p class="text-zinc-400 md:text-[14px] lg:text-[16px] leading-relaxed">
                                     {value.description}
                                 </p>
                             </div>

@@ -14,7 +14,7 @@ const isBlackTheme = theme === "black";
 <header
     id="main-header"
     class:list={[
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[80] transition-all duration-300",
         isBlackTheme
             ? "bg-black py-4 border-b border-gray-800"
             : "bg-transparent py-6",
@@ -87,7 +87,7 @@ const isBlackTheme = theme === "black";
                 <ShoppingCart class="w-4 h-4" />
                 Cotizar Ahora
                 <!-- Cart counter badge -->
-                <span class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span id="cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300">
                     3
                 </span>
             </a>
@@ -95,7 +95,7 @@ const isBlackTheme = theme === "black";
     </div>
 
     {/* Mobile Header */}
-    <div class="container mx-auto px-6 flex md:hidden items-center justify-between">
+    <div class="container mx-auto px-6 flex md:hidden items-center justify-between relative z-[70]">
         {/* Logo */}
         <a href="/" class="flex items-center gap-2">
             <img
@@ -105,45 +105,66 @@ const isBlackTheme = theme === "black";
             />
         </a>
 
-        {/* Mobile Menu Toggle */}
-        <button
-            id="mobile-menu-btn"
-            class:list={[
-                "md:hidden p-2",
-                isBlackTheme ? "text-white" : "text-white",
-            ]}
-        >
-            <Menu id="menu-icon" />
-            <X id="close-icon" class="hidden" />
-        </button>
-    </div>
-
-    {/* Mobile Nav */}
-    <div
-        id="mobile-menu"
-        class="md:hidden bg-white border-b border-gray-200 overflow-hidden h-0 transition-all duration-300"
-    >
-        <nav class="flex flex-col p-6 gap-4">
-            <a href="/" class="text-lg font-bold text-gray-900 mobile-link"
-                >Inicio</a
-            >
-            <a
-                href="/nosotros"
-                class="text-lg font-bold text-gray-900 mobile-link">Nosotros</a
-            >
-            <a
-                href="/productos"
-                class="text-lg font-bold text-gray-900 mobile-link">Productos</a
-            >
+        <div class="flex items-center gap-4">
+            {/* Mobile Cart Icon */}
             <a
                 href="/cotizacion"
-                class="mt-4 w-full bg-black text-white py-3 rounded-full font-bold"
+                id="mobile-cart-btn"
+                class:list={[
+                    "relative p-2 transition-opacity duration-300",
+                    isBlackTheme ? "text-white" : "text-white",
+                ]}
             >
-                Cotizar Ahora</a
+                <ShoppingCart class="w-6 h-6 transition-all duration-300" />
+                <span id="mobile-cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300 hidden">
+                    0
+                </span>
+            </a>
+
+            {/* Mobile Menu Toggle - Custom Hamburger */}
+            <button
+                id="mobile-menu-btn"
+                class:list={[
+                    "md:hidden p-2 relative z-[70]",
+                    isBlackTheme ? "text-white" : "text-white",
+                ]}
+                aria-label="Menu"
             >
-        </nav>
+                <div class="w-6 h-5 flex flex-col justify-between">
+                    <span id="line-1" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
+                    <span id="line-2" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
+                    <span id="line-3" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
+                </div>
+            </button>
+        </div>
     </div>
 </header>
+
+{/* Mobile Nav - Slide-in from Right (Outside header to avoid z-index conflicts) */}
+<div
+    id="mobile-menu"
+    class="fixed inset-0 z-[60] md:hidden bg-white transform translate-x-full transition-transform duration-500 ease-in-out"
+>
+    <nav class="flex flex-col p-6 gap-4 pt-24">
+        <a href="/" class="text-lg font-bold text-gray-900 mobile-link"
+            >Inicio</a
+        >
+        <a
+            href="/nosotros"
+            class="text-lg font-bold text-gray-900 mobile-link">Nosotros</a
+        >
+        <a
+            href="/productos"
+            class="text-lg font-bold text-gray-900 mobile-link">Productos</a
+        >
+        <a
+            href="/cotizacion"
+            class="mt-4 w-full bg-black text-white py-3 rounded-full font-bold"
+        >
+            Cotizar Ahora</a
+        >
+    </nav>
+</div>
 
 <script>
     const header = document.getElementById("main-header");
@@ -152,13 +173,19 @@ const isBlackTheme = theme === "black";
     const ctaBtn = document.getElementById("cta-btn");
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenu = document.getElementById("mobile-menu");
-    const menuIcon = document.getElementById("menu-icon");
-    const closeIcon = document.getElementById("close-icon");
+    const line1 = document.getElementById("line-1");
+    const line2 = document.getElementById("line-2");
+    const line3 = document.getElementById("line-3");
+    const mobileCartBtn = document.getElementById("mobile-cart-btn");
 
     const initialTheme = header?.dataset.theme || "transparent";
 
     function updateHeaderStyle() {
         if (!header || initialTheme === "black") return;
+
+        // If menu is open, do not apply scroll styles
+        const isMenuOpen = mobileMenu?.classList.contains("translate-x-0");
+        if (isMenuOpen) return;
 
         const isScrolled = window.scrollY > 50;
 
@@ -170,6 +197,8 @@ const isBlackTheme = theme === "black";
                 "py-4",
                 "border-b",
                 "border-gray-200",
+                "transition-all",
+                "duration-0",
             );
 
             logo?.classList.remove("brightness-200", "contrast-100");
@@ -178,8 +207,6 @@ const isBlackTheme = theme === "black";
                 link.classList.remove("text-white/80", "hover:text-white");
                 link.classList.add("text-gray-600", "hover:text-black");
             });
-
-
 
             ctaBtn?.classList.remove(
                 "bg-white",
@@ -196,6 +223,22 @@ const isBlackTheme = theme === "black";
                 mobileMenuBtn.classList.remove("text-white");
                 mobileMenuBtn.classList.add("text-black");
             }
+
+            if (line1 && line2 && line3) {
+                line1.classList.remove("bg-white");
+                line2.classList.remove("bg-white");
+                line3.classList.remove("bg-white");
+                line1.classList.add("bg-black");
+                line2.classList.add("bg-black");
+                line3.classList.add("bg-black");
+            }
+            
+            // Change mobile cart icon color to black on scroll
+            if (mobileCartBtn) {
+                mobileCartBtn.classList.remove("text-white");
+                mobileCartBtn.classList.add("text-black");
+            }
+
         } else {
             header.classList.add("bg-transparent", "py-6");
             header.classList.remove(
@@ -204,6 +247,8 @@ const isBlackTheme = theme === "black";
                 "py-4",
                 "border-b",
                 "border-gray-200",
+                "transition-all",
+                "duration-0",
             );
 
             logo?.classList.add("brightness-200", "contrast-100");
@@ -212,8 +257,6 @@ const isBlackTheme = theme === "black";
                 link.classList.add("text-white/80", "hover:text-white");
                 link.classList.remove("text-gray-600", "hover:text-black");
             });
-
-
 
             ctaBtn?.classList.add(
                 "bg-white",
@@ -230,6 +273,21 @@ const isBlackTheme = theme === "black";
                 mobileMenuBtn.classList.add("text-white");
                 mobileMenuBtn.classList.remove("text-black");
             }
+
+            if (line1 && line2 && line3) {
+                line1.classList.remove("bg-black");
+                line2.classList.remove("bg-black");
+                line3.classList.remove("bg-black");
+                line1.classList.add("bg-white");
+                line2.classList.add("bg-white");
+                line3.classList.add("bg-white");
+            }
+            
+            // Change mobile cart icon color back to white when not scrolled
+            if (mobileCartBtn) {
+                mobileCartBtn.classList.add("text-white");
+                mobileCartBtn.classList.remove("text-black");
+            }
         }
     }
 
@@ -240,28 +298,191 @@ const isBlackTheme = theme === "black";
         updateHeaderStyle();
     }
 
-    // Mobile Menu Toggle
-    mobileMenuBtn?.addEventListener("click", () => {
-        const isOpen = mobileMenu?.style.height === "auto";
+    // Mobile Menu Toggle with Animation
+    let isAnimating = false;
+    mobileMenuBtn?.addEventListener("click", async () => {
+        if (isAnimating) return;
+        
+        const isOpen = mobileMenu?.classList.contains("translate-x-0");
 
         if (isOpen) {
-            if (mobileMenu) mobileMenu.style.height = "0";
-            menuIcon?.classList.remove("hidden");
-            closeIcon?.classList.add("hidden");
+            // Close menu
+            isAnimating = true;
+            
+            // Reverse animation: X → Cross → Hamburger
+            // Step 1: X to Cross (rotate back to perpendicular)
+            line1?.classList.remove("rotate-45");
+            line1?.classList.add("-rotate-90");
+            line2?.classList.remove("-rotate-45");
+            line2?.classList.add("rotate-0");
+            
+            await new Promise(resolve => setTimeout(resolve, 150));
+            
+            // Step 2: Cross to Hamburger
+            line1?.classList.remove("-rotate-90", "translate-y-[9px]", "-rotate-45");
+            line2?.classList.remove("rotate-0", "rotate-45");
+            line3?.classList.remove("opacity-0", "scale-0");
+            
+            // Change lines back to white/black based on scroll
+            const isScrolled = window.scrollY > 50;
+            [line1, line2, line3].forEach(line => {
+                if (initialTheme === "transparent" && !isScrolled) {
+                    line?.classList.remove("bg-black");
+                    line?.classList.add("bg-white");
+                } else if (initialTheme === "transparent" && isScrolled) {
+                    line?.classList.add("bg-black");
+                    line?.classList.remove("bg-white");
+                }
+            });
+            
+            await new Promise(resolve => setTimeout(resolve, 150));
+            
+            // Slide menu out
+            mobileMenu?.classList.remove("translate-x-0");
+            mobileMenu?.classList.add("translate-x-full");
+            
+            // Show cart icon after menu has mostly slid out (400ms delay)
+            setTimeout(() => {
+                if (mobileCartBtn) {
+                    mobileCartBtn.classList.remove("opacity-0", "pointer-events-none");
+                }
+            }, 200);
+
+            // Restore header style in close.
+            updateHeaderStyle();
+            
+            document.body.style.overflow = "";
+            isAnimating = false;
         } else {
-            if (mobileMenu) mobileMenu.style.height = "auto";
-            menuIcon?.classList.add("hidden");
-            closeIcon?.classList.remove("hidden");
+            // Open menu
+            isAnimating = true;
+            
+            // Change lines to black IMMEDIATELY for visibility on white menu
+            [line1, line2, line3].forEach(line => {
+                line?.classList.remove("bg-white");
+                line?.classList.add("bg-black");
+            });
+
+            // Remove header border when menu is open
+            header?.classList.remove("border-b", "border-gray-200");
+            
+            // Slide menu in
+            mobileMenu?.classList.remove("translate-x-full");
+            mobileMenu?.classList.add("translate-x-0");
+
+            // Hide cart icon
+            if (mobileCartBtn) {
+                mobileCartBtn.classList.add("opacity-0", "pointer-events-none");
+            }
+            
+            // Step 1: Hamburger to Cross (line 3 disappears, line 1 rotates 90° to be perpendicular to line 2)
+            line3?.classList.add("opacity-0", "scale-0");
+            line1?.classList.add("-rotate-90", "translate-y-[9px]");
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            // Step 2: Rotate the cross 45° to form an X (both lines rotate together in harmony)
+            line1?.classList.remove("-rotate-90");
+            line1?.classList.add("-rotate-45");  // -90° + 45° = -45°
+            line2?.classList.add("rotate-45");     // 0° + 45° = 45°
+            
+            document.body.style.overflow = "hidden";
+            isAnimating = false;
         }
     });
 
     // Close mobile menu on link click
     const mobileLinks = document.querySelectorAll(".mobile-link");
     mobileLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-            if (mobileMenu) mobileMenu.style.height = "0";
-            menuIcon?.classList.remove("hidden");
-            closeIcon?.classList.add("hidden");
+        link.addEventListener("click", async () => {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            // Trigger close animation
+            line1?.classList.remove("-rotate-45");  // Remove -45°
+            line1?.classList.add("-rotate-90");     // Back to -90° (cross)
+            line2?.classList.remove("rotate-45");   // Remove 45°
+            
+            await new Promise(resolve => setTimeout(resolve, 150));
+            
+            line1?.classList.remove("-rotate-90", "translate-y-[9px]");
+            line3?.classList.remove("opacity-0", "scale-0");
+            
+            const isScrolled = window.scrollY > 50;
+            [line1, line2, line3].forEach(line => {
+                if (initialTheme === "transparent" && !isScrolled) {
+                    line?.classList.remove("bg-black");
+                    line?.classList.add("bg-white");
+                } else if (initialTheme === "transparent" && isScrolled) {
+                    line?.classList.add("bg-black");
+                    line?.classList.remove("bg-white");
+                }
+            });
+            
+            await new Promise(resolve => setTimeout(resolve, 150));
+            
+            mobileMenu?.classList.remove("translate-x-0");
+            mobileMenu?.classList.add("translate-x-full");
+            
+            // Show cart icon after menu has mostly slid out (400ms delay)
+            setTimeout(() => {
+                if (mobileCartBtn) {
+                    mobileCartBtn.classList.remove("opacity-0", "pointer-events-none");
+                }
+            }, 400);
+            
+            document.body.style.overflow = "";
+            isAnimating = false;
         });
+    });
+
+    // Cart Counter Animation
+    const cartCounter = document.getElementById('cart-counter');
+    const mobileCartCounter = document.getElementById('mobile-cart-counter');
+    
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
+        const totalItems = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
+        
+        // Update desktop counter
+        if (cartCounter) {
+            cartCounter.textContent = totalItems.toString();
+            if (totalItems === 0) {
+                cartCounter.classList.add('hidden');
+            } else {
+                cartCounter.classList.remove('hidden');
+            }
+        }
+        
+        // Update mobile counter
+        if (mobileCartCounter) {
+            mobileCartCounter.textContent = totalItems.toString();
+            if (totalItems === 0) {
+                mobileCartCounter.classList.add('hidden');
+            } else {
+                mobileCartCounter.classList.remove('hidden');
+            }
+        }
+    }
+
+    // Initial load
+    updateCartCount();
+
+    window.addEventListener('add-to-cart', () => {
+        updateCartCount();
+
+        // Add pop animation to both counters
+        if (cartCounter) {
+            cartCounter.classList.remove('animate-pop');
+            void cartCounter.offsetWidth;
+            cartCounter.classList.add('animate-pop');
+        }
+        
+        if (mobileCartCounter) {
+            mobileCartCounter.classList.remove('animate-pop');
+            void mobileCartCounter.offsetWidth;
+            mobileCartCounter.classList.add('animate-pop');
+        }
     });
 </script>

@@ -2,51 +2,92 @@
 import Layout from "../../layouts/Layout.astro";
 import ProductDetail from "../../components/ProductDetail.astro";
 import placeholderImage from "@/assets/OPP-80W-ST.png";
+import { supabase } from "../../lib/supabase";
 
 export async function getStaticPaths() {
-    // TODO: Fetch actual products
-    return [{ params: { slug: "1" } }, { params: { slug: "example" } }];
+    // Fetch all products
+    const { data: products, error: productsError } = await supabase
+        .from('products')
+        .select('*');
+
+    if (productsError) {
+        console.error("Error fetching products:", productsError);
+        return [];
+    }
+
+    // Fetch all categories
+    const { data: categories, error: categoriesError } = await supabase
+        .from('product_categories')
+        .select('*');
+    
+    if (categoriesError) {
+        console.error("Error fetching categories:", categoriesError);
+    }
+
+    // Fetch all specs
+    const { data: specs, error: specsError } = await supabase
+        .from('product_specs')
+        .select('*');
+
+    if (specsError) {
+        console.error("Error fetching specs:", specsError);
+    }
+
+    // Fetch all files
+    const { data: files, error: filesError } = await supabase
+        .from('product_files')
+        .select('*');
+
+    if (filesError) {
+        console.error("Error fetching files:", filesError);
+    }
+
+    return products.map((product) => {
+        const category = categories?.find(c => c.id === product.category_id);
+        const productSpecs = specs?.filter(s => s.product_id === product.id) || [];
+        const productFiles = files?.filter(f => f.product_id === product.id) || [];
+
+        return {
+            params: { slug: product.slug },
+            props: { 
+                product,
+                categoryName: category?.name || "Unknown Category",
+                specs: productSpecs,
+                files: productFiles
+            },
+        };
+    });
 }
 
 const { slug } = Astro.params;
+const { product, categoryName, specs, files } = Astro.props;
 
-// Dummy data for now
 const productData = {
-    // Datos de ejemplo para el producto
-    category: "BRACKETS",
-    title: "HIGHBAY VAL BRACKET 63W-83",
-    seriesTitle: "RDX",
-    seriesSubtitle: "ROUND MAX SERIES",
-    description:
-        "Luminaria high-bay diseñada para iluminación interior de gran altura. Perfecta para aplicaciones industriales como refinerías, almacenes, muelles de carga, plantas de manufactura y centros de distribución. Ofrece alta eficiencia luminosa y durabilidad excepcional en entornos exigentes con techos altos.",
-    previousModel: "PEL-K",
-    image: placeholderImage.src,
-    versions: [
+    category: categoryName,
+    slug: product.slug,
+    title: product.name,
+    seriesTitle: product.led_power ? `${product.led_power}` : "", // RDX -> Watts
+    seriesSubtitle: product.efficiency ? `${product.efficiency}` : "", // ROUND MAX SERIES -> Eficiencia
+    description: product.description_short || "",
+    previousModel: "PEL-K", // Placeholder
+    image: placeholderImage.src, // Placeholder
+    versions: [ // Dummy data
         { id: "1", name: "BRACKET 63W-83", gtin: "4096854203689" },
         { id: "2", name: "BRACKET 63W-85", gtin: "4096854203690" },
         { id: "3", name: "BRACKET 63W-87", gtin: "4096854203691" },
     ],
-    specifications: [
-        { label: "Potencia del LED", value: "40W" },
-        { label: "Potencia Panel Solar", value: "70W" },
-        { label: "Batería", value: "Litio Ferro-fosfato 40AH" },
-        { label: "Flujo Luminoso Máximo", value: "6800 Lm" },
-        { label: "Eficiencia", value: "170 Lm/W" },
-        { label: "Dist. Lumínica", value: "IES II L Simétrica" },
-        { label: "Horas de Vida", value: "100,000 Horas" },
-        { label: "Control", value: "100/30 Configurable 2.4Ghz" },
-        { label: "Tiempo de Carga", value: "4-5 Horas" },
-        { label: "Tiempo de Autonomía", value: "2-3 días nublados" },
-        { label: "Tipo de Cargador", value: "MPPT" },
-        { label: "Instalación", value: "En brazo o punta de poste" },
-        { label: "Altura Recom.", value: "4-5m (20-30ft interposta)" },
-        { label: "Peso Neto/Total", value: "8Kg/10Kg" },
-    ],
+    specifications: specs.map(s => ({
+        label: s.label,
+        value: s.value
+    })),
+    downloads: files.map(f => ({
+        title: f.file_title,
+        url: f.file_path
+    })),
     technicalDescription: [
-        "Luminaria solar LED de 40W para alumbrado público, con panel monocristalino integrado y autonomía superior a 3 días. Equipada con LED Philips 3030 2D (170 lm/W, certificación L70 para 100,000 horas) y lente de policarbonato (pérdida de luz <9%). Incluye batería LiFePO4 (garantía de 3 años) y controlador MPPT con 99% de eficiencia (>2,500 ciclos).",
-        "Ideal para carreteras, parques, autopistas y zonas costeras. Ofrece programación personalizada, soporte de ingeniería (archivos IES/Dialux) y adaptabilidad para montaje en poste. Fabricada en policarbonato e integra una fotocélula solar para mayor durabilidad.",
+        product.description_long || ""
     ],
-    technicalImages: [
+    technicalImages: [ // Placeholder
         {
             title: "Dimensiones (mm)",
             image: "https://images.unsplash.com/photo-1764737734436-7eb904d3a4ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
@@ -70,3 +111,4 @@ const productData = {
 <Layout headerTheme="black">
     <ProductDetail {...productData} />
 </Layout>
+

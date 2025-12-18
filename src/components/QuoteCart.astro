@@ -1,45 +1,8 @@
 ---
 import { X, Minus, Plus } from "lucide-astro";
 
-interface CartItem {
-    id: string;
-    name: string;
-    code: string;
-    quantity: number;
-    lumens: string;
-    warranty: string;
-    image: string;
-}
+import productsData from "../data/products.json";
 
-const cartItems: CartItem[] = [
-    {
-        id: "1",
-        name: "Highbay VAL Bracket 63W-83",
-        code: "T14381",
-        quantity: 450,
-        lumens: "8,190 lm",
-        warranty: "5 años",
-        image: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200",
-    },
-    {
-        id: "2",
-        name: "Panel LED Square 40W",
-        code: "T14382",
-        quantity: 1200,
-        lumens: "4,800 lm",
-        warranty: "3 años",
-        image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200",
-    },
-    {
-        id: "3",
-        name: "Luminaria Solar Street 80W",
-        code: "T14383",
-        quantity: 450,
-        lumens: "10,400 lm",
-        warranty: "5 años",
-        image: "https://images.unsplash.com/photo-1565814636199-ae8133055c1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200",
-    },
-];
 ---
 
 <section class="bg-white pb-12 pt-32">
@@ -72,76 +35,10 @@ const cartItems: CartItem[] = [
 
         {/* Cart Items */}
         <div class="space-y-4 mb-12" id="cart-items-container">
-            {
-                cartItems.map((item) => (
-                    <div
-                        class="cart-item bg-zinc-50 border border-zinc-200 p-6 flex items-center gap-8 hover:border-[#FF8351]/50 transition-all duration-300"
-                        data-id={item.id}
-                    >
-                        {/* Product Image */}
-                        <div class="w-20 h-20 bg-white rounded overflow-hidden flex-shrink-0">
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                class="w-full h-full object-cover"
-                            />
-                        </div>
-
-                        {/* Product Name & Code */}
-                        <div class="flex-1">
-                            <h3 class="text-black font-bold uppercase tracking-wide leading-tight mb-1">
-                                {item.name}
-                            </h3>
-                            <p class="text-xs text-zinc-400">{item.code}</p>
-                        </div>
-
-                        {/* Lumens */}
-                        <div class="min-w-[100px]">
-                            <p class="text-xs text-zinc-400 mb-1">
-                                Flujo luminoso
-                            </p>
-                            <p class="text-black font-bold text-sm">
-                                {item.lumens}
-                            </p>
-                        </div>
-
-                        {/* Warranty */}
-                        <div class="min-w-[100px]">
-                            <p class="text-xs text-zinc-400 mb-1">Garantía</p>
-                            <p class="text-black font-bold text-sm">
-                                {item.warranty}
-                            </p>
-                        </div>
-
-                        {/* Quantity Controls */}
-                        <div class="flex items-center gap-4">
-                            <button
-                                class="decrease-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
-                                aria-label="Disminuir cantidad"
-                            >
-                                <Minus class="w-4 h-4" />
-                            </button>
-                            <span class="qty-display text-black min-w-[40px] text-center">
-                                {item.quantity}
-                            </span>
-                            <button
-                                class="increase-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
-                                aria-label="Aumentar cantidad"
-                            >
-                                <Plus class="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        {/* Remove Button */}
-                        <button
-                            class="remove-item w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-400 hover:text-[#FF8351]"
-                            aria-label="Eliminar producto"
-                        >
-                            <X class="w-4 h-4" />
-                        </button>
-                    </div>
-                ))
-            }
+            {/* Cart Items will be rendered here by JS */}
+            <div id="empty-cart-message" class="hidden text-center py-12 text-zinc-500">
+                Tu carrito de cotización está vacío.
+            </div>
         </div>
 
         {/* Contact Form */}
@@ -294,38 +191,148 @@ const cartItems: CartItem[] = [
     </div>
 </section>
 
-<script>
+<script define:vars={{ productsData }}>
+    // Pass products to client
+    const products = productsData;
+
     const cartContainer = document.getElementById("cart-items-container");
+    const emptyMessage = document.getElementById("empty-cart-message");
     const cartCount = document.getElementById("cart-count");
 
-    function updateCartCount() {
-        if (!cartContainer || !cartCount) return;
-        const count = cartContainer.querySelectorAll(".cart-item").length;
-        cartCount.textContent = count.toString();
+    // Icons SVG strings for dynamic rendering
+    const minusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M5 12h14"/></svg>`;
+    const plusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`;
+    const xIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
+
+    function renderCart() {
+        if (!cartContainer) return;
+        
+        const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
+        
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '';
+            if (emptyMessage) {
+                cartContainer.appendChild(emptyMessage);
+                emptyMessage.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (emptyMessage) emptyMessage.classList.add('hidden');
+        cartContainer.innerHTML = '';
+
+        cart.forEach((item) => {
+            const product = products.find((p) => p.slug === item.slug);
+            if (!product) return;
+
+            // Image logic: use main_image or fallback
+            const imageName = product.main_image || 'placeholder';
+            const imageUrl = `/imgs/cart/${imageName}.png`;
+            const fallbackUrl = `/imgs/cart/no-image.png`;
+
+            const itemEl = document.createElement('div');
+            itemEl.className = "cart-item bg-zinc-50 border border-zinc-200 p-6 md:p-4 lg:p-6 flex items-center gap-8 hover:border-[#FF8351]/50 transition-all duration-300";
+            itemEl.dataset.slug = item.slug;
+
+            itemEl.innerHTML = `
+                <div class="w-20 h-20 bg-white rounded overflow-hidden flex-shrink-0">
+                    <img
+                        src="${imageUrl}"
+                        alt="${product.name}"
+                        class="w-full h-full object-cover"
+                        onerror="this.onerror=null; this.src='${fallbackUrl}';"
+                    />
+                </div>
+
+                <div class="flex-1">
+                    <h3 class="text-black font-bold uppercase tracking-wide leading-tight mb-1">
+                        ${product.name}
+                    </h3>
+                    <p class="text-xs text-zinc-400">${product.led_power || ''}</p>
+                </div>
+
+                <div class="min-w-[100px]">
+                    <p class="text-xs text-zinc-400 mb-1">
+                        Flujo luminoso
+                    </p>
+                    <p class="text-black font-bold text-sm">
+                        ${product.max_luminous_flux}
+                    </p>
+                </div>
+
+                <div class="min-w-[100px] md:min-w-[80px] lg:min-w-[100px]">
+                    <p class="text-xs text-zinc-400 mb-1">Garantía</p>
+                    <p class="text-black font-bold text-sm">
+                        ${product.warranty || 'N/A'}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4 md:gap-2 lg:gap-4">
+                    <button
+                        class="decrease-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
+                        aria-label="Disminuir cantidad"
+                    >
+                        ${minusIcon}
+                    </button>
+                    <span class="qty-display text-black min-w-[40px] text-center">
+                        ${item.quantity}
+                    </span>
+                    <button
+                        class="increase-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
+                        aria-label="Aumentar cantidad"
+                    >
+                        ${plusIcon}
+                    </button>
+                </div>
+
+                <button
+                    class="remove-item w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-400 hover:text-[#FF8351]"
+                    aria-label="Eliminar producto"
+                >
+                    ${xIcon}
+                </button>
+            `;
+            
+            cartContainer.appendChild(itemEl);
+        });
     }
+
+    // Initial render
+    renderCart();
 
     if (cartContainer) {
         cartContainer.addEventListener("click", (e) => {
-            const target = e.target as HTMLElement;
-            const itemRow = target.closest(".cart-item") as HTMLElement;
+            const target = e.target;
+            const itemRow = target.closest(".cart-item");
 
             if (!itemRow) return;
 
+            const slug = itemRow.dataset.slug;
             const qtyDisplay = itemRow.querySelector(".qty-display");
-            let currentQty = parseInt(qtyDisplay?.textContent || "0");
+            
+            // Get current cart
+            let cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
+            const itemIndex = cart.findIndex((i) => i.slug === slug);
+            
+            if (itemIndex === -1) return;
+
+            let currentQty = cart[itemIndex].quantity;
 
             // Increase Quantity
             if (target.closest(".increase-qty")) {
                 currentQty++;
+                cart[itemIndex].quantity = currentQty;
                 if (qtyDisplay) qtyDisplay.textContent = currentQty.toString();
+                localStorage.setItem('opplux_cart', JSON.stringify(cart));
             }
 
             // Decrease Quantity
             if (target.closest(".decrease-qty")) {
                 if (currentQty > 1) {
                     currentQty--;
-                    if (qtyDisplay)
-                        qtyDisplay.textContent = currentQty.toString();
+                    cart[itemIndex].quantity = currentQty;
+                    if (qtyDisplay) qtyDisplay.textContent = currentQty.toString();
+                    localStorage.setItem('opplux_cart', JSON.stringify(cart));
                 }
             }
 
@@ -333,16 +340,23 @@ const cartItems: CartItem[] = [
             if (target.closest(".remove-item")) {
                 itemRow.style.opacity = "0";
                 itemRow.style.transform = "translateX(-20px)";
+                
+                // Remove from cart array
+                cart.splice(itemIndex, 1);
+                localStorage.setItem('opplux_cart', JSON.stringify(cart));
+                
+                // Dispatch event to update header
+                window.dispatchEvent(new CustomEvent('add-to-cart'));
+
                 setTimeout(() => {
-                    itemRow.remove();
-                    updateCartCount();
+                    renderCart(); // Re-render to handle empty state if needed
                 }, 300);
             }
         });
     }
 
     // Form handling
-    const form = document.getElementById("quote-form") as HTMLFormElement;
+    const form = document.getElementById("quote-form");
     if (form) {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -354,13 +368,13 @@ const cartItems: CartItem[] = [
     }
 
     // Country selection handler
-    const countrySelect = document.getElementById("country") as HTMLSelectElement;
+    const countrySelect = document.getElementById("country");
     const otherCountryContainer = document.getElementById("other-country-container");
-    const otherCountryInput = document.getElementById("other-country") as HTMLInputElement;
+    const otherCountryInput = document.getElementById("other-country");
 
     if (countrySelect && otherCountryContainer && otherCountryInput) {
         countrySelect.addEventListener("change", (e) => {
-            const target = e.target as HTMLSelectElement;
+            const target = e.target;
             if (target.value === "other") {
                 otherCountryContainer.classList.remove("hidden");
                 otherCountryInput.required = true;

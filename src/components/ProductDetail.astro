@@ -4,6 +4,7 @@ import { Download, Check, ChevronLeft, ChevronRight, ShoppingCart } from "lucide
 
 interface Props {
     category: string;
+    slug: string;
     title: string;
     seriesTitle: string;
     seriesSubtitle: string;
@@ -14,10 +15,12 @@ interface Props {
     specifications: { label: string; value: string }[];
     technicalDescription: string[];
     technicalImages: { title: string; image: string }[];
+    downloads?: { title: string; url: string }[];
 }
 
 const {
     category,
+    slug,
     title,
     seriesTitle,
     seriesSubtitle,
@@ -27,6 +30,7 @@ const {
     specifications,
     technicalDescription,
     technicalImages,
+    downloads = [],
 } = Astro.props;
 
 const allImages = [
@@ -39,7 +43,7 @@ const allImages = [
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-12 mb-8">
             {/* Galería de Imágenes */}
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 animate-slide-right opacity-0 -translate-x-10 transition-all duration-1000 ease-out">
                 {/* Imagen Principal */}
                 <div
                     class="bg-gray-50 rounded-lg relative overflow-hidden group"
@@ -94,9 +98,9 @@ const allImages = [
             </div>
 
             {/* Información del producto */}
-            <div class="flex flex-col">
+            <div class="flex flex-col animate-slide-left opacity-0 translate-x-10 transition-all duration-1000 ease-out">
                 {/* Categoría */}
-                <p class="text-sm tracking-wider text-gray-600 mb-4">
+                <p class="text-sm tracking-wider text-gray-600 mb-4 uppercase">
                     {category}
                 </p>
 
@@ -115,19 +119,6 @@ const allImages = [
                     </p>
                     <p class="text-gray-700 leading-relaxed text-base mb-5">
                         {description}
-                    </p>
-                    {
-                        previousModel && (
-                            <p class="text-sm">
-                                <span class="text-[#1e3a8a]">
-                                    Anteriormente:
-                                </span>{" "}
-                                <span class="text-gray-700">
-                                    {previousModel}
-                                </span>
-                            </p>
-                        )
-                    }
                 </div>
 
                 {/* Miniaturas (Movidas a la derecha) */}
@@ -187,17 +178,31 @@ const allImages = [
                     </div>
 
                     <button
-                        class="w-full sm:flex-1 px-8 py-[11px] bg-[#FF8351] text-white hover:bg-[#e6744a] transition-colors font-bold text-sm uppercase tracking-wide shadow-sm flex items-center justify-center gap-2"
+                        id="add-to-cart-btn"
+                        data-slug={slug}
+                        class="w-full sm:flex-1 px-8 py-[11px] bg-[#FF8351] text-white hover:bg-[#e6744a] transition-all duration-300 font-bold text-sm uppercase tracking-wide shadow-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                        <ShoppingCart class="w-5 h-5" />
-                        <span>Agregar a carrito de cotización</span>
+                        <span id="btn-content" class="flex items-center gap-2">
+                            <ShoppingCart class="w-5 h-5" />
+                            <span>Agregar a carrito de cotización</span>
+                        </span>
+                        <span id="btn-spinner" class="hidden">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span id="btn-success" class="hidden flex items-center gap-2">
+                            <Check class="w-5 h-5" />
+                            <span>Añadido!</span>
+                        </span>
                     </button>
                 </div>
             </div>
         </div>
 
         {/* Sección de Especificaciones con tabla */}
-        <div class="mb-12">
+        <div class="mb-12 animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-300">
             <h2 class="mb-6 text-4xl font-light font-outfit">Información técnica</h2>
             <div class="space-y-4 mb-12">
                 {
@@ -209,7 +214,7 @@ const allImages = [
         </div>
 
         {/* Sección de Información técnica */}
-        <div class="mb-12 max-w-xl">
+        <div class="mb-12 max-w-xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-500">
             <h2 class="mb-6 max-w-xl">Especificaciones</h2>
             <div class="border-t border-gray-200">
                 {
@@ -224,14 +229,28 @@ const allImages = [
                 }
             </div>
         </div>
-        <div class="mb-8 max-w-7xl">
-            {/* Botón Descargar hoja de datos (Movido al final) */}
-            <button
-                class="w-[320px] mt-auto px-6 py-3 border-[1px] border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-colors flex items-center justify-center gap-2 font-bold"
-            >
-                <span>DESCARGAR HOJA TÉCNICA</span>
-                <Download class="w-5 h-5" />
-            </button>
+        <div class="mb-8 max-w-7xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-700">
+            {/* Descargas */}
+            <div class="space-y-6">
+                {
+                    downloads.map((download) => (
+                        <div>
+                            <p class="text-sm font-bold text-zinc-900 mb-2 uppercase tracking-wide">
+                                {download.title}
+                            </p>
+                            <a
+                                href={download.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="w-full sm:w-[320px] px-6 py-3 border border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-sm uppercase tracking-widest group"
+                            >
+                                <Download class="w-4 h-4 group-hover:animate-bounce" />
+                                Descargar PDF
+                            </a>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     </div>
 </section>
@@ -314,6 +333,82 @@ const allImages = [
     nextBtn?.addEventListener("click", () => {
         const newIndex = (currentIndex + 1) % totalImages;
         updateGallery(newIndex);
+    });
+
+    // Add to Cart Logic
+    const addToCartBtn = document.getElementById('add-to-cart-btn') as HTMLButtonElement;
+    const btnContent = document.getElementById('btn-content');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const btnSuccess = document.getElementById('btn-success');
+
+    addToCartBtn?.addEventListener('click', () => {
+        if (!btnContent || !btnSpinner || !btnSuccess) return;
+
+        // Loading state
+        addToCartBtn.disabled = true;
+        btnContent.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+
+        // Simulate network request
+        setTimeout(() => {
+            // Get current quantity
+            const qtyInput = document.getElementById("qty-input") as HTMLInputElement;
+            const quantity = parseInt(qtyInput?.value || "1");
+            const slug = addToCartBtn.dataset.slug;
+
+            if (slug) {
+                // Get existing cart
+                const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
+                
+                // Check if product exists
+                const existingItemIndex = cart.findIndex((item: any) => item.slug === slug);
+
+                if (existingItemIndex > -1) {
+                    // Update quantity
+                    cart[existingItemIndex].quantity += quantity;
+                } else {
+                    // Add new item
+                    cart.push({ slug, quantity });
+                }
+
+                // Save back to localStorage
+                localStorage.setItem('opplux_cart', JSON.stringify(cart));
+            }
+
+            // Success state
+            btnSpinner.classList.add('hidden');
+            btnSuccess.classList.remove('hidden');
+            
+            // Change button color to green
+            addToCartBtn.classList.remove('bg-[#FF8351]', 'hover:bg-[#e6744a]');
+            addToCartBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+            // Dispatch event for Header
+            window.dispatchEvent(new CustomEvent('add-to-cart'));
+
+            // Reset after delay
+            setTimeout(() => {
+                btnSuccess.classList.add('hidden');
+                btnContent.classList.remove('hidden');
+                addToCartBtn.disabled = false;
+                
+                // Revert button color
+                addToCartBtn.classList.add('bg-[#FF8351]', 'hover:bg-[#e6744a]');
+                addToCartBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            }, 2000);
+        }, 800);
+    });
+
+    // Trigger animations on load
+    window.addEventListener('load', () => {
+        // Slide animations
+        document.querySelector('.animate-slide-right')?.classList.remove('opacity-0', '-translate-x-10');
+        document.querySelector('.animate-slide-left')?.classList.remove('opacity-0', 'translate-x-10');
+        
+        // Fade up animations
+        document.querySelectorAll('.animate-fade-up').forEach(el => {
+            el.classList.remove('opacity-0', 'translate-y-10');
+        });
     });
 </script>
 

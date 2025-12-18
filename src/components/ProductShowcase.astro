@@ -4,211 +4,83 @@ import streetLightImg from "../assets/street-light.png";
 import ufoLightImg from "../assets/ufo-light.png";
 import bannerImg from "../assets/product-section-banner-3.jpg";
 
-const categories = [
-    { name: "Alumbrado Público", count: 12 },
-    { name: "Iluminación Solar", count: 8 },
-    { name: "High Bay LED", count: 15 },
-    { name: "Proyectores", count: 6 },
-];
+import { supabase } from "../lib/supabase";
 
-const productsByCategory = [
-    {
-        category: "Alumbrado Público",
-        products: [
-            {
-                id: 1,
-                name: "OPP-NSL-ECO-40W",
-                comment: "Eficiencia energética",
-                image: streetLightImg,
-                watts: 40,
-                lumens: 5200,
-                description:
-                    "40W LED solar street luminaire with integrated monocrystalline solar cell and Lumileds Philips 5030 2D LED source.",
-                specs: ["40W", "5000K", "IP65", "L70>50,000hrs"],
-            },
-            {
-                id: 2,
-                name: "OPP-NSL-PRO-60W",
-                comment: "Tecnología avanzada",
-                image: streetLightImg,
-                watts: 60,
-                lumens: 7800,
-                description:
-                    "Professional grade 60W LED solar street luminaire with advanced MPPT controller.",
-                specs: ["60W", "5000K", "IP66", "L70>60,000hrs"],
-            },
-            {
-                id: 3,
-                name: "OPP-NSL-ECO-80W",
-                comment: "Autonomía extendida",
-                image: streetLightImg,
-                watts: 80,
-                lumens: 10400,
-                description:
-                    "80W solar street light with extended battery autonomy and smart control system.",
-                specs: ["80W", "5000K", "IP65", "3-Day Autonomy"],
-            },
-            {
-                id: 4,
-                name: "OPP-NSL-MAX-120W",
-                comment: "Máxima performance",
-                image: streetLightImg,
-                watts: 120,
-                lumens: 15600,
-                description:
-                    "Maximum performance 120W LED solar street luminaire for demanding projects.",
-                specs: ["120W", "5000K", "IP66", "L70>70,000hrs"],
-            },
-        ],
-    },
-    {
-        category: "High Bay LED",
-        products: [
-            {
-                id: 5,
-                name: "OPPUS-HB-100W-MV",
-                comment: "Alta potencia industrial",
-                image: ufoLightImg,
-                watts: 100,
-                lumens: 17000,
-                description:
-                    "High-Efficiency LED Luminaire for industrial applications with 170 LM/W performance.",
-                specs: ["100W", "5000K", "IP65", "170LM/W"],
-            },
-            {
-                id: 6,
-                name: "OPPUS-HB-150W-MV",
-                comment: "Máximo rendimiento",
-                image: ufoLightImg,
-                watts: 150,
-                lumens: 25500,
-                description:
-                    "Heavy-duty LED High Bay designed for warehouses and large industrial spaces.",
-                specs: ["150W", "4000K", "IP65", "170LM/W"],
-            },
-            {
-                id: 7,
-                name: "OPPUS-HB-200W-MV",
-                comment: "Disipación superior",
-                image: ufoLightImg,
-                watts: 200,
-                lumens: 34000,
-                description:
-                    "200W high-efficiency industrial LED with superior heat dissipation design.",
-                specs: ["200W", "5000K", "IP65", "L80>80,000hrs"],
-            },
-            {
-                id: 8,
-                name: "OPPUS-HB-250W-MV",
-                comment: "Potencia extrema",
-                image: ufoLightImg,
-                watts: 250,
-                lumens: 42500,
-                description:
-                    "250W industrial LED luminaire with extreme power output for large facilities.",
-                specs: ["250W", "5000K", "IP65", "170LM/W"],
-            },
-        ],
-    },
-    {
-        category: "Iluminación Solar",
-        products: [
-            {
-                id: 9,
-                name: "OPP-SOLAR-30W",
-                comment: "Compacto y eficiente",
-                image: streetLightImg,
-                watts: 30,
-                lumens: 3900,
-                description:
-                    "Compact 30W solar LED luminaire ideal for residential areas and pathways.",
-                specs: ["30W", "4000K", "IP65", "L70>40,000hrs"],
-            },
-            {
-                id: 10,
-                name: "OPP-SOLAR-50W",
-                comment: "Rendimiento óptimo",
-                image: streetLightImg,
-                watts: 50,
-                lumens: 6500,
-                description:
-                    "50W solar LED with optimized panel configuration for maximum energy harvest.",
-                specs: ["50W", "5000K", "IP65", "L70>50,000hrs"],
-            },
-            {
-                id: 11,
-                name: "OPP-SOLAR-100W",
-                comment: "Alta capacidad",
-                image: streetLightImg,
-                watts: 100,
-                lumens: 13000,
-                description:
-                    "High-capacity 100W solar luminaire with intelligent battery management.",
-                specs: ["100W", "5000K", "IP66", "L70>60,000hrs"],
-            },
-            {
-                id: 12,
-                name: "OPP-SOLAR-150W",
-                comment: "Máxima autonomía",
-                image: streetLightImg,
-                watts: 150,
-                lumens: 19500,
-                description:
-                    "150W solar LED with extended autonomy for critical infrastructure lighting.",
-                specs: ["150W", "5000K", "IP66", "5-Day Autonomy"],
-            },
-        ],
-    },
-    {
-        category: "Proyectores",
-        products: [
-            {
-                id: 13,
-                name: "OPP-FLOOD-50W",
-                comment: "Versatilidad total",
-                image: ufoLightImg,
-                watts: 50,
-                lumens: 6500,
-                description:
-                    "50W LED floodlight with adjustable mounting for versatile applications.",
-                specs: ["50W", "4000K", "IP65", "Wide Beam"],
-            },
-            {
-                id: 14,
-                name: "OPP-FLOOD-100W",
-                comment: "Iluminación potente",
-                image: ufoLightImg,
-                watts: 100,
-                lumens: 13000,
-                description:
-                    "100W high-power LED floodlight for large outdoor areas and sports facilities.",
-                specs: ["100W", "5000K", "IP66", "150°Beam"],
-            },
-            {
-                id: 15,
-                name: "OPP-FLOOD-200W",
-                comment: "Máxima cobertura",
-                image: ufoLightImg,
-                watts: 200,
-                lumens: 26000,
-                description:
-                    "200W professional floodlight with maximum coverage for stadiums and large venues.",
-                specs: ["200W", "5000K", "IP66", "L80>70,000hrs"],
-            },
-            {
-                id: 16,
-                name: "OPP-FLOOD-300W",
-                comment: "Potencia industrial",
-                image: ufoLightImg,
-                watts: 300,
-                lumens: 39000,
-                description:
-                    "300W industrial-grade floodlight for demanding commercial applications.",
-                specs: ["300W", "5000K", "IP67", "180°Beam"],
-            },
-        ],
-    },
-];
+// Fetch categories
+const { data: dbCategories, error: categoriesError } = await supabase
+    .from('product_categories')
+    .select('*')
+    .order('id');
+
+if (categoriesError) {
+    console.error("Error fetching categories:", categoriesError);
+}
+
+// Fetch products
+const { data: dbProducts, error: productsError } = await supabase
+    .from('products')
+    .select('*')
+    .order('id');
+
+if (productsError) {
+    console.error("Error fetching products:", productsError);
+}
+
+// Fetch product specs
+const { data: dbSpecs, error: specsError } = await supabase
+    .from('product_specs')
+    .select('*');
+
+if (specsError) {
+    console.error("Error fetching specs:", specsError);
+}
+
+// Process data for the UI
+const categories = (dbCategories || []).map(cat => {
+    const count = (dbProducts || []).filter(p => p.category_id === cat.id).length;
+    return {
+        id: cat.id,
+        name: cat.name,
+        count: count
+    };
+});
+
+const productsByCategory = (dbCategories || []).map(cat => {
+    const catProducts = (dbProducts || []).filter(p => p.category_id === cat.id);
+    
+    return {
+        category: cat.name,
+        products: catProducts.map(p => {
+            // Find specific specs for this product
+            const productSpecs = (dbSpecs || []).filter(s => s.product_id === p.id);
+            
+            // Handle variations in casing for Rec. height
+            const recHeight = productSpecs.find(s => 
+                s.label === 'Rec. height' || s.label === 'Rec. Height'
+            )?.value;
+            
+            const weight = productSpecs.find(s => s.label === 'Net/Total Weight')?.value;
+
+            return {
+                id: p.id,
+                slug: p.slug, // Add slug
+                name: p.name,
+                comment: p.efficiency ? `${p.efficiency}` : "Alta Eficiencia", // Use efficiency as comment
+                image: { src: p.main_image }, // Assuming main_image is a URL or path string
+                watts: p.led_power,
+                lumens: p.max_luminous_flux,
+                description: p.description_short || p.description_long || "",
+                // Construct specs from available data
+                specs: [
+                    p.led_power ? `${p.led_power}` : "",
+                    p.efficiency ? `${p.efficiency}` : "",
+                    recHeight || "", // Rec. height
+                    weight || ""    // Net/Total Weight
+                ].filter(Boolean)
+            };
+        })
+    };
+}).filter(group => group.products.length > 0); // Only show categories with products
 ---
 
 <section id="productos" class="bg-white">
@@ -239,29 +111,36 @@ const productsByCategory = [
     {/* Existing Content */}
     <div class="pt-6 pb-12">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col lg:flex-row gap-16">
+            <div class="flex flex-col xl:flex-row lg:gap-16 md:gap-10 gap-3">
                 {/* Left Sidebar */}
-                <aside class="lg:w-72 flex-shrink-0">
-                    <div class="animate-fade-in-up">
-                        <div class="mb-12">
-                            <h2
-                                class="text-6xl font-extrabold tracking-tight text-black leading-none mb-6"
-                            >
-                                Nueva
-                                <br />
-                                colección
-                            </h2>
-                            <div class="h-1 w-16 bg-[#FF8351] mb-6"></div>
-                            <p class="text-zinc-500 text-sm leading-relaxed">
-                                Descubre las últimas soluciones en iluminación
-                                LED para proyectos comerciales e industriales.
-                            </p>
+                <aside class="w-full xl:w-72 flex-shrink-0">
+                    <div class="animate-slide-right opacity-0 -translate-x-5 transition-all duration-700 ease-out">
+                        {/* Header Content - Split layout for < xl, stacked for >= xl */}
+                        <div class="flex flex-col md:flex-row xl:flex-col justify-between items-start gap-8 md:gap-24 md:mb-12 mb-6">
+                            <div class="max-w-lg">
+                                <h2
+                                    class="text-6xl font-extrabold tracking-tight text-black leading-none mb-6"
+                                >
+                                    Nueva
+                                    <br />
+                                    colección
+                                </h2>
+                                <div class="h-1 w-16 bg-[#FF8351]"></div>
+                            </div>
+                            
+                            <div class="max-w-md md:mt-4 xl:mt-6">
+                                <p class="text-zinc-500 text-sm leading-relaxed">
+                                    Descubre las últimas soluciones en iluminación
+                                    LED para proyectos comerciales e industriales.
+                                </p>
+                            </div>
                         </div>
 
-                        <div class="space-y-1">
+                        {/* Categories List - Grid for < xl, Stack for >= xl */}
+                        <div class="hidden md:grid grid-cols-1 md:grid-cols-3 xl:flex xl:flex-col gap-4 xl:gap-1 xl:space-y-1">
                             {
                                 categories.map((category) => (
-                                    <button class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group">
+                                    <button class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none">
                                         <span class="text-base text-zinc-900 group-hover:text-[#FF8351] transition-all">
                                             {category.name}
                                         </span>
@@ -284,7 +163,7 @@ const productsByCategory = [
                             productsByCategory.map((categoryGroup) => (
                                 <>
                                     {/* Category Card */}
-                                    <div class="group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 animate-fade-in-up">
+                                    <div class="product-card group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 opacity-0 translate-y-8 ease-out">
                                         <div class="text-center p-8">
                                             <h3 class="text-white font-bold text-3xl tracking-tight leading-tight">
                                                 {categoryGroup.category}
@@ -297,7 +176,7 @@ const productsByCategory = [
 
                                     {/* Category Products */}
                                     {categoryGroup.products.map((product) => (
-                                        <div class="group relative bg-white cursor-pointer animate-fade-in-up">
+                                        <div class="product-card group relative bg-white cursor-pointer opacity-0 translate-y-8 transition-all duration-700 ease-out">
                                             {/* Product Image Container */}
                                             <div class="relative aspect-square bg-zinc-50 flex items-end justify-center overflow-hidden">
                                                 {/* Technical Specs Badges - Top Left */}
@@ -329,30 +208,40 @@ const productsByCategory = [
                                                     class="w-[180%] h-[180%] object-contain object-bottom drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
                                                 />
 
-                                                {/* Hover Overlay */}
-                                                <div class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white">
+                                                {/* Hover Overlay - Clickable Area */}
+                                                <a 
+                                                    href={`/productos/${product.slug}`}
+                                                    class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white z-10"
+                                                >
                                                     <p class="text-xs leading-relaxed text-center mb-4 text-white/90">
                                                         {product.description}
                                                     </p>
 
                                                     <div class="flex flex-wrap gap-2 justify-center mb-5">
                                                         {product.specs.map(
-                                                            (spec) => (
-                                                                <span class="text-[10px] font-bold bg-white/20 px-2.5 py-1">
+                                                            (spec, index) => (
+                                                                <span class={`text-[10px] font-bold bg-white/20 px-2.5 py-1 ${index === 3 ? 'xl:hidden 2xl:inline-block' : ''}`}>
                                                                     {spec}
                                                                 </span>
                                                             ),
                                                         )}
                                                     </div>
 
-                                                    <a
-                                                        href={`/productos/${product.id}`}
-                                                        class="bg-[#FF8351] hover:bg-[#ff6a31] text-white px-8 py-3 font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 transition-all"
+                                                    <div
+                                                        class="xl:hidden 2xl:inline-flex bg-[#FF8351] hover:bg-[#ff6a31] text-white px-8 py-3 font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 transition-all"
                                                     >
                                                         Ver detalles
                                                         <ArrowRight class="w-4 h-4" />
-                                                    </a>
-                                                </div>
+                                                    </div>
+
+                                                    {/* Button for 1280px - 1536px range */}
+                                                    <div
+                                                        class="hidden xl:inline-flex 2xl:hidden items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-[10px] font-bold uppercase tracking-wider group/btn border-b border-transparent hover:border-[#FF8351]"
+                                                    >
+                                                        Ver Detalles
+                                                        <ArrowRight class="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                                                    </div>
+                                                </a>
                                             </div>
 
                                             {/* Product Info */}
@@ -376,22 +265,30 @@ const productsByCategory = [
     </div>
 </section>
 
-<style>
-    @keyframes fadeInUp {
-        from {
-            transform: translateY(20px);
-        }
-        to {
-            transform: translateY(0);
-        }
-    }
+<script>
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
 
-    .animate-fade-in-up {
-        view-timeline-name: --fade-in-up;
-        view-timeline-axis: block;
-        animation: fadeInUp 0.6s ease-out forwards;
-        animation-timeline: view();
-        animation-range: entry 10% cover 20%;
-        opacity: 1;
-    }
-</style>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Slide Right Animation
+                if (entry.target.classList.contains('animate-slide-right')) {
+                    entry.target.classList.remove('opacity-0', '-translate-x-5');
+                }
+                // Fade Up Animation
+                if (entry.target.classList.contains('product-card')) {
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-slide-right, .product-card').forEach(el => {
+        observer.observe(el);
+    });
+</script>
