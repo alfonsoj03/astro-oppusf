@@ -36,7 +36,7 @@ import productsData from "../data/products.json";
         {/* Cart Items */}
         <div class="space-y-4 mb-12" id="cart-items-container">
             {/* Cart Items will be rendered here by JS */}
-            <div id="empty-cart-message" class="hidden text-center py-12 text-zinc-500">
+            <div id="empty-cart-message" class="hidden text-center py-6 md:py-12 text-zinc-500">
                 Tu carrito de cotización está vacío.
             </div>
         </div>
@@ -231,66 +231,72 @@ import productsData from "../data/products.json";
             const fallbackUrl = `/imgs/cart/no-image.png`;
 
             const itemEl = document.createElement('div');
-            itemEl.className = "cart-item bg-zinc-50 border border-zinc-200 p-6 md:p-4 lg:p-6 flex items-center gap-8 hover:border-[#FF8351]/50 transition-all duration-300";
+            itemEl.className = "cart-item bg-zinc-50 border border-zinc-200 p-4 md:p-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 hover:border-[#FF8351]/50 transition-all duration-300";
             itemEl.dataset.slug = item.slug;
 
             itemEl.innerHTML = `
-                <div class="w-20 h-20 bg-white rounded overflow-hidden flex-shrink-0">
-                    <img
-                        src="${imageUrl}"
-                        alt="${product.name}"
-                        class="w-full h-full object-cover"
-                        onerror="this.onerror=null; this.src='${fallbackUrl}';"
-                    />
+                <div class="flex items-center gap-4 md:gap-6 md:flex-1">
+                    <div class="w-20 h-20 bg-white rounded overflow-hidden flex-shrink-0">
+                        <img
+                            src="${imageUrl}"
+                            alt="${product.name}"
+                            class="w-full h-full object-cover"
+                            onerror="this.onerror=null; this.src='${fallbackUrl}';"
+                        />
+                    </div>
+
+                    <div class="flex-1">
+                        <h3 class="text-black font-bold uppercase tracking-wide leading-tight mb-1">
+                            ${product.name}
+                        </h3>
+                        <p class="text-xs text-zinc-400">${product.led_power || ''}</p>
+                    </div>
                 </div>
 
-                <div class="flex-1">
-                    <h3 class="text-black font-bold uppercase tracking-wide leading-tight mb-1">
-                        ${product.name}
-                    </h3>
-                    <p class="text-xs text-zinc-400">${product.led_power || ''}</p>
+                <div class="grid grid-cols-2 md:flex md:items-center gap-4 md:gap-6">
+                    <div class="min-w-[100px]">
+                        <p class="text-xs text-zinc-400 mb-1">
+                            Flujo luminoso
+                        </p>
+                        <p class="text-black font-bold text-sm">
+                            ${product.max_luminous_flux}
+                        </p>
+                    </div>
+
+                    <div class="min-w-[100px]">
+                        <p class="text-xs text-zinc-400 mb-1">Garantía</p>
+                        <p class="text-black font-bold text-sm">
+                            ${product.warranty || 'N/A'}
+                        </p>
+                    </div>
                 </div>
 
-                <div class="min-w-[100px]">
-                    <p class="text-xs text-zinc-400 mb-1">
-                        Flujo luminoso
-                    </p>
-                    <p class="text-black font-bold text-sm">
-                        ${product.max_luminous_flux}
-                    </p>
-                </div>
+                <div class="flex items-center justify-between md:justify-end gap-4 pt-3 md:pt-0 border-t md:border-t-0 border-zinc-200">
+                    <div class="flex items-center gap-2">
+                        <button
+                            class="decrease-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
+                            aria-label="Disminuir cantidad"
+                        >
+                            ${minusIcon}
+                        </button>
+                        <span class="qty-display text-black min-w-[40px] text-center font-semibold">
+                            ${item.quantity}
+                        </span>
+                        <button
+                            class="increase-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
+                            aria-label="Aumentar cantidad"
+                        >
+                            ${plusIcon}
+                        </button>
+                    </div>
 
-                <div class="min-w-[100px] md:min-w-[80px] lg:min-w-[100px]">
-                    <p class="text-xs text-zinc-400 mb-1">Garantía</p>
-                    <p class="text-black font-bold text-sm">
-                        ${product.warranty || 'N/A'}
-                    </p>
-                </div>
-
-                <div class="flex items-center gap-4 md:gap-2 lg:gap-4">
                     <button
-                        class="decrease-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
-                        aria-label="Disminuir cantidad"
+                        class="remove-item w-8 h-8 rounded-full bg-zinc-200 hover:bg-red-500 flex items-center justify-center transition-colors text-zinc-600 hover:text-white"
+                        aria-label="Eliminar producto"
                     >
-                        ${minusIcon}
-                    </button>
-                    <span class="qty-display text-black min-w-[40px] text-center">
-                        ${item.quantity}
-                    </span>
-                    <button
-                        class="increase-qty w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-600 hover:text-[#FF8351]"
-                        aria-label="Aumentar cantidad"
-                    >
-                        ${plusIcon}
+                        ${xIcon}
                     </button>
                 </div>
-
-                <button
-                    class="remove-item w-8 h-8 rounded-full border border-zinc-300 hover:border-[#FF8351] flex items-center justify-center transition-colors text-zinc-400 hover:text-[#FF8351]"
-                    aria-label="Eliminar producto"
-                >
-                    ${xIcon}
-                </button>
             `;
             
             cartContainer.appendChild(itemEl);

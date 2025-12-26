@@ -1,6 +1,11 @@
-
 ---
-import { Download, Check, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-astro";
+import {
+    Download,
+    Check,
+    ChevronLeft,
+    ChevronRight,
+    ShoppingCart,
+} from "lucide-astro";
 
 interface Props {
     category: string;
@@ -11,7 +16,6 @@ interface Props {
     description: string;
     previousModel?: string;
     image: string;
-    versions: { id: string; name: string; gtin: string }[];
     specifications: { label: string; value: string }[];
     technicalDescription: string[];
     technicalImages: { title: string; image: string }[];
@@ -43,7 +47,9 @@ const allImages = [
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-2 gap-12 mb-8">
             {/* Galería de Imágenes */}
-            <div class="flex flex-col gap-4 animate-slide-right opacity-0 -translate-x-10 transition-all duration-1000 ease-out">
+            <div
+                class="flex flex-col gap-4 animate-slide-right opacity-0 -translate-x-10 transition-all duration-1000 ease-out"
+            >
                 {/* Imagen Principal */}
                 <div
                     class="bg-gray-50 rounded-lg relative overflow-hidden group"
@@ -98,7 +104,9 @@ const allImages = [
             </div>
 
             {/* Información del producto */}
-            <div class="flex flex-col animate-slide-left opacity-0 translate-x-10 transition-all duration-1000 ease-out">
+            <div
+                class="flex flex-col animate-slide-left opacity-0 translate-x-10 transition-all duration-1000 ease-out"
+            >
                 {/* Categoría */}
                 <p class="text-sm tracking-wider text-gray-600 mb-4 uppercase">
                     {category}
@@ -119,309 +127,371 @@ const allImages = [
                     </p>
                     <p class="text-gray-700 leading-relaxed text-base mb-5">
                         {description}
-                </div>
+                    </p>
 
-                {/* Miniaturas (Movidas a la derecha) */}
-                <div class="grid grid-cols-5 gap-3 mb-6">
-                    {
-                        allImages.map((img, index) => (
-                            <button
-                                class:list={[
-                                    "bg-gray-50 rounded-lg overflow-hidden aspect-square border-2 transition-all duration-200 gallery-thumb relative",
-                                    index === 0
-                                        ? "border-[#FF8351] opacity-100"
-                                        : "border-transparent opacity-50 hover:opacity-100",
-                                ]}
-                                data-index={index}
-                                data-image={img.image}
-                                data-title={img.title}
-                                aria-label={`Ver ${img.title}`}
+                    {/* Miniaturas (Movidas a la derecha) */}
+                    <div class="grid grid-cols-5 gap-3 mb-6">
+                        {
+                            allImages.map((img, index) => (
+                                <button
+                                    class:list={[
+                                        "bg-gray-50 rounded-lg overflow-hidden aspect-square border-2 transition-all duration-200 gallery-thumb relative",
+                                        index === 0
+                                            ? "border-[#FF8351] opacity-100"
+                                            : "border-transparent opacity-50 hover:opacity-100",
+                                    ]}
+                                    data-index={index}
+                                    data-image={img.image}
+                                    data-title={img.title}
+                                    aria-label={`Ver ${img.title}`}
+                                >
+                                    <img
+                                        src={img.image}
+                                        alt={img.title}
+                                        class="w-full h-full object-cover"
+                                    />
+                                </button>
+                            ))
+                        }
+                    </div>
+
+                    {/* Selector de Cantidad y Botón de Cotización */}
+                    <div
+                        class="flex flex-col sm:flex-row items-center gap-6 mb-8"
+                    >
+                        <div class="flex items-center gap-4 w-full sm:w-auto">
+                            <div
+                                class="flex items-center border border-gray-300 overflow-hidden"
                             >
-                                <img
-                                    src={img.image}
-                                    alt={img.title}
-                                    class="w-full h-full object-cover"
+                                <button
+                                    id="decrease-qty"
+                                    class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600 font-bold text-lg"
+                                    aria-label="Disminuir cantidad"
+                                >
+                                    -
+                                </button>
+                                <input
+                                    type="number"
+                                    id="qty-input"
+                                    value="1"
+                                    min="1"
+                                    class="w-12 h-10 text-center border-x border-gray-300 text-gray-900 font-medium focus:outline-none appearance-none m-0 p-0"
                                 />
-                            </button>
+                                <button
+                                    id="increase-qty"
+                                    class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600 font-bold text-lg"
+                                    aria-label="Aumentar cantidad"
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            id="add-to-cart-btn"
+                            data-slug={slug}
+                            class="w-full sm:flex-1 px-8 py-[11px] bg-[#FF8351] text-white hover:bg-[#e6744a] transition-all duration-300 font-bold text-sm uppercase tracking-wide shadow-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                            <span
+                                id="btn-content"
+                                class="flex items-center gap-2"
+                            >
+                                <ShoppingCart class="w-5 h-5" />
+                                <span>Agregar a carrito de cotización</span>
+                            </span>
+                            <span id="btn-spinner" class="hidden">
+                                <svg
+                                    class="animate-spin h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                            </span>
+                            <span
+                                id="btn-success"
+                                class="hidden flex items-center gap-2"
+                            >
+                                <Check class="w-5 h-5" />
+                                <span>Añadido!</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Sección de Especificaciones con tabla */}
+            <div
+                class="mb-12 animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-300"
+            >
+                <h2 class="mb-6 text-4xl font-light font-outfit">
+                    Información técnica
+                </h2>
+                <div class="space-y-4 mb-12">
+                    {
+                        technicalDescription.map((paragraph) => (
+                            <p class="text-gray-700 leading-relaxed">
+                                {paragraph}
+                            </p>
                         ))
                     }
                 </div>
+            </div>
 
-                {/* Selector de Cantidad y Botón de Cotización */}
-                <div class="flex flex-col sm:flex-row items-center gap-6 mb-8">
-                    <div class="flex items-center gap-4 w-full sm:w-auto">
-                        <div
-                            class="flex items-center border border-gray-300 overflow-hidden"
-                        >
-                            <button
-                                id="decrease-qty"
-                                class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600 font-bold text-lg"
-                                aria-label="Disminuir cantidad"
-                            >
-                                -
-                            </button>
-                            <input
-                                type="number"
-                                id="qty-input"
-                                value="1"
-                                min="1"
-                                class="w-12 h-10 text-center border-x border-gray-300 text-gray-900 font-medium focus:outline-none appearance-none m-0 p-0"
-                            />
-                            <button
-                                id="increase-qty"
-                                class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600 font-bold text-lg"
-                                aria-label="Aumentar cantidad"
-                            >
-                                +
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        id="add-to-cart-btn"
-                        data-slug={slug}
-                        class="w-full sm:flex-1 px-8 py-[11px] bg-[#FF8351] text-white hover:bg-[#e6744a] transition-all duration-300 font-bold text-sm uppercase tracking-wide shadow-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                    >
-                        <span id="btn-content" class="flex items-center gap-2">
-                            <ShoppingCart class="w-5 h-5" />
-                            <span>Agregar a carrito de cotización</span>
-                        </span>
-                        <span id="btn-spinner" class="hidden">
-                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </span>
-                        <span id="btn-success" class="hidden flex items-center gap-2">
-                            <Check class="w-5 h-5" />
-                            <span>Añadido!</span>
-                        </span>
-                    </button>
+            {/* Sección de Información técnica */}
+            <div
+                class="mb-12 max-w-xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-500"
+            >
+                <h2 class="mb-6 max-w-xl">Especificaciones</h2>
+                <div class="border-t border-gray-200">
+                    {
+                        specifications.map((spec) => (
+                            <div class="grid grid-cols-2 py-4 border-b border-gray-200">
+                                <div class="text-gray-600">{spec.label}</div>
+                                <div class="text-gray-900 text-right">
+                                    {spec.value}
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+            <div
+                class="mb-8 max-w-7xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-700"
+            >
+                {/* Descargas */}
+                <div class="space-y-6">
+                    {
+                        downloads.map((download) => (
+                            <div>
+                                <p class="text-sm font-bold text-zinc-900 mb-2 uppercase tracking-wide">
+                                    {download.title}
+                                </p>
+                                <a
+                                    href={download.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="w-full sm:w-[320px] px-6 py-3 border border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-sm uppercase tracking-widest group"
+                                >
+                                    <Download class="w-4 h-4 group-hover:animate-bounce" />
+                                    Descargar PDF
+                                </a>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         </div>
-
-        {/* Sección de Especificaciones con tabla */}
-        <div class="mb-12 animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-300">
-            <h2 class="mb-6 text-4xl font-light font-outfit">Información técnica</h2>
-            <div class="space-y-4 mb-12">
-                {
-                    technicalDescription.map((paragraph) => (
-                        <p class="text-gray-700 leading-relaxed">{paragraph}</p>
-                    ))
-                }
-            </div>
-        </div>
-
-        {/* Sección de Información técnica */}
-        <div class="mb-12 max-w-xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-500">
-            <h2 class="mb-6 max-w-xl">Especificaciones</h2>
-            <div class="border-t border-gray-200">
-                {
-                    specifications.map((spec) => (
-                        <div class="grid grid-cols-2 py-4 border-b border-gray-200">
-                            <div class="text-gray-600">{spec.label}</div>
-                            <div class="text-gray-900 text-right">
-                                {spec.value}
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
-        <div class="mb-8 max-w-7xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-700">
-            {/* Descargas */}
-            <div class="space-y-6">
-                {
-                    downloads.map((download) => (
-                        <div>
-                            <p class="text-sm font-bold text-zinc-900 mb-2 uppercase tracking-wide">
-                                {download.title}
-                            </p>
-                            <a
-                                href={download.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="w-full sm:w-[320px] px-6 py-3 border border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-sm uppercase tracking-widest group"
-                            >
-                                <Download class="w-4 h-4 group-hover:animate-bounce" />
-                                Descargar PDF
-                            </a>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
     </div>
-</section>
 
-<script>
-    const mainImage = document.getElementById("main-image") as HTMLImageElement;
-    const galleryTitle = document.getElementById("gallery-title");
-    const thumbs = document.querySelectorAll(".gallery-thumb");
-    const prevBtn = document.getElementById("prev-btn");
-    const nextBtn = document.getElementById("next-btn");
+    <script>
+        const mainImage = document.getElementById(
+            "main-image",
+        ) as HTMLImageElement;
+        const galleryTitle = document.getElementById("gallery-title");
+        const thumbs = document.querySelectorAll(".gallery-thumb");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
 
-    // Quantity Selector Logic
-    const decreaseBtn = document.getElementById("decrease-qty");
-    const increaseBtn = document.getElementById("increase-qty");
-    const qtyInput = document.getElementById("qty-input") as HTMLInputElement;
+        // Quantity Selector Logic
+        const decreaseBtn = document.getElementById("decrease-qty");
+        const increaseBtn = document.getElementById("increase-qty");
+        const qtyInput = document.getElementById(
+            "qty-input",
+        ) as HTMLInputElement;
 
-    if (decreaseBtn && increaseBtn && qtyInput) {
-        decreaseBtn.addEventListener("click", () => {
-            const currentVal = parseInt(qtyInput.value) || 1;
-            if (currentVal > 1) {
-                qtyInput.value = (currentVal - 1).toString();
+        if (decreaseBtn && increaseBtn && qtyInput) {
+            decreaseBtn.addEventListener("click", () => {
+                const currentVal = parseInt(qtyInput.value) || 1;
+                if (currentVal > 1) {
+                    qtyInput.value = (currentVal - 1).toString();
+                }
+            });
+
+            increaseBtn.addEventListener("click", () => {
+                const currentVal = parseInt(qtyInput.value) || 0;
+                qtyInput.value = (currentVal + 1).toString();
+            });
+
+            // Validate manual input
+            qtyInput.addEventListener("change", () => {
+                let val = parseInt(qtyInput.value);
+                if (isNaN(val) || val < 1) {
+                    qtyInput.value = "1";
+                }
+            });
+        }
+
+        let currentIndex = 0;
+        const totalImages = thumbs.length;
+
+        function updateGallery(index: number) {
+            const thumb = thumbs[index] as HTMLElement;
+            const newImage = thumb.getAttribute("data-image");
+            const newTitle = thumb.getAttribute("data-title");
+
+            if (mainImage && newImage) {
+                mainImage.style.opacity = "0";
+                setTimeout(() => {
+                    mainImage.src = newImage;
+                    mainImage.style.opacity = "1";
+                }, 150);
             }
-        });
 
-        increaseBtn.addEventListener("click", () => {
-            const currentVal = parseInt(qtyInput.value) || 0;
-            qtyInput.value = (currentVal + 1).toString();
-        });
-
-        // Validate manual input
-        qtyInput.addEventListener("change", () => {
-            let val = parseInt(qtyInput.value);
-            if (isNaN(val) || val < 1) {
-                qtyInput.value = "1";
+            if (galleryTitle && newTitle) {
+                galleryTitle.textContent = newTitle;
             }
+
+            thumbs.forEach((t) => {
+                t.classList.remove("border-[#FF8351]", "opacity-100");
+                t.classList.add("border-transparent", "opacity-50");
+            });
+            thumb.classList.remove("border-transparent", "opacity-50");
+            thumb.classList.add("border-[#FF8351]", "opacity-100");
+
+            currentIndex = index;
+        }
+
+        thumbs.forEach((thumb, index) => {
+            thumb.addEventListener("click", () => {
+                updateGallery(index);
+            });
         });
-    }
 
-    let currentIndex = 0;
-    const totalImages = thumbs.length;
+        prevBtn?.addEventListener("click", () => {
+            const newIndex = (currentIndex - 1 + totalImages) % totalImages;
+            updateGallery(newIndex);
+        });
 
-    function updateGallery(index: number) {
-        const thumb = thumbs[index] as HTMLElement;
-        const newImage = thumb.getAttribute("data-image");
-        const newTitle = thumb.getAttribute("data-title");
+        nextBtn?.addEventListener("click", () => {
+            const newIndex = (currentIndex + 1) % totalImages;
+            updateGallery(newIndex);
+        });
 
-        if (mainImage && newImage) {
-            mainImage.style.opacity = "0";
+        // Add to Cart Logic
+        const addToCartBtn = document.getElementById(
+            "add-to-cart-btn",
+        ) as HTMLButtonElement;
+        const btnContent = document.getElementById("btn-content");
+        const btnSpinner = document.getElementById("btn-spinner");
+        const btnSuccess = document.getElementById("btn-success");
+
+        addToCartBtn?.addEventListener("click", () => {
+            if (!btnContent || !btnSpinner || !btnSuccess) return;
+
+            // Loading state
+            addToCartBtn.disabled = true;
+            btnContent.classList.add("hidden");
+            btnSpinner.classList.remove("hidden");
+
+            // Simulate network request
             setTimeout(() => {
-                mainImage.src = newImage;
-                mainImage.style.opacity = "1";
-            }, 150);
-        }
+                // Get current quantity
+                const qtyInput = document.getElementById(
+                    "qty-input",
+                ) as HTMLInputElement;
+                const quantity = parseInt(qtyInput?.value || "1");
+                const slug = addToCartBtn.dataset.slug;
 
-        if (galleryTitle && newTitle) {
-            galleryTitle.textContent = newTitle;
-        }
+                if (slug) {
+                    // Get existing cart
+                    const cart = JSON.parse(
+                        localStorage.getItem("opplux_cart") || "[]",
+                    );
 
-        thumbs.forEach((t) => {
-            t.classList.remove("border-[#FF8351]", "opacity-100");
-            t.classList.add("border-transparent", "opacity-50");
-        });
-        thumb.classList.remove("border-transparent", "opacity-50");
-        thumb.classList.add("border-[#FF8351]", "opacity-100");
+                    // Check if product exists
+                    const existingItemIndex = cart.findIndex(
+                        (item: any) => item.slug === slug,
+                    );
 
-        currentIndex = index;
-    }
+                    if (existingItemIndex > -1) {
+                        // Update quantity
+                        cart[existingItemIndex].quantity += quantity;
+                    } else {
+                        // Add new item
+                        cart.push({ slug, quantity });
+                    }
 
-    thumbs.forEach((thumb, index) => {
-        thumb.addEventListener("click", () => {
-            updateGallery(index);
-        });
-    });
-
-    prevBtn?.addEventListener("click", () => {
-        const newIndex = (currentIndex - 1 + totalImages) % totalImages;
-        updateGallery(newIndex);
-    });
-
-    nextBtn?.addEventListener("click", () => {
-        const newIndex = (currentIndex + 1) % totalImages;
-        updateGallery(newIndex);
-    });
-
-    // Add to Cart Logic
-    const addToCartBtn = document.getElementById('add-to-cart-btn') as HTMLButtonElement;
-    const btnContent = document.getElementById('btn-content');
-    const btnSpinner = document.getElementById('btn-spinner');
-    const btnSuccess = document.getElementById('btn-success');
-
-    addToCartBtn?.addEventListener('click', () => {
-        if (!btnContent || !btnSpinner || !btnSuccess) return;
-
-        // Loading state
-        addToCartBtn.disabled = true;
-        btnContent.classList.add('hidden');
-        btnSpinner.classList.remove('hidden');
-
-        // Simulate network request
-        setTimeout(() => {
-            // Get current quantity
-            const qtyInput = document.getElementById("qty-input") as HTMLInputElement;
-            const quantity = parseInt(qtyInput?.value || "1");
-            const slug = addToCartBtn.dataset.slug;
-
-            if (slug) {
-                // Get existing cart
-                const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
-                
-                // Check if product exists
-                const existingItemIndex = cart.findIndex((item: any) => item.slug === slug);
-
-                if (existingItemIndex > -1) {
-                    // Update quantity
-                    cart[existingItemIndex].quantity += quantity;
-                } else {
-                    // Add new item
-                    cart.push({ slug, quantity });
+                    // Save back to localStorage
+                    localStorage.setItem("opplux_cart", JSON.stringify(cart));
                 }
 
-                // Save back to localStorage
-                localStorage.setItem('opplux_cart', JSON.stringify(cart));
-            }
+                // Success state
+                btnSpinner.classList.add("hidden");
+                btnSuccess.classList.remove("hidden");
 
-            // Success state
-            btnSpinner.classList.add('hidden');
-            btnSuccess.classList.remove('hidden');
-            
-            // Change button color to green
-            addToCartBtn.classList.remove('bg-[#FF8351]', 'hover:bg-[#e6744a]');
-            addToCartBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                // Change button color to green
+                addToCartBtn.classList.remove(
+                    "bg-[#FF8351]",
+                    "hover:bg-[#e6744a]",
+                );
+                addToCartBtn.classList.add(
+                    "bg-green-600",
+                    "hover:bg-green-700",
+                );
 
-            // Dispatch event for Header
-            window.dispatchEvent(new CustomEvent('add-to-cart'));
+                // Dispatch event for Header
+                window.dispatchEvent(new CustomEvent("add-to-cart"));
 
-            // Reset after delay
-            setTimeout(() => {
-                btnSuccess.classList.add('hidden');
-                btnContent.classList.remove('hidden');
-                addToCartBtn.disabled = false;
-                
-                // Revert button color
-                addToCartBtn.classList.add('bg-[#FF8351]', 'hover:bg-[#e6744a]');
-                addToCartBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-            }, 2000);
-        }, 800);
-    });
+                // Reset after delay
+                setTimeout(() => {
+                    btnSuccess.classList.add("hidden");
+                    btnContent.classList.remove("hidden");
+                    addToCartBtn.disabled = false;
 
-    // Trigger animations on load
-    window.addEventListener('load', () => {
-        // Slide animations
-        document.querySelector('.animate-slide-right')?.classList.remove('opacity-0', '-translate-x-10');
-        document.querySelector('.animate-slide-left')?.classList.remove('opacity-0', 'translate-x-10');
-        
-        // Fade up animations
-        document.querySelectorAll('.animate-fade-up').forEach(el => {
-            el.classList.remove('opacity-0', 'translate-y-10');
+                    // Revert button color
+                    addToCartBtn.classList.add(
+                        "bg-[#FF8351]",
+                        "hover:bg-[#e6744a]",
+                    );
+                    addToCartBtn.classList.remove(
+                        "bg-green-600",
+                        "hover:bg-green-700",
+                    );
+                }, 2000);
+            }, 800);
         });
-    });
-</script>
 
-<style>
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        // Trigger animations on load
+        window.addEventListener("load", () => {
+            // Slide animations
+            document
+                .querySelector(".animate-slide-right")
+                ?.classList.remove("opacity-0", "-translate-x-10");
+            document
+                .querySelector(".animate-slide-left")
+                ?.classList.remove("opacity-0", "translate-x-10");
 
-    /* Hide scrollbar for Firefox */
-    input[type="number"] {
-        -moz-appearance: textfield;
-    }
-</style>
+            // Fade up animations
+            document.querySelectorAll(".animate-fade-up").forEach((el) => {
+                el.classList.remove("opacity-0", "translate-y-10");
+            });
+        });
+    </script>
+
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide scrollbar for Firefox */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</section>

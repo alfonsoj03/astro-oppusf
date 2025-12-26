@@ -8,20 +8,17 @@ import Projects from "../components/Projects.astro";
 import ScalableFeatures from "../components/ScalableFeatures.astro";
 import TailoredSolutions from "../components/TailoredSolutions.astro";
 import Categories from "../components/Categories.astro";
-import QuoteCart from "../components/QuoteCart.astro";
-import AboutUs from "../components/AboutUs.astro";
 ---
 
 <Layout>
 	<Hero />
 	<Marquee client:idle />
-	<Features />
-	<Solutions />
 	<Projects />
+	<Solutions />
+	<Features />
 	{/*<StarProducts />*/}
 	<ScalableFeatures />
 	<TailoredSolutions />
 	{/*<TrustSection />*/}
-	{/*Our Products */}
 	<Categories />
 </Layout>

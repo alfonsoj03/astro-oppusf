@@ -1,42 +1,72 @@
 ---
 import { ArrowRight, MapPin } from "lucide-astro";
+import { supabase } from "../lib/supabase";
+import placeholderImg from "../assets/cedis-1.png";
 
-const projects = [
-    {
-        id: 1,
-        category: "Alumbrado Público",
-        title: "Modernización Avenida Reforma: Eficiencia y Seguridad Vial",
-        description:
-            "Implementación de sistema inteligente de telegestión punto a punto, logrando un ahorro energético del 60% y mejorando la seguridad vial nocturna con una temperatura de color óptima.",
-        location: "Ciudad de México",
-        image: "https://images.unsplash.com/photo-1600206085398-f6ede93b06f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaXR5JTIwc3RyZWV0JTIwbGlnaHRzJTIwbmlnaHR8ZW58MXx8fHwxNzY0NDQzNjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-        id: 2,
-        category: "Iluminación Arquitectónica",
-        title: "Torre Corporativa Zenith: Identidad Nocturna Dinámica",
-        description:
-            "Diseño lumínico integral para fachada e interiores, utilizando tecnología RGBW para crear escenas dinámicas que resaltan la arquitectura moderna y reducen la contaminación lumínica.",
-        location: "Monterrey, NL",
-        image: "https://images.unsplash.com/photo-1762506168883-0f829364d598?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwYnVpbGRpbmclMjBsaWdodGluZyUyMG5pZ2h0JTIwbW9kZXJufGVufDF8fHx8MTc2NDQ0MzYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-        id: 3,
-        category: "Iluminación Deportiva",
-        title: "Estadio Olímpico: Experiencia Visual de Clase Mundial",
-        description:
-            "Iluminación deportiva de alta potencia cumpliendo estándares internacionales para transmisión 4K, garantizando uniformidad y confort visual superior para jugadores y espectadores.",
-        location: "Guadalajara, Jal",
-        image: "https://images.unsplash.com/photo-1697562160779-fed83c21a2cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFkaXVtJTIwZmxvb2RsaWdodHMlMjBuaWdodCUyMG1hdGNofGVufDF8fHx8MTc2NDQ0MzYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-];
+// Import all images from assets directory
+const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/assets/*.{png,jpg,jpeg,webp}",
+    { eager: true },
+);
+
+// Fetch latest 3 success cases from Supabase
+const { data: successCasesData, error } = await supabase
+    .from("success_cases")
+    .select(
+        `
+        id,
+        title,
+        description,
+        location,
+        slug,
+        main_image,
+        project_types (
+            name
+        )
+    `,
+    )
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+if (error) {
+    console.error("Error fetching projects for home:", error);
+}
+
+// Transform data to match component expectations
+const projects = (successCasesData || []).map((sc) => {
+    // Try to resolve gallery image from assets
+    let resourceSrc = sc.main_image;
+    if (resourceSrc && !resourceSrc.startsWith("http")) {
+        const imagePath = `/src/assets/${resourceSrc}.png`;
+        const imageModule = images[imagePath];
+
+        if (imageModule && imageModule.default) {
+            resourceSrc = imageModule.default.src;
+        } else {
+            // Fallback if not found
+            resourceSrc = placeholderImg.src;
+        }
+    } else if (!resourceSrc) {
+        resourceSrc = placeholderImg.src;
+    }
+
+    return {
+        id: sc.id,
+        category: (sc.project_types as any)?.name || "Sin categoría",
+        title: sc.title,
+        description: sc.description,
+        location: sc.location,
+        image: resourceSrc,
+        slug: sc.slug,
+    };
+});
 ---
 
 <section class="py-12 lg:py-24 bg-white text-zinc-900 relative overflow-hidden">
     <div class="container mx-auto px-6 relative z-10">
         {/* Header */}
         <div
-            class="flex flex-col md:flex-row md:items-end justify-between gap-8 md:mb-10 mb-16 lg:mb-16"
+            class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-10 lg:mb-16"
         >
             <div class="space-y-4">
                 <span
@@ -51,7 +81,8 @@ const projects = [
                 </h2>
             </div>
 
-            <button
+            <a
+                href="/casos-de-exito"
                 class="hidden md:flex items-center gap-2 text-zinc-600 hover:text-[#FF8351] transition-colors font-medium group"
             >
                 <span>Ver portafolio completo</span>
@@ -59,14 +90,14 @@ const projects = [
                     size={16}
                     class="group-hover:translate-x-1 transition-transform"
                 />
-            </button>
+            </a>
         </div>
 
         {/* Grid */}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
             {
                 projects.map((project, index) => (
-                    <div 
+                    <div
                         class="project-card group flex flex-col opacity-0 translate-y-8 transition-all duration-700 ease-out md:bg-zinc-50 lg:bg-transparent md:border md:border-zinc-200 lg:border-none md:hover:border-zinc-300 md:transition-colors md:duration-300"
                         style={`transition-delay: ${index * 100}ms`}
                     >
@@ -107,10 +138,13 @@ const projects = [
                                     <span>{project.location}</span>
                                 </div>
 
-                                <button class="md:bg-transparent lg:bg-[#FF8351] bg-[#FF8351] hover:bg-[#e06b3d] md:hover:bg-transparent md:hover:text-[#e06b3d] md:text-[#FF8351] lg:text-white text-white text-sm font-bold px-6 py-2.5 md:px-0 md:py-0 rounded-full transition-colors flex items-center gap-2 md:w-full md:justify-start lg:w-auto lg:justify-center">
+                                <a
+                                    href={`/casos-de-exito/${project.slug}`}
+                                    class="md:bg-transparent lg:bg-[#FF8351] bg-[#FF8351] hover:bg-[#e06b3d] md:hover:bg-transparent md:hover:text-[#e06b3d] md:text-[#FF8351] lg:text-white text-white text-sm font-bold px-3 py-1 lg:px-3 lg:py-1 md:px-0 md:py-0 rounded-full transition-colors flex items-center gap-2 md:w-full md:justify-start lg:w-auto lg:justify-center"
+                                >
                                     Ver detalles
                                     <ArrowRight size={14} />
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -120,11 +154,12 @@ const projects = [
 
         {/* Mobile "View All" Button */}
         <div class="mt-12 flex md:hidden justify-center">
-            <button
+            <a
+                href="/casos-de-exito"
                 class="text-zinc-900 font-bold border-b-2 border-[#FF8351] pb-1"
             >
                 Ver todos los proyectos
-            </button>
+            </a>
         </div>
     </div>
 </section>
@@ -132,20 +167,20 @@ const projects = [
 <script>
     const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: "0px",
+        threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.classList.remove('opacity-0', 'translate-y-8');
+                entry.target.classList.remove("opacity-0", "translate-y-8");
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.project-card').forEach(card => {
+    document.querySelectorAll(".project-card").forEach((card) => {
         observer.observe(card);
     });
 </script>

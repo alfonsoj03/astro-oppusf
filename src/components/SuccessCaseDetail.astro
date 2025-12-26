@@ -1,0 +1,292 @@
+---
+import { ArrowRight } from "lucide-astro";
+import DynamicGallery from "./DynamicGallery.astro";
+
+interface Props {
+  title: string;
+  slug: string;
+  description: string;
+  location: string;
+  projectType: string;
+  imgOrientation: string;
+  products: {
+    name: string;
+    quantity: number;
+    slug: string;
+    ledPower: string;
+    mainImage: string;
+    efficiency: string;
+    height: string;
+    warranty: string;
+  }[];
+  content: { title: string; resource: string; contentType: string }[];
+}
+
+const {
+  title,
+  slug,
+  description,
+  location,
+  projectType,
+  imgOrientation,
+  products,
+  content,
+} = Astro.props;
+
+const totalQuantity = products.reduce(
+  (acc, product) => acc + product.quantity,
+  0,
+);
+
+const productsWithSpecs = products.map((product) => ({
+  ...product,
+  specs: [
+    product.ledPower ? `${product.ledPower}` : "",
+    product.efficiency ? `${product.efficiency}` : "",
+  ].filter(Boolean),
+}));
+---
+
+<section class="bg-white pt-36 pb-24 overflow-hidden">
+  {/* Gallery Section */}
+  <div class="container mx-auto px-6">
+    <div class="max-w-7xl mx-auto">
+      {/* Title */}
+      <div class="mb-14 reveal-on-scroll" data-animation="fade-up">
+        <p class="text-[#FF8351] text-xs tracking-[0.2em] uppercase mb-4">
+          CASO DE ÉXITO
+        </p>
+        <h2
+          class="text-7xl max-w-3xl font-semibold tracking-tighter leading-[0.9]"
+        >
+          {title}
+        </h2>
+      </div>
+
+      {/* Dynamic Gallery Component */}
+      <div class="mb-14">
+        <DynamicGallery
+          content={content}
+          isVertical={imgOrientation === "vertical"}
+        />
+      </div>
+
+      {/* Details Section - White background with stats and description */}
+      <div class="mb-12">
+        {/* Two Column Layout */}
+        <div class="grid md:grid-cols-2 gap-16 lg:gap-24">
+          {/* Right Column - Description (Now first in HTML for mobile) */}
+          <div
+            class="space-y-6 text-zinc-600 order-first lg:order-last leading-relaxed reveal-on-scroll"
+            data-animation="fade-left"
+          >
+            <p>
+              {description}
+            </p>
+            <p>
+              Nuestra solución integró 450 luminarias Highbay de alta eficiencia
+              para las áreas de almacenamiento, 1,200 paneles LED para oficinas
+              y áreas administrativas, y 85 luminarias solares para el
+              estacionamiento exterior, eliminando completamente la necesidad de
+              cableado en esa zona.
+            </p>
+            <p>
+              El resultado fue extraordinario: reducción del 68% en el consumo
+              energético, mejora significativa en la seguridad laboral gracias a
+              una iluminación uniforme y de calidad, y prácticamente cero costos
+              de mantenimiento durante el primer año de operación.
+            </p>
+            <p class="text-zinc-950 italic">
+              "La inversión se pagó por sí misma más rápido de lo esperado. La
+              calidad de la iluminación mejoró notablemente la productividad de
+              nuestros equipos y la satisfacción del personal."
+            </p>
+            <p class="text-sm text-zinc-500">
+              — Carlos Mendoza, Director de Operaciones, Tech Corp International
+            </p>
+          </div>
+
+          {/* Left Column - Stats (Now second in HTML) */}
+          <div
+            class="space-y-4 reveal-on-scroll"
+            data-animation="fade-right"
+            style="transition-delay: 200ms"
+          >
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Cliente</p>
+              <p class="text-zinc-950 text-xl">Tech Corp International</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Ubicación</p>
+              <p class="text-zinc-950 text-xl">{location}</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Tipo de proyecto</p>
+              <p class="text-zinc-950 text-xl">{projectType}</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Área total</p>
+              <p class="text-zinc-950 text-xl">45,000 m²</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Luminarias instaladas</p>
+              <p class="text-zinc-950 text-xl">{totalQuantity} unidades</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">Ahorro energético</p>
+              <p class="text-[#FF8351] text-xl">68% mensual</p>
+            </div>
+
+            <div class="pb-2 border-b border-zinc-200">
+              <p class="text-zinc-500 text-sm mb-2">ROI estimado</p>
+              <p class="text-[#FF8351] text-xl">24 meses</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Products Used Section */}
+  <div class="py-12 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="max-w-7xl mx-auto">
+        {/* Title */}
+        <div class="mb-12">
+          <h3 class="text-3xl md:text-4xl text-zinc-950 mb-2">
+            Productos <span class="text-[#FF8351]">utilizados</span>
+          </h3>
+          <div class="h-1 w-16 bg-[#FF8351]"></div>
+        </div>
+
+        {/* Products Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {
+            productsWithSpecs && productsWithSpecs.length > 0 ? (
+              productsWithSpecs.map((product) => (
+                <div
+                  class="product-card group relative bg-white cursor-pointer opacity-0 translate-y-8 transition-all duration-700 ease-out reveal-on-scroll"
+                  data-animation="fade-up"
+                >
+                  {/* Product Image Container */}
+                  <div class="relative aspect-square bg-zinc-50 flex items-end justify-center overflow-hidden">
+                    {/* Technical Specs Badges - Top Left */}
+                    <div class="absolute inset-0 pointer-events-none z-10">
+                      {/* Key specs at top left */}
+                      <div class="absolute top-4 left-4 flex gap-2">
+                        <div class="bg-black/80 backdrop-blur-sm px-3 py-1.5 border-l-2 border-[#FF8351]">
+                          <span class="text-white text-xs font-bold">
+                            {product.specs[0]}
+                          </span>
+                        </div>
+                        <div class="bg-black/80 backdrop-blur-sm px-3 py-1.5 border-l-2 border-[#FF8351]">
+                          <span class="text-white text-xs font-bold">
+                            {product.specs[1]}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <img
+                      src={product.mainImage}
+                      alt={product.name}
+                      class="w-[180%] h-[180%] object-contain object-bottom drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
+                    />
+
+                    {/* Hover Overlay - Clickable Area */}
+                    <a
+                      href={`/productos/${product.slug}`}
+                      class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white z-10"
+                    >
+                      <div class="flex flex-wrap gap-2 justify-center mb-5">
+                        {product.specs.map((spec, index) => (
+                          <span
+                            class={`text-[10px] font-bold bg-white/20 px-2.5 py-1 ${index === 3 ? "xl:hidden 2xl:inline-block" : ""}`}
+                          >
+                            {spec}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div class="xl:hidden 2xl:inline-flex bg-[#FF8351] hover:bg-[#ff6a31] text-white px-8 py-3 font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 transition-all">
+                        Ver detalles
+                        <ArrowRight class="w-4 h-4" />
+                      </div>
+
+                      {/* Button for 1280px - 1536px range */}
+                      <div class="hidden xl:inline-flex 2xl:hidden items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-[10px] font-bold uppercase tracking-wider group/btn border-b border-transparent hover:border-[#FF8351]">
+                        Ver Detalles
+                        <ArrowRight class="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                      </div>
+                    </a>
+                  </div>
+
+                  {/* Product Info */}
+                  <div class="pt-2 flex items-end justify-between">
+                    <p class="text-[11px] text-zinc-900 uppercase tracking-wide">
+                      {product.name}
+                    </p>
+                    <p class="text-[9px] text-zinc-400 uppercase tracking-wider">
+                      {product.ledPower}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p class="text-zinc-500">
+                No hay productos asociados a este caso de éxito.
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reveal-on-scroll {
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal-on-scroll[data-animation="fade-up"] {
+    transform: translateY(20px);
+  }
+
+  .reveal-on-scroll[data-animation="fade-left"] {
+    transform: translateX(-20px);
+  }
+
+  .reveal-on-scroll[data-animation="fade-right"] {
+    transform: translateX(20px);
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+</style>
+
+<script>
+  function initAnimations() {
+    const elements = document.querySelectorAll(".reveal-on-scroll");
+    elements.forEach((el) => {
+      // Pequeño delay para asegurar que el estado inicial se aplique antes de la transición
+      setTimeout(() => {
+        el.classList.add("is-visible");
+      }, 100);
+    });
+  }
+
+  // Initialize on load and on view transitions
+  initAnimations();
+  document.addEventListener("astro:after-swap", () => {
+    initAnimations();
+  });
+</script>

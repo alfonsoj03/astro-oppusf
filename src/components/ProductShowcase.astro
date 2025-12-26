@@ -8,9 +8,9 @@ import { supabase } from "../lib/supabase";
 
 // Fetch categories
 const { data: dbCategories, error: categoriesError } = await supabase
-    .from('product_categories')
-    .select('*')
-    .order('id');
+    .from("product_categories")
+    .select("*")
+    .order("id");
 
 if (categoriesError) {
     console.error("Error fetching categories:", categoriesError);
@@ -18,9 +18,9 @@ if (categoriesError) {
 
 // Fetch products
 const { data: dbProducts, error: productsError } = await supabase
-    .from('products')
-    .select('*')
-    .order('id');
+    .from("products")
+    .select("*")
+    .order("id");
 
 if (productsError) {
     console.error("Error fetching products:", productsError);
@@ -28,59 +28,74 @@ if (productsError) {
 
 // Fetch product specs
 const { data: dbSpecs, error: specsError } = await supabase
-    .from('product_specs')
-    .select('*');
+    .from("product_specs")
+    .select("*");
 
 if (specsError) {
     console.error("Error fetching specs:", specsError);
 }
 
 // Process data for the UI
-const categories = (dbCategories || []).map(cat => {
-    const count = (dbProducts || []).filter(p => p.category_id === cat.id).length;
+const categories = (dbCategories || []).map((cat) => {
+    const count = (dbProducts || []).filter(
+        (p) => p.category_id === cat.id,
+    ).length;
     return {
         id: cat.id,
         name: cat.name,
-        count: count
+        count: count,
     };
 });
 
-const productsByCategory = (dbCategories || []).map(cat => {
-    const catProducts = (dbProducts || []).filter(p => p.category_id === cat.id);
-    
-    return {
-        category: cat.name,
-        products: catProducts.map(p => {
-            // Find specific specs for this product
-            const productSpecs = (dbSpecs || []).filter(s => s.product_id === p.id);
-            
-            // Handle variations in casing for Rec. height
-            const recHeight = productSpecs.find(s => 
-                s.label === 'Rec. height' || s.label === 'Rec. Height'
-            )?.value;
-            
-            const weight = productSpecs.find(s => s.label === 'Net/Total Weight')?.value;
+const productsByCategory = (dbCategories || [])
+    .map((cat) => {
+        const catProducts = (dbProducts || []).filter(
+            (p) => p.category_id === cat.id,
+        );
 
-            return {
-                id: p.id,
-                slug: p.slug, // Add slug
-                name: p.name,
-                comment: p.efficiency ? `${p.efficiency}` : "Alta Eficiencia", // Use efficiency as comment
-                image: { src: p.main_image }, // Assuming main_image is a URL or path string
-                watts: p.led_power,
-                lumens: p.max_luminous_flux,
-                description: p.description_short || p.description_long || "",
-                // Construct specs from available data
-                specs: [
-                    p.led_power ? `${p.led_power}` : "",
-                    p.efficiency ? `${p.efficiency}` : "",
-                    recHeight || "", // Rec. height
-                    weight || ""    // Net/Total Weight
-                ].filter(Boolean)
-            };
-        })
-    };
-}).filter(group => group.products.length > 0); // Only show categories with products
+        return {
+            id: cat.id,
+            category: cat.name,
+            products: catProducts.map((p) => {
+                // Find specific specs for this product
+                const productSpecs = (dbSpecs || []).filter(
+                    (s) => s.product_id === p.id,
+                );
+
+                // Handle variations in casing for Rec. height
+                const recHeight = productSpecs.find(
+                    (s) =>
+                        s.label === "Rec. height" || s.label === "Rec. Height",
+                )?.value;
+
+                const weight = productSpecs.find(
+                    (s) => s.label === "Net/Total Weight",
+                )?.value;
+
+                return {
+                    id: p.id,
+                    slug: p.slug, // Add slug
+                    name: p.name,
+                    comment: p.efficiency
+                        ? `${p.efficiency}`
+                        : "Alta Eficiencia", // Use efficiency as comment
+                    image: { src: `/src/assets/${p.main_image}.png` }, // Assuming main_image is a URL or path string
+                    watts: p.led_power,
+                    lumens: p.max_luminous_flux,
+                    description:
+                        p.description_short || p.description_long || "",
+                    // Construct specs from available data
+                    specs: [
+                        p.led_power ? `${p.led_power}` : "",
+                        p.efficiency ? `${p.efficiency}` : "",
+                        recHeight || "", // Rec. height
+                        weight || "", // Net/Total Weight
+                    ].filter(Boolean),
+                };
+            }),
+        };
+    })
+    .filter((group) => group.products.length > 0); // Only show categories with products
 ---
 
 <section id="productos" class="bg-white">
@@ -114,9 +129,15 @@ const productsByCategory = (dbCategories || []).map(cat => {
             <div class="flex flex-col xl:flex-row lg:gap-16 md:gap-10 gap-3">
                 {/* Left Sidebar */}
                 <aside class="w-full xl:w-72 flex-shrink-0">
-                    <div class="animate-slide-right opacity-0 -translate-x-5 transition-all duration-700 ease-out">
-                        {/* Header Content - Split layout for < xl, stacked for >= xl */}
-                        <div class="flex flex-col md:flex-row xl:flex-col justify-between items-start gap-8 md:gap-24 md:mb-12 mb-6">
+                    <div
+                        class="animate-slide-right opacity-0 -translate-x-5 transition-all duration-700 ease-out"
+                    >
+                        {
+                            /* Header Content - Split layout for < xl, stacked for >= xl */
+                        }
+                        <div
+                            class="flex flex-col md:flex-row xl:flex-col justify-between items-start gap-8 md:gap-24 md:mb-12 mb-6"
+                        >
                             <div class="max-w-lg">
                                 <h2
                                     class="text-6xl font-extrabold tracking-tight text-black leading-none mb-6"
@@ -127,27 +148,35 @@ const productsByCategory = (dbCategories || []).map(cat => {
                                 </h2>
                                 <div class="h-1 w-16 bg-[#FF8351]"></div>
                             </div>
-                            
+
                             <div class="max-w-md md:mt-4 xl:mt-6">
-                                <p class="text-zinc-500 text-sm leading-relaxed">
-                                    Descubre las últimas soluciones en iluminación
-                                    LED para proyectos comerciales e industriales.
+                                <p
+                                    class="text-zinc-500 text-sm leading-relaxed"
+                                >
+                                    Descubre las últimas soluciones en
+                                    iluminación LED para proyectos comerciales e
+                                    industriales.
                                 </p>
                             </div>
                         </div>
 
                         {/* Categories List - Grid for < xl, Stack for >= xl */}
-                        <div class="hidden md:grid grid-cols-1 md:grid-cols-3 xl:flex xl:flex-col gap-4 xl:gap-1 xl:space-y-1">
+                        <div
+                            class="hidden md:grid grid-cols-1 md:grid-cols-3 xl:flex xl:flex-col gap-4 xl:gap-1 xl:space-y-1"
+                        >
                             {
                                 categories.map((category) => (
-                                    <button class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none">
+                                    <a
+                                        href={`#category-${category.id}`}
+                                        class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none"
+                                    >
                                         <span class="text-base text-zinc-900 group-hover:text-[#FF8351] transition-all">
                                             {category.name}
                                         </span>
                                         <span class="text-black font-bold text-sm">
                                             {category.count}
                                         </span>
-                                    </button>
+                                    </a>
                                 ))
                             }
                         </div>
@@ -163,7 +192,10 @@ const productsByCategory = (dbCategories || []).map(cat => {
                             productsByCategory.map((categoryGroup) => (
                                 <>
                                     {/* Category Card */}
-                                    <div class="product-card group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 opacity-0 translate-y-8 ease-out">
+                                    <div
+                                        id={`category-${categoryGroup.id}`}
+                                        class="product-card group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 opacity-0 translate-y-8 ease-out scroll-mt-32"
+                                    >
                                         <div class="text-center p-8">
                                             <h3 class="text-white font-bold text-3xl tracking-tight leading-tight">
                                                 {categoryGroup.category}
@@ -180,7 +212,7 @@ const productsByCategory = (dbCategories || []).map(cat => {
                                             {/* Product Image Container */}
                                             <div class="relative aspect-square bg-zinc-50 flex items-end justify-center overflow-hidden">
                                                 {/* Technical Specs Badges - Top Left */}
-                                                <div class="absolute inset-0 pointer-events-none">
+                                                <div class="absolute inset-0 pointer-events-none z-10">
                                                     {/* Key specs at top left */}
                                                     <div class="absolute top-4 left-4 flex gap-2">
                                                         <div class="bg-black/80 backdrop-blur-sm px-3 py-1.5 border-l-2 border-[#FF8351]">
@@ -209,7 +241,7 @@ const productsByCategory = (dbCategories || []).map(cat => {
                                                 />
 
                                                 {/* Hover Overlay - Clickable Area */}
-                                                <a 
+                                                <a
                                                     href={`/productos/${product.slug}`}
                                                     class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white z-10"
                                                 >
@@ -220,24 +252,22 @@ const productsByCategory = (dbCategories || []).map(cat => {
                                                     <div class="flex flex-wrap gap-2 justify-center mb-5">
                                                         {product.specs.map(
                                                             (spec, index) => (
-                                                                <span class={`text-[10px] font-bold bg-white/20 px-2.5 py-1 ${index === 3 ? 'xl:hidden 2xl:inline-block' : ''}`}>
+                                                                <span
+                                                                    class={`text-[10px] font-bold bg-white/20 px-2.5 py-1 ${index === 3 ? "xl:hidden 2xl:inline-block" : ""}`}
+                                                                >
                                                                     {spec}
                                                                 </span>
                                                             ),
                                                         )}
                                                     </div>
 
-                                                    <div
-                                                        class="xl:hidden 2xl:inline-flex bg-[#FF8351] hover:bg-[#ff6a31] text-white px-8 py-3 font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 transition-all"
-                                                    >
+                                                    <div class="xl:hidden 2xl:inline-flex bg-[#FF8351] hover:bg-[#ff6a31] text-white px-8 py-3 font-bold text-xs uppercase tracking-widest inline-flex items-center gap-2 transition-all">
                                                         Ver detalles
                                                         <ArrowRight class="w-4 h-4" />
                                                     </div>
 
                                                     {/* Button for 1280px - 1536px range */}
-                                                    <div
-                                                        class="hidden xl:inline-flex 2xl:hidden items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-[10px] font-bold uppercase tracking-wider group/btn border-b border-transparent hover:border-[#FF8351]"
-                                                    >
+                                                    <div class="hidden xl:inline-flex 2xl:hidden items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-[10px] font-bold uppercase tracking-wider group/btn border-b border-transparent hover:border-[#FF8351]">
                                                         Ver Detalles
                                                         <ArrowRight class="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                                                     </div>
@@ -268,27 +298,32 @@ const productsByCategory = (dbCategories || []).map(cat => {
 <script>
     const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: "0px",
+        threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 // Slide Right Animation
-                if (entry.target.classList.contains('animate-slide-right')) {
-                    entry.target.classList.remove('opacity-0', '-translate-x-5');
+                if (entry.target.classList.contains("animate-slide-right")) {
+                    entry.target.classList.remove(
+                        "opacity-0",
+                        "-translate-x-5",
+                    );
                 }
                 // Fade Up Animation
-                if (entry.target.classList.contains('product-card')) {
-                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                if (entry.target.classList.contains("product-card")) {
+                    entry.target.classList.remove("opacity-0", "translate-y-8");
                 }
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.animate-slide-right, .product-card').forEach(el => {
-        observer.observe(el);
-    });
+    document
+        .querySelectorAll(".animate-slide-right, .product-card")
+        .forEach((el) => {
+            observer.observe(el);
+        });
 </script>

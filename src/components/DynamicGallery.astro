@@ -1,0 +1,410 @@
+---
+import { ChevronLeft, ChevronRight, X, Play } from "lucide-astro";
+
+interface Props {
+    content: { title: string; resource: string; contentType: string }[];
+    isVertical?: boolean;
+}
+
+const { content, isVertical = false } = Astro.props;
+
+// Helper to determine if a resource is a video
+const isVideo = (item: { resource: string; contentType: string }) => {
+    return item.contentType === "youtube";
+};
+
+// Helper to get YouTube embed URL
+const getEmbedUrl = (urlString: string) => {
+    try {
+        const url = new URL(urlString);
+        let videoId = "";
+
+        if (url.hostname.includes("youtube.com")) {
+            videoId = url.searchParams.get("v") || "";
+        } else if (url.hostname.includes("youtu.be")) {
+            videoId = url.pathname.slice(1);
+        }
+
+        if (videoId) {
+            // Clean videoId of any potential extra path segments if malformed
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+    } catch (e) {
+        console.error("Error parsing YouTube URL:", urlString);
+    }
+
+    // Fallback for simple string replacement if URL parsing fails or for other formats
+    if (urlString.includes("youtube.com/watch?v=")) {
+        return urlString.split("&")[0].replace("watch?v=", "embed/");
+    } else if (urlString.includes("youtu.be/")) {
+        return urlString
+            .split("?")[0]
+            .replace("youtu.be/", "youtube.com/embed/");
+    }
+    return urlString;
+};
+
+// Pre-process content to assign modal indices and identify videos
+let imageCount = 0;
+const processedContent = content.map((item) => {
+    const isItemVideo = isVideo(item);
+    return {
+        ...item,
+        isItemVideo,
+        modalIndex: isItemVideo ? -1 : imageCount++,
+    };
+});
+
+const modalImages = processedContent.filter((c) => !c.isItemVideo);
+
+// Chunking logic
+const chunks = [];
+let remaining = processedContent.length;
+let currentIndex = 0;
+
+while (remaining > 0) {
+    let chunkSize = 6;
+    if (remaining - chunkSize === 1) {
+        chunkSize = 4; // Avoid leaving 1 orphan, take 4 leaves 3
+    } else if (remaining < 6) {
+        chunkSize = remaining;
+    }
+
+    chunks.push(processedContent.slice(currentIndex, currentIndex + chunkSize));
+    currentIndex += chunkSize;
+    remaining -= chunkSize;
+}
+---
+
+<div class="dynamic-gallery space-y-4">
+    {
+        chunks.map((chunk, chunkIndex) => (
+            <div
+                class={`gallery-grid grid gap-4 ${
+                    chunk.length === 1
+                        ? "grid-cols-1"
+                        : chunk.length === 2
+                          ? "grid-cols-2"
+                          : chunk.length === 3
+                            ? "grid-cols-1 md:grid-cols-3"
+                            : chunk.length === 4
+                              ? isVertical
+                                  ? "grid-cols-2 md:grid-cols-4"
+                                  : "grid-cols-1 md:grid-cols-3"
+                              : chunk.length === 5
+                                ? "grid-cols-1 md:grid-cols-4"
+                                : "grid-cols-2 md:grid-cols-4"
+                }`}
+            >
+                {chunk.map((item, itemIndex) => {
+                    // Calculate global index for unique IDs
+                    const globalIndex = content.indexOf(item);
+
+                    // Determine classes based on layout
+                    // Using aspect-[4/3] as base for consistency unless special layout requires otherwise
+                    let gridClasses =
+                        "relative group overflow-hidden rounded-lg cursor-pointer reveal-on-scroll object-cover";
+                    let style = `transition-delay: ${itemIndex * 50}ms`;
+
+                    if (chunk.length === 1) {
+                        gridClasses += " aspect-video";
+                    } else if (chunk.length === 2) {
+                        gridClasses += " aspect-[4/3]";
+                    } else if (chunk.length === 3) {
+                        if (itemIndex === 0)
+                            gridClasses +=
+                                " md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-auto md:h-full";
+                        else gridClasses += " aspect-[4/3]";
+                    } else if (chunk.length === 4) {
+                        if (isVertical) {
+                            gridClasses += " aspect-[2/3]";
+                        } else {
+                            if (itemIndex === 0)
+                                gridClasses += " md:col-span-3 aspect-[21/9]";
+                            else gridClasses += " aspect-[4/3]";
+                        }
+                    } else if (chunk.length === 5) {
+                        if (itemIndex === 0)
+                            gridClasses +=
+                                " md:col-span-2 md:row-span-2 aspect-square";
+                        else gridClasses += " aspect-square";
+                    } else if (chunk.length === 6) {
+                        // 1 large (2x2), 2 medium (1x2 vertical? no, let's do 1x1), 3 small
+                        // Let's replicate the layout from SuccessCaseDetail:
+                        // Item 0: col-span-2 row-span-2
+                        // Item 5: col-span-4 row-span-1 (wide bottom)
+                        if (itemIndex === 0)
+                            gridClasses +=
+                                " md:col-span-2 md:row-span-2 aspect-square";
+                        else if (itemIndex === 5)
+                            gridClasses += " md:col-span-4 aspect-[4/1]";
+                        else gridClasses += " aspect-square";
+                    }
+
+                    return (
+                        <div
+                            class={gridClasses}
+                            data-animation="fade-up"
+                            style={style}
+                            data-type={item.isItemVideo ? "video" : "image"}
+                            data-src={item.resource}
+                            data-title={item.title}
+                            data-index={item.modalIndex}
+                        >
+                            {item.isItemVideo ? (
+                                <iframe
+                                    src={getEmbedUrl(item.resource)}
+                                    title={item.title}
+                                    class="w-full h-full object-cover"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                />
+                            ) : (
+                                <>
+                                    <img
+                                        src={item.resource}
+                                        alt={item.title}
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 p-3 rounded-full text-white backdrop-blur-sm">
+                                            <span class="sr-only">
+                                                Ver imagen
+                                            </span>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                class="lucide lucide-maximize-2"
+                                            >
+                                                <polyline points="15 3 21 3 21 9" />
+                                                <polyline points="9 21 3 21 3 15" />
+                                                <line
+                                                    x1="21"
+                                                    x2="14"
+                                                    y1="3"
+                                                    y2="10"
+                                                />
+                                                <line
+                                                    x1="3"
+                                                    x2="10"
+                                                    y1="21"
+                                                    y2="14"
+                                                />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        ))
+    }
+</div>
+
+{/* Modal */}
+<div id="gallery-modal" class="fixed inset-0 z-[100] hidden" aria-hidden="true">
+    {/* Backdrop */}
+    <div
+        class="absolute inset-0 bg-zinc-950/95 backdrop-blur-md transition-opacity duration-300"
+        id="modal-backdrop"
+    >
+    </div>
+
+    {/* Close Button */}
+    <button
+        id="modal-close"
+        class="absolute top-6 right-6 z-[110] group bg-black/20 hover:bg-white text-white hover:text-black p-2.5 rounded-full backdrop-blur-md border border-white/10 transition-all duration-300"
+        aria-label="Cerrar galería"
+    >
+        <X class="w-6 h-6" />
+    </button>
+
+    <div
+        class="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8 z-[105]"
+    >
+        {/* Main Image Container */}
+        <div
+            class="relative w-full max-w-7xl h-[75vh] flex items-center justify-center mb-6"
+        >
+            <img
+                id="modal-image"
+                src=""
+                alt=""
+                class="max-w-full max-h-full object-contain shadow-2xl rounded-sm"
+            />
+
+            {/* Navigation Arrows */}
+            <button
+                id="modal-prev"
+                class="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 p-3 bg-black/20 hover:bg-white text-white hover:text-black rounded-full backdrop-blur-md border border-white/10 transition-all duration-300 group"
+                aria-label="Imagen anterior"
+            >
+                <ChevronLeft
+                    class="w-8 h-8 group-hover:scale-110 transition-transform"
+                />
+            </button>
+            <button
+                id="modal-next"
+                class="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 p-3 bg-black/20 hover:bg-white text-white hover:text-black rounded-full backdrop-blur-md border border-white/10 transition-all duration-300 group"
+                aria-label="Siguiente imagen"
+            >
+                <ChevronRight
+                    class="w-8 h-8 group-hover:scale-110 transition-transform"
+                />
+            </button>
+        </div>
+
+        {/* Caption */}
+        <div class="mb-6 text-center">
+            <p
+                id="modal-caption"
+                class="text-white/90 text-lg font-medium tracking-wide"
+            >
+            </p>
+        </div>
+
+        {/* Thumbnails Strip */}
+        <div
+            class="w-full max-w-4xl overflow-x-auto flex gap-3 justify-center pb-4 scrollbar-hide px-4"
+        >
+            {
+                modalImages.map((img, index) => (
+                    <button
+                        class="modal-thumb relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent opacity-40 hover:opacity-100 transition-all duration-300"
+                        data-index={index}
+                        data-src={img.resource}
+                        data-title={img.title}
+                    >
+                        <img
+                            src={img.resource}
+                            alt={img.title}
+                            class="w-full h-full object-cover"
+                        />
+                    </button>
+                ))
+            }
+        </div>
+    </div>
+</div>
+
+<script define:vars={{ modalImages }}>
+    const galleryItems = document.querySelectorAll(
+        '.dynamic-gallery [data-type="image"]',
+    );
+    const modal = document.getElementById("gallery-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalCaption = document.getElementById("modal-caption");
+    const modalClose = document.getElementById("modal-close");
+    const modalBackdrop = document.getElementById("modal-backdrop");
+    const modalPrev = document.getElementById("modal-prev");
+    const modalNext = document.getElementById("modal-next");
+    const modalThumbs = document.querySelectorAll(".modal-thumb");
+
+    let currentModalIndex = 0;
+
+    function openModal(index) {
+        if (index < 0 || index >= modalImages.length) return;
+        currentModalIndex = index;
+        updateModalContent();
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+    }
+
+    function closeModal() {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+    }
+
+    function updateModalContent() {
+        const item = modalImages[currentModalIndex];
+        modalImage.src = item.resource;
+        modalImage.alt = item.title;
+        modalCaption.textContent = item.title;
+
+        // Update thumbs
+        modalThumbs.forEach((thumb, idx) => {
+            if (idx === currentModalIndex) {
+                thumb.classList.add("border-[#FF8351]", "opacity-100");
+                thumb.classList.remove("border-transparent", "opacity-50");
+                thumb.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "center",
+                });
+            } else {
+                thumb.classList.remove("border-[#FF8351]", "opacity-100");
+                thumb.classList.add("border-transparent", "opacity-50");
+            }
+        });
+    }
+
+    function nextImage() {
+        currentModalIndex = (currentModalIndex + 1) % modalImages.length;
+        updateModalContent();
+    }
+
+    function prevImage() {
+        currentModalIndex =
+            (currentModalIndex - 1 + modalImages.length) % modalImages.length;
+        updateModalContent();
+    }
+
+    // Event Listeners
+    galleryItems.forEach((item) => {
+        item.addEventListener("click", () => {
+            const index = parseInt(item.dataset.index);
+            openModal(index);
+        });
+    });
+
+    modalClose?.addEventListener("click", closeModal);
+    modalBackdrop?.addEventListener("click", closeModal);
+
+    modalNext?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        nextImage();
+    });
+
+    modalPrev?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        prevImage();
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+        if (modal.classList.contains("hidden")) return;
+
+        if (e.key === "Escape") closeModal();
+        if (e.key === "ArrowRight") nextImage();
+        if (e.key === "ArrowLeft") prevImage();
+    });
+
+    // Thumbnail click
+    modalThumbs.forEach((thumb) => {
+        thumb.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const index = parseInt(thumb.dataset.index);
+            openModal(index);
+        });
+    });
+</script>
+
+<style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

@@ -1,5 +1,5 @@
 ---
-import { Menu, X, ArrowRight, ShoppingBag, ShoppingCart, Search } from "lucide-astro";
+import { Menu, X, ArrowRight, ShoppingBag, ShoppingCart, Search, Youtube, Facebook } from "lucide-astro";
 import oppluxLogo from "../assets/258df82474b849b69ecba8069ce145ec98c5d6b4.png";
 
 interface Props {
@@ -14,29 +14,38 @@ const isBlackTheme = theme === "black";
 <header
     id="main-header"
     class:list={[
-        "fixed top-0 left-0 right-0 z-[80] transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[100] transition-all duration-300",
         isBlackTheme
             ? "bg-black py-4 border-b border-gray-800"
             : "bg-transparent py-6",
     ]}
     data-theme={theme}
 >
-    <div class="container mx-auto px-6 hidden md:grid grid-cols-3 items-center">
+    <div class="container mx-auto px-3 hidden lg:flex items-center justify-between">
         {/* Logo - Left */}
-        <a href="/" class="flex items-center gap-2 justify-start">
-            <img
-                src={oppluxLogo.src}
-                alt="Opplux"
-                id="header-logo"
-                class:list={[
-                    "h-10 w-auto object-contain transition-all duration-300",
-                    isBlackTheme ? "" : "brightness-200 contrast-100",
-                ]}
-            />
-        </a>
+        <div class="flex-shrink-0 grid">
+            <div class="col-start-1 row-start-1 flex items-center justify-start">
+                <a href="/" class="flex items-center gap-2">
+                    <img
+                        src={oppluxLogo.src}
+                        alt="Opplux"
+                        id="header-logo"
+                        class:list={[
+                            "h-10 w-auto object-contain transition-all duration-300",
+                            isBlackTheme ? "" : "brightness-200 contrast-100",
+                        ]}
+                    />
+                </a>
+            </div>
+            {/* Hidden Button to synchronize width */}
+            <div class="col-start-1 row-start-1 invisible pointer-events-none flex items-center gap-2 px-5 py-2 text-sm font-bold whitespace-nowrap">
+                <ShoppingCart class="w-4 h-4" />
+                Cotizar Ahora
+            </div>
+        </div>
 
         {/* Desktop Nav - Center */}
-        <nav class="flex items-center justify-center gap-8">
+        <nav class="flex-1 flex items-center justify-center gap-8">
             <a
                 href="/"
                 class:list={[
@@ -70,38 +79,61 @@ const isBlackTheme = theme === "black";
             >
                 Productos
             </a>
+            <a
+                href="/casos-de-exito"
+                class:list={[
+                    "text-sm font-medium transition-colors uppercase tracking-wider nav-link",
+                    isBlackTheme
+                        ? "text-white hover:text-gray-300"
+                        : "text-white/80 hover:text-white",
+                ]}
+            >
+                Casos de éxito
+            </a>
         </nav>
 
         {/* Actions - Right */}
-        <div class="flex items-center justify-end">
-            <a
-                href="/cotizacion"
-                id="cta-btn"
-                class:list={[
-                    "relative flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-colors",
-                    isBlackTheme
-                        ? "bg-white text-black hover:bg-gray-200"
-                        : "bg-white text-black hover:bg-gray-200",
-                ]}
-            >
-                <ShoppingCart class="w-4 h-4" />
-                Cotizar Ahora
-                <!-- Cart counter badge -->
-                <span id="cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300">
-                    3
-                </span>
-            </a>
+        <div class="flex-shrink-0 grid">
+            <div class="col-start-1 row-start-1 flex items-center justify-end">
+                <a
+                    href="/cotizacion"
+                    id="cta-btn"
+                    class:list={[
+                        "relative flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-colors whitespace-nowrap",
+                        isBlackTheme
+                            ? "bg-white text-black hover:bg-gray-200"
+                            : "bg-white text-black hover:bg-gray-200",
+                    ]}
+                >
+                    <ShoppingCart class="w-4 h-4" />
+                    Cotizar Ahora
+                    <!-- Cart counter badge -->
+                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300">
+                        3
+                    </span>
+                </a>
+            </div>
+            {/* Hidden Logo to synchronize width */}
+            <div class="col-start-1 row-start-1 invisible pointer-events-none flex items-center justify-end">
+                <div class="flex items-center gap-2">
+                    <img src={oppluxLogo.src} class="h-10 w-auto" />
+                </div>
+            </div>
         </div>
     </div>
 
     {/* Mobile Header */}
-    <div class="container mx-auto px-6 flex md:hidden items-center justify-between relative z-[70]">
+    <div class="container mx-auto px-6 flex lg:hidden items-center justify-between relative z-[70]">
         {/* Logo */}
         <a href="/" class="flex items-center gap-2">
             <img
                 src={oppluxLogo.src}
                 alt="Opplux"
-                class="h-10 w-auto object-contain"
+                id="mobile-logo"
+                class:list={[
+                    "h-10 w-auto object-contain transition-all duration-300",
+                    isBlackTheme ? "" : "brightness-200 contrast-100",
+                ]}
             />
         </a>
 
@@ -125,7 +157,7 @@ const isBlackTheme = theme === "black";
             <button
                 id="mobile-menu-btn"
                 class:list={[
-                    "md:hidden p-2 relative z-[70]",
+                    "lg:hidden p-2 relative z-[70]",
                     isBlackTheme ? "text-white" : "text-white",
                 ]}
                 aria-label="Menu"
@@ -143,32 +175,59 @@ const isBlackTheme = theme === "black";
 {/* Mobile Nav - Slide-in from Right (Outside header to avoid z-index conflicts) */}
 <div
     id="mobile-menu"
-    class="fixed inset-0 z-[60] md:hidden bg-white transform translate-x-full transition-transform duration-500 ease-in-out"
+    class="fixed inset-0 z-[90] lg:hidden bg-white transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col"
 >
-    <nav class="flex flex-col p-6 gap-4 pt-24">
-        <a href="/" class="text-lg font-bold text-gray-900 mobile-link"
-            >Inicio</a
-        >
-        <a
-            href="/nosotros"
-            class="text-lg font-bold text-gray-900 mobile-link">Nosotros</a
-        >
-        <a
-            href="/productos"
-            class="text-lg font-bold text-gray-900 mobile-link">Productos</a
-        >
-        <a
-            href="/cotizacion"
-            class="mt-4 w-full bg-black text-white py-3 rounded-full font-bold"
-        >
-            Cotizar Ahora</a
-        >
-    </nav>
+    <div class="container mx-auto px-6 flex flex-col flex-1">
+        <nav class="flex flex-col gap-4 pt-24 flex-1">
+            <a href="/" class="text-3xl text-black mobile-link"
+                >Inicio</a
+            >
+            <a
+                href="/nosotros"
+                class="text-3xl text-black mobile-link">Nosotros</a
+            >
+            <a
+                href="/productos"
+                class="text-3xl text-black mobile-link">Productos</a
+            >
+            <a
+                href="/casos-de-exito"
+                class="text-3xl text-black mobile-link">Casos de éxito</a
+            >
+            <a
+                href="/cotizacion"
+                class="text-3xl text-black mobile-link"
+            >
+                <span class="relative inline-block">
+                    Carrito de cotización
+                    <span id="menu-cart-counter" class="absolute -top-1 -right-4 translate-x-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                        0
+                    </span>
+                </span>
+            </a>
+        </nav>
+        
+        {/* WhatsApp Contact Button */}
+        <div class="mb-16">
+            <a 
+                href="https://wa.me/5218112345678" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="flex items-center justify-start gap-3 py-6 text-black hover:bg-gray-50 transition-colors"
+            >
+                <span class="text-3xl">Contacto Whatsapp</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#25D366" class="w-8 h-8">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>
     const header = document.getElementById("main-header");
     const logo = document.getElementById("header-logo");
+    const mobileLogo = document.getElementById("mobile-logo");
     const navLinks = document.querySelectorAll(".nav-link");
     const ctaBtn = document.getElementById("cta-btn");
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -181,11 +240,37 @@ const isBlackTheme = theme === "black";
     const initialTheme = header?.dataset.theme || "transparent";
 
     function updateHeaderStyle() {
-        if (!header || initialTheme === "black") return;
+        if (!header) return;
 
-        // If menu is open, do not apply scroll styles
+        // If menu is open, keep header transparent and elements black
         const isMenuOpen = mobileMenu?.classList.contains("translate-x-0");
-        if (isMenuOpen) return;
+        if (isMenuOpen) {
+            header.classList.remove("bg-black", "bg-white/80", "backdrop-blur-md", "border-b", "border-gray-200", "border-gray-800");
+            header.classList.add("bg-transparent");
+            
+            // Elements should be black on white menu
+            [line1, line2, line3].forEach(line => {
+                line?.classList.remove("bg-white");
+                line?.classList.add("bg-black");
+            });
+            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            return;
+        }
+
+        if (initialTheme === "black") {
+            header.classList.add("bg-black", "py-4", "border-b", "border-gray-800");
+            header.classList.remove("bg-transparent", "py-6");
+            
+            // Elements should be white on black header
+            [line1, line2, line3].forEach(line => {
+                line?.classList.remove("bg-black");
+                line?.classList.add("bg-white");
+            });
+            // The template says isBlackTheme ? "" : "brightness-200 contrast-100"
+            // So for black theme it should NOT have those classes.
+            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            return;
+        }
 
         const isScrolled = window.scrollY > 50;
 
@@ -202,6 +287,7 @@ const isBlackTheme = theme === "black";
             );
 
             logo?.classList.remove("brightness-200", "contrast-100");
+            mobileLogo?.classList.remove("brightness-200", "contrast-100");
 
             navLinks.forEach((link) => {
                 link.classList.remove("text-white/80", "hover:text-white");
@@ -252,6 +338,7 @@ const isBlackTheme = theme === "black";
             );
 
             logo?.classList.add("brightness-200", "contrast-100");
+            mobileLogo?.classList.add("brightness-200", "contrast-100");
 
             navLinks.forEach((link) => {
                 link.classList.add("text-white/80", "hover:text-white");
@@ -326,7 +413,10 @@ const isBlackTheme = theme === "black";
             // Change lines back to white/black based on scroll
             const isScrolled = window.scrollY > 50;
             [line1, line2, line3].forEach(line => {
-                if (initialTheme === "transparent" && !isScrolled) {
+                if (initialTheme === "black") {
+                    line?.classList.remove("bg-black");
+                    line?.classList.add("bg-white");
+                } else if (initialTheme === "transparent" && !isScrolled) {
                     line?.classList.remove("bg-black");
                     line?.classList.add("bg-white");
                 } else if (initialTheme === "transparent" && isScrolled) {
@@ -362,6 +452,7 @@ const isBlackTheme = theme === "black";
                 line?.classList.remove("bg-white");
                 line?.classList.add("bg-black");
             });
+            mobileLogo?.classList.remove("brightness-200", "contrast-100");
 
             // Remove header border when menu is open
             header?.classList.remove("border-b", "border-gray-200");
@@ -369,6 +460,10 @@ const isBlackTheme = theme === "black";
             // Slide menu in
             mobileMenu?.classList.remove("translate-x-full");
             mobileMenu?.classList.add("translate-x-0");
+
+            // Make header transparent when menu is open to let menu show through
+            header?.classList.remove("bg-black", "bg-white/80", "backdrop-blur-md", "border-b", "border-gray-200", "border-gray-800");
+            header?.classList.add("bg-transparent");
 
             // Hide cart icon
             if (mobileCartBtn) {
@@ -411,7 +506,10 @@ const isBlackTheme = theme === "black";
             
             const isScrolled = window.scrollY > 50;
             [line1, line2, line3].forEach(line => {
-                if (initialTheme === "transparent" && !isScrolled) {
+                if (initialTheme === "black") {
+                    line?.classList.remove("bg-black");
+                    line?.classList.add("bg-white");
+                } else if (initialTheme === "transparent" && !isScrolled) {
                     line?.classList.remove("bg-black");
                     line?.classList.add("bg-white");
                 } else if (initialTheme === "transparent" && isScrolled) {
@@ -440,6 +538,7 @@ const isBlackTheme = theme === "black";
     // Cart Counter Animation
     const cartCounter = document.getElementById('cart-counter');
     const mobileCartCounter = document.getElementById('mobile-cart-counter');
+    const menuCartCounter = document.getElementById('menu-cart-counter');
     
     function updateCartCount() {
         const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
@@ -455,13 +554,23 @@ const isBlackTheme = theme === "black";
             }
         }
         
-        // Update mobile counter
+        // Update mobile counter (icon)
         if (mobileCartCounter) {
             mobileCartCounter.textContent = totalItems.toString();
             if (totalItems === 0) {
                 mobileCartCounter.classList.add('hidden');
             } else {
                 mobileCartCounter.classList.remove('hidden');
+            }
+        }
+        
+        // Update menu cart counter (text link)
+        if (menuCartCounter) {
+            menuCartCounter.textContent = totalItems.toString();
+            if (totalItems === 0) {
+                menuCartCounter.classList.add('hidden');
+            } else {
+                menuCartCounter.classList.remove('hidden');
             }
         }
     }

@@ -1,0 +1,264 @@
+---
+import { ArrowRight, MapPin } from "lucide-astro";
+import bannerImg from "../assets/product-section-banner-2.jpg";
+import placeholderImg from "../assets/cedis-1.png";
+import { supabase } from "../lib/supabase";
+
+// Import all images from assets directory
+const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/assets/*.{png,jpg,jpeg,webp}",
+    { eager: true },
+);
+
+// Fetch success cases from Supabase
+const { data: successCasesData, error } = await supabase
+    .from("success_cases")
+    .select(
+        `
+        id,
+        title,
+        description,
+        location,
+        slug,
+        main_image,
+        project_types (
+            name
+        )
+    `,
+    )
+    .order("created_at", { ascending: false });
+
+if (error) {
+    console.error("Error fetching success cases:", error);
+}
+
+// Mock data for fallback
+const mockSuccessCases = [
+    {
+        id: 1,
+        category: "Alumbrado Público",
+        title: "Modernización Avenida Reforma: Eficiencia y Seguridad Vial",
+        description:
+            "Implementación de sistema inteligente de telegestión punto a punto, logrando un ahorro energético del 60% y mejorando la seguridad vial nocturna con una temperatura de color óptima.",
+        location: "Ciudad de México",
+        image: "https://images.unsplash.com/photo-1600206085398-f6ede93b06f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaXR5JTIwc3RyZWV0JTIwbGlnaHRzJTIwbmlnaHR8ZW58MXx8fHwxNzY0NDQzNjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "modernizacion-avenida-reforma",
+    },
+    {
+        id: 2,
+        category: "Iluminación Arquitectónica",
+        title: "Torre Corporativa Zenith: Identidad Nocturna Dinámica",
+        description:
+            "Diseño lumínico integral para fachada e interiores, utilizando tecnología RGBW para crear escenas dinámicas que resaltan la arquitectura moderna y reducen la contaminación lumínica.",
+        location: "Monterrey, NL",
+        image: "https://images.unsplash.com/photo-1762506168883-0f829364d598?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwYnVpbGRpbmclMjBsaWdodGluZyUyMG5pZ2h0JTIwbW9kZXJufGVufDF8fHx8MTc2NDQ0MzYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "torre-corporativa-zenith",
+    },
+    {
+        id: 3,
+        category: "Iluminación Deportiva",
+        title: "Estadio Olímpico: Experiencia Visual de Clase Mundial",
+        description:
+            "Iluminación deportiva de alta potencia cumpliendo estándares internacionales para transmisión 4K, garantizando uniformidad y confort visual superior para jugadores y espectadores.",
+        location: "Guadalajara, Jal",
+        image: "https://images.unsplash.com/photo-1697562160779-fed83c21a2cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFkaXVtJTIwZmxvb2RsaWdodHMlMjBuaWdodCUyMG1hdGNofGVufDF8fHx8MTc2NDQ0MzYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "estadio-olimpico",
+    },
+    {
+        id: 4,
+        category: "Iluminación Industrial",
+        title: "Complejo Industrial Tecnológico: Productividad y Eficiencia",
+        description:
+            "Solución de iluminación LED de alta eficiencia para naves industriales, mejorando la productividad laboral con iluminación uniforme y reduciendo costos operativos en un 70%.",
+        location: "Querétaro, Qro",
+        image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwd2FyZWhvdXNlJTIwbGlnaHRpbmd8ZW58MXx8fHwxNzY0NDQzNjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "complejo-industrial-tecnologico",
+    },
+    {
+        id: 5,
+        category: "Iluminación Comercial",
+        title: "Plaza Comercial Central: Experiencia de Compra Mejorada",
+        description:
+            "Transformación lumínica completa de centro comercial, creando ambientes diferenciados que aumentaron el tráfico de visitantes en un 35% mediante iluminación estratégica.",
+        location: "Puebla, Pue",
+        image: "https://images.unsplash.com/photo-1555529669-722f54459f2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzaG9wcGluZyUyMG1hbGwlMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjQ0NDM2MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "plaza-comercial-central",
+    },
+    {
+        id: 6,
+        category: "Iluminación Hospitalaria",
+        title: "Hospital Regional: Bienestar y Confort del Paciente",
+        description:
+            "Implementación de iluminación circadiana en áreas críticas y de recuperación, mejorando significativamente el bienestar de pacientes y la eficiencia del personal médico.",
+        location: "Tijuana, BC",
+        image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob3NwaXRhbCUyMGNvcnJpZG9yJTIwbW9kZXJufGVufDF8fHx8MTc2NDQ0MzYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+        slug: "hospital-regional",
+    },
+];
+
+// Transform data to match component expectations
+const successCases =
+    successCasesData && successCasesData.length > 0
+        ? successCasesData.map((sc) => {
+              // Try to resolve gallery image from assets
+              let resourceSrc = sc.main_image;
+              if (resourceSrc && !resourceSrc.startsWith("http")) {
+                  const imagePath = `/src/assets/${resourceSrc}.png`;
+                  const imageModule = images[imagePath];
+
+                  if (imageModule && imageModule.default) {
+                      resourceSrc = imageModule.default.src;
+                  } else {
+                      // Fallback if not found
+                      resourceSrc = placeholderImg.src;
+                  }
+              } else if (!resourceSrc) {
+                  resourceSrc = placeholderImg.src;
+              }
+
+              return {
+                  id: sc.id,
+                  category: (sc.project_types as any)?.name || "Sin categoría",
+                  title: sc.title,
+                  description: sc.description,
+                  location: sc.location,
+                  image: resourceSrc,
+                  slug: sc.slug,
+              };
+          })
+        : mockSuccessCases;
+---
+
+<section id="productos" class="bg-white">
+    {/* Banner Hero Section - Just the image */}
+    <div class="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
+        {/* Background Image */}
+        <img
+            src={bannerImg.src}
+            alt="Productos"
+            class="absolute inset-0 w-full h-full object-cover"
+        />
+    </div>
+
+    {/* Title and Breadcrumb - Outside the banner */}
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="mb-4 mt-12 animate-fade-in-up">
+            {/* Breadcrumb */}
+            <div
+                class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest"
+            >
+                <span>Inicio</span>
+                <span class="text-[#FF8351]">/</span>
+                <span class="text-[#FF8351]">Productos</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Title Section (ScalableFeatures style) -->
+    <section class="pt-6 md:pb-12 pb-6 bg-white text-zinc-700">
+        <div class="container mx-auto px-6">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start gap-6 md:gap-12"
+            >
+                <div class="max-w-2xl md:max-w-md lg:max-w-2xl">
+                    <h2
+                        class="text-5xl lg:text-7xl font-semibold tracking-tighter leading-[0.9]"
+                    >
+                        Transformando espacios con luz innovadora.
+                    </h2>
+                </div>
+                <div class="max-w-md md:max-w-sm lg:max-w-md">
+                    <p class="text-zinc-500 text-md lg:text-lg leading-relaxed">
+                        Descubre cómo hemos ayudado a empresas y organizaciones
+                        a mejorar sus espacios mediante soluciones de
+                        iluminación inteligente, eficiente y sostenible.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Cases Grid (Projects style) -->
+    <section
+        class="pt-4 md:pt-12 pb-24 bg-white text-zinc-900 relative overflow-hidden"
+    >
+        <div class="container mx-auto px-6 relative z-10">
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
+                {
+                    successCases.map((successCase, index) => (
+                        <div
+                            class="success-case-card group flex flex-col animate-slide-up md:bg-zinc-50 lg:bg-transparent md:border md:border-zinc-200 lg:border-none md:hover:border-zinc-300 md:transition-colors md:duration-300"
+                            style={`animation-delay: ${index * 150}ms`}
+                        >
+                            {/* Image Area */}
+                            <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl md:rounded-none lg:rounded-2xl lg:mb-6 mb-6 md:mb-0">
+                                <img
+                                    src={successCase.image}
+                                    alt={successCase.title}
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                {/* Category Tag */}
+                                <div class="absolute top-4 left-4">
+                                    <span class="bg-white/90 backdrop-blur-sm text-zinc-900 text-xs font-bold px-3 py-1.5 rounded-full">
+                                        {successCase.category}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Content Area */}
+                            <div class="flex flex-col flex-1 mb-3 md:p-6 lg:p-0 lg:mb-3">
+                                {/* Location - Above title on MD, below description on others */}
+                                <div class="hidden md:flex lg:hidden items-center gap-2 text-zinc-400 md:text-zinc-500 text-xs mb-2">
+                                    <MapPin size={14} />
+                                    <span>{successCase.location}</span>
+                                </div>
+
+                                <h3 class="md:text-lg lg:text-2xl text-2xl font-bold text-zinc-900 md:text-zinc-900 lg:text-zinc-900 leading-tight md:mb-2 lg:mb-4 mb-4 min-h-[3.5rem]">
+                                    {successCase.title}
+                                </h3>
+
+                                <p class="md:hidden lg:block block text-zinc-500 text-sm leading-relaxed mb-6 flex-1">
+                                    {successCase.description}
+                                </p>
+
+                                <div class="flex flex-row md:flex-col lg:flex-row items-center justify-between mt-auto pt-4 border-t border-zinc-100 md:border-t-0 md:pt-0 lg:border-t lg:pt-4 lg:border-zinc-100">
+                                    <div class="flex md:hidden lg:flex items-center gap-2 text-zinc-400 text-xs">
+                                        <MapPin size={14} />
+                                        <span>{successCase.location}</span>
+                                    </div>
+
+                                    <a
+                                        href={`/casos-de-exito/${successCase.slug}`}
+                                        class="md:bg-transparent lg:bg-[#FF8351] bg-[#FF8351] hover:bg-[#e06b3d] md:hover:bg-transparent md:hover:text-[#e06b3d] md:text-[#FF8351] lg:text-white text-white text-sm font-bold px-3 py-1 lg:px-3 lg:py-1 md:px-0 md:py-0 rounded-full transition-colors flex items-center gap-2 md:w-full md:justify-start lg:w-auto lg:justify-center"
+                                    >
+                                        Ver detalles
+                                        <ArrowRight size={14} />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+    </style>
+</section>

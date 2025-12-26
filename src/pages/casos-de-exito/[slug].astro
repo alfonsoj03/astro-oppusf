@@ -1,0 +1,176 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SuccessCaseDetail from "../../components/SuccessCaseDetail.astro";
+import { supabase } from "../../lib/supabase";
+import placeholderImg from "../../assets/cedis-1.png";
+
+export async function getStaticPaths() {
+    // Fetch all success cases with project type
+    const { data: successCases, error: casesError } = await supabase.from(
+        "success_cases",
+    ).select(`
+            *,
+            project_types (
+                name
+            )
+        `);
+
+    if (casesError) {
+        console.error("Error fetching success cases:", casesError);
+        return [];
+    }
+
+    // Import all images from assets directory
+    const images = import.meta.glob<{ default: ImageMetadata }>(
+        "/src/assets/*.{png,jpg,jpeg,webp}",
+        { eager: true },
+    );
+
+    // For each success case, fetch related data
+    const paths = await Promise.all(
+        successCases.map(async (successCase) => {
+            // Fetch products used in this case
+            const { data: caseProducts, error: productsError } = await supabase
+                .from("success_case_products")
+                .select(
+                    `
+                quantity,
+                products (
+                    id,
+                    slug,
+                    name,
+                    main_image,
+                    led_power,
+                    efficiency,
+                    warranty
+                )
+            `,
+                )
+                .eq("success_case_id", successCase.id);
+
+            if (productsError) {
+                console.error(
+                    `Error fetching products for case ${successCase.id}:`,
+                    productsError,
+                );
+            }
+
+            // Fetch contents for this case
+            const { data: caseContents, error: contentsError } = await supabase
+                .from("success_case_contents")
+                .select(
+                    `
+                title,
+                resource,
+                content_types (
+                    code,
+                    description
+                )
+            `,
+                )
+                .eq("success_case_id", successCase.id);
+
+            if (contentsError) {
+                console.error(
+                    `Error fetching contents for case ${successCase.id}:`,
+                    contentsError,
+                );
+            }
+
+            // Transform products data
+            const products = (caseProducts || []).map((cp) => {
+                const prod = cp.products as any;
+                // Try to resolve product image from assets if it's a filename
+                let prodImage = prod.main_image;
+
+                if (prodImage && !prodImage.startsWith("http")) {
+                    const imagePath = `/src/assets/${prodImage}.png`;
+                    const imageModule = images[imagePath];
+                    if (imageModule && imageModule.default) {
+                        prodImage = imageModule.default.src;
+                    } else {
+                        // Fallback
+                        prodImage = "/src/assets/OPP-80W-ST.png";
+                    }
+                } else if (!prodImage) {
+                    prodImage = "/src/assets/OPP-80W-ST.png";
+                }
+
+                return {
+                    name: prod.name,
+                    quantity: cp.quantity,
+                    slug: prod.slug,
+                    ledPower: prod.led_power,
+                    mainImage: prodImage,
+                    efficiency: prod.efficiency,
+                    height: "",
+                    warranty: prod.warranty,
+                };
+            });
+
+            // Transform contents data (Gallery)
+            const content = (caseContents || []).map((cc) => {
+                let resourceSrc = cc.resource;
+                // Try to resolve gallery image from assets
+                if (resourceSrc && !resourceSrc.startsWith("http")) {
+                    const imagePath = `/src/assets/${resourceSrc}.png`;
+                    const imageModule = images[imagePath];
+
+                    if (imageModule && imageModule.default) {
+                        resourceSrc = imageModule.default.src;
+                    } else {
+                        // Fallback if not found
+                        resourceSrc = "/placeholder.png";
+                    }
+                }
+
+                return {
+                    title: cc.title,
+                    resource: resourceSrc, // Now a full URL
+                    contentType: (cc.content_types as any)?.code || "",
+                };
+            });
+
+            return {
+                params: { slug: successCase.slug },
+                props: {
+                    title: successCase.title,
+                    slug: successCase.slug,
+                    description: successCase.description,
+                    location: successCase.location,
+                    projectType: successCase.project_types?.name || "Unknown",
+                    imgOrientation: successCase.img_orientation || "horizontal",
+                    products,
+                    content,
+                },
+            };
+        }),
+    );
+
+    return paths;
+}
+
+const {
+    title,
+    slug,
+    description,
+    location,
+    projectType,
+    imgOrientation,
+    products,
+    content,
+} = Astro.props;
+---
+
+<Layout headerTheme="black">
+    <SuccessCaseDetail
+        title={title}
+        slug={slug}
+        description={description}
+        location={location}
+        projectType={projectType}
+        imgOrientation={imgOrientation}
+        products={products}
+        content={content}
+    />
+</Layout>
