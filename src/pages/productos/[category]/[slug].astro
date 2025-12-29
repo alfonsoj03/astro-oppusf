@@ -1,0 +1,180 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ProductDetail from "../../../components/ProductDetail.astro";
+import placeholderImage from "@/assets/OPP-80W-ST.png";
+import { supabase } from "../../../lib/supabase";
+
+// Import all images from assets directory
+const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/assets/*.{png,jpg,jpeg,webp}",
+    { eager: true },
+);
+
+// Import all PDFs from assets directory
+const pdfs = import.meta.glob<{ default: string }>("/src/assets/*.pdf", {
+    eager: true,
+});
+
+// Helper to slugify text
+function slugify(text: string) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+        .replace(/\-\-+/g, "-"); // Replace multiple - with single -
+}
+
+export async function getStaticPaths() {
+    // Fetch all products
+    const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("*");
+
+    if (productsError) {
+        console.error("Error fetching products:", productsError);
+        return [];
+    }
+
+    // Fetch all categories
+    const { data: categories, error: categoriesError } = await supabase
+        .from("product_categories")
+        .select("*");
+
+    if (categoriesError) {
+        console.error("Error fetching categories:", categoriesError);
+    }
+
+    // Fetch all specs
+    const { data: specs, error: specsError } = await supabase
+        .from("product_specs")
+        .select("*");
+
+    if (specsError) {
+        console.error("Error fetching specs:", specsError);
+    }
+
+    // Fetch all files
+    const { data: files, error: filesError } = await supabase
+        .from("product_files")
+        .select("*");
+
+    if (filesError) {
+        console.error("Error fetching files:", filesError);
+    }
+
+    // Fetch all technical images
+    const { data: technicalImages, error: techImagesError } = await supabase
+        .from("product_images")
+        .select("*");
+
+    if (techImagesError) {
+        console.error("Error fetching technical images:", techImagesError);
+    }
+
+    // Fetch all accessories
+    const { data: accessories, error: accessoriesError } = await supabase
+        .from("product_accesories")
+        .select("*");
+
+    if (accessoriesError) {
+        console.error("Error fetching accessories:", accessoriesError);
+    }
+
+    return products.map((product) => {
+        const category = categories?.find((c) => c.id === product.category_id);
+        const categorySlug =
+            category?.slug || (category ? slugify(category.name) : "unknown");
+
+        const productSpecs =
+            specs?.filter((s) => s.product_id === product.id) || [];
+        const productFiles =
+            files?.filter((f) => f.product_id === product.id) || [];
+        const productTechImages =
+            technicalImages?.filter((ti) => ti.product_id === product.id) || [];
+        const productAccessories =
+            accessories?.filter((a) => a.product_id === product.id) || [];
+
+        return {
+            params: { category: categorySlug, slug: product.slug },
+            props: {
+                product,
+                categoryName: category?.name || "Unknown Category",
+                specs: productSpecs,
+                files: productFiles,
+                techImages: productTechImages,
+                accessories: productAccessories,
+            },
+        };
+    });
+}
+
+const { category, slug } = Astro.params;
+const { product, categoryName, specs, files, techImages, accessories } =
+    Astro.props;
+
+// Helper to resolve image from glob
+function resolveImage(imageName: string | null, suffix: string = "") {
+    if (!imageName) return placeholderImage.src;
+    if (imageName.startsWith("http")) return imageName;
+
+    const imagePath = `/src/assets/${imageName}${suffix}.png`;
+    const imageModule = images[imagePath];
+
+    if (imageModule && imageModule.default) {
+        return imageModule.default.src;
+    }
+
+    return placeholderImage.src;
+}
+
+// Helper to resolve PDF from glob
+function resolvePdf(fileName: string | null) {
+    if (!fileName) return "#";
+    if (fileName.startsWith("http")) return fileName;
+
+    const cleanFileName = fileName.trim();
+    const pdfPath = `/src/assets/${cleanFileName}.pdf`;
+    const pdfModule = pdfs[pdfPath];
+
+    if (pdfModule && pdfModule.default) {
+        return pdfModule.default;
+    }
+
+    return "#";
+}
+
+const productData = {
+    category: categoryName,
+    slug: product.slug,
+    title: product.name,
+    seriesTitle: product.led_power ? `${product.led_power}` : "", // RDX -> Watts
+    seriesSubtitle: product.efficiency ? `${product.efficiency}` : "", // ROUND MAX SERIES -> Eficiencia
+    description: product.description_short || "",
+    previousModel: "PEL-K", // Placeholder
+    image: resolveImage(product.main_image, "_main"),
+    specifications: specs.map((s) => ({
+        label: s.label,
+        value: s.value,
+    })),
+    downloads: files.map((f) => ({
+        title: f.file_title,
+        url: resolvePdf(f.file_path),
+    })),
+    technicalDescription: [product.description_long || ""],
+    technicalImages: techImages.map((ti) => ({
+        title: ti.image_title,
+        image: resolveImage(ti.image_name),
+    })),
+    accessories: accessories.map((a) => ({
+        image: resolveImage(a.image_name),
+        title: a.image_title,
+        annotation: a.annotation,
+    })),
+};
+---
+
+<Layout headerTheme="black">
+    <ProductDetail {...productData} />
+</Layout>

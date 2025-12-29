@@ -20,6 +20,7 @@ interface Props {
     technicalDescription: string[];
     technicalImages: { title: string; image: string }[];
     downloads?: { title: string; url: string }[];
+    accessories?: { image: string; title: string; annotation?: string }[];
 }
 
 const {
@@ -35,6 +36,7 @@ const {
     technicalDescription,
     technicalImages,
     downloads = [],
+    accessories = [],
 } = Astro.props;
 
 const allImages = [
@@ -269,14 +271,46 @@ const allImages = [
                 </div>
             </div>
             <div
-                class="mb-8 max-w-7xl animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-700"
+                class="mb-8 md:col-span-2 animate-fade-up opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-700"
             >
+                {/* Accesorios */}
+                {
+                    accessories.length > 0 && (
+                        <div class="mb-12">
+                            <h2 class="mb-6 text-4xl font-light font-outfit">
+                                Accesorios
+                            </h2>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                {accessories.map((accessory) => (
+                                    <div class="flex flex-col items-center text-center group">
+                                        <div class="bg-gray-50 rounded-xl p-6 mb-4 w-full aspect-square flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                                            <img
+                                                src={accessory.image}
+                                                alt={accessory.title}
+                                                class="max-w-full max-h-full object-contain"
+                                            />
+                                        </div>
+                                        <h3 class="text-lg font-normal font-outfit text-gray-500 uppercase tracking-wide">
+                                            {accessory.title}
+                                        </h3>
+                                        {accessory.annotation && (
+                                            <p class="text-md text-gray-500 italic">
+                                                {accessory.annotation}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
+
                 {/* Descargas */}
                 <div class="space-y-6">
                     {
                         downloads.map((download) => (
                             <div>
-                                <p class="text-sm font-bold text-zinc-900 mb-2 uppercase tracking-wide">
+                                <p class="text-sm font-bold text-zinc-900 mb-4 uppercase tracking-wide">
                                     {download.title}
                                 </p>
                                 <a

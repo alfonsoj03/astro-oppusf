@@ -1,38 +1,83 @@
 ---
-import { ArrowRight } from "lucide-astro";
+import { ArrowLeft, ArrowRight } from "lucide-astro";
 import streetLightImg from "../assets/street-light.png";
 import ufoLightImg from "../assets/ufo-light.png";
 import bannerImg from "../assets/product-section-banner-3.jpg";
 
 import { supabase } from "../lib/supabase";
 
-// Fetch categories
-const { data: dbCategories, error: categoriesError } = await supabase
-    .from("product_categories")
-    .select("*")
-    .order("id");
-
-if (categoriesError) {
-    console.error("Error fetching categories:", categoriesError);
+interface Props {
+    isCategoryPage?: boolean;
+    category?: any;
+    products?: any[];
+    specs?: any[];
+    allCategories?: any[];
 }
 
-// Fetch products
-const { data: dbProducts, error: productsError } = await supabase
-    .from("products")
-    .select("*")
-    .order("id");
+const {
+    isCategoryPage = false,
+    category: propCategory,
+    products: propProducts,
+    specs: propSpecs,
+    allCategories: propAllCategories,
+} = Astro.props;
 
-if (productsError) {
-    console.error("Error fetching products:", productsError);
+// Fetch data only if not provided via props
+let dbCategories = propAllCategories;
+let dbProducts = propProducts;
+let dbSpecs = propSpecs;
+
+if (!dbCategories || !dbProducts || !dbSpecs) {
+    // Fetch categories
+    const { data: fetchedCategories, error: categoriesError } = await supabase
+        .from("product_categories")
+        .select("*")
+        .order("position", { ascending: true });
+
+    if (categoriesError) {
+        console.error("Error fetching categories:", categoriesError);
+    }
+    dbCategories = fetchedCategories || [];
+
+    // Fetch products
+    const { data: fetchedProducts, error: productsError } = await supabase
+        .from("products")
+        .select("*")
+        .order("id");
+
+    if (productsError) {
+        console.error("Error fetching products:", productsError);
+    }
+    dbProducts = fetchedProducts || [];
+
+    // Fetch product specs
+    const { data: fetchedSpecs, error: specsError } = await supabase
+        .from("product_specs")
+        .select("*");
+
+    if (specsError) {
+        console.error("Error fetching specs:", specsError);
+    }
+    dbSpecs = fetchedSpecs || [];
 }
 
-// Fetch product specs
-const { data: dbSpecs, error: specsError } = await supabase
-    .from("product_specs")
-    .select("*");
+// Import all images from assets directory for dynamic resolution
+const assets = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/assets/*.{png,jpg,jpeg,webp}",
+    { eager: true },
+);
 
-if (specsError) {
-    console.error("Error fetching specs:", specsError);
+function resolveAsset(path: string | null) {
+    if (!path) return bannerImg.src;
+    if (path.startsWith("http")) return path;
+
+    // Try different extensions if needed
+    const extensions = [".png", ".jpg", ".jpeg", ".webp", ""];
+    for (const ext of extensions) {
+        const fullPath = `/src/assets/${path}${ext}`;
+        if (assets[fullPath]) return assets[fullPath].default.src;
+    }
+    return bannerImg.src;
 }
 
 // Process data for the UI
@@ -43,59 +88,108 @@ const categories = (dbCategories || []).map((cat) => {
     return {
         id: cat.id,
         name: cat.name,
+        slug: cat.slug,
         count: count,
     };
 });
 
-const productsByCategory = (dbCategories || [])
+// Helper to parse product name for sorting
+function parseProductSortKey(name: string) {
+    const match = name.match(/^([a-zA-Z\s]+)\s*(\d+)?/);
+    if (match) {
+        return {
+            series: match[1].trim(),
+            wattage: match[2] ? parseInt(match[2], 10) : 0,
+        };
+    }
+    return { series: name, wattage: 0 };
+}
+
+// Helper to slugify text
+function slugify(text: string) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-");
+}
+
+// Filter categories to show
+const categoriesToShow =
+    isCategoryPage && propCategory ? [propCategory] : dbCategories || [];
+
+const productsByCategory = categoriesToShow
     .map((cat) => {
         const catProducts = (dbProducts || []).filter(
             (p) => p.category_id === cat.id,
         );
 
+        // Calculate series counts
+        const seriesCounts = new Map<string, number>();
+        catProducts.forEach((p) => {
+            const { series } = parseProductSortKey(p.name);
+            seriesCounts.set(series, (seriesCounts.get(series) || 0) + 1);
+        });
+
+        // Sort products
+        catProducts.sort((a, b) => {
+            const keyA = parseProductSortKey(a.name);
+            const keyB = parseProductSortKey(b.name);
+            const countA = seriesCounts.get(keyA.series) || 0;
+            const countB = seriesCounts.get(keyB.series) || 0;
+            if (countA !== countB) return countB - countA;
+            if (keyA.series < keyB.series) return -1;
+            if (keyA.series > keyB.series) return 1;
+            return keyA.wattage - keyB.wattage;
+        });
+
         return {
             id: cat.id,
             category: cat.name,
+            slug: cat.slug,
             products: catProducts.map((p) => {
-                // Find specific specs for this product
                 const productSpecs = (dbSpecs || []).filter(
                     (s) => s.product_id === p.id,
                 );
-
-                // Handle variations in casing for Rec. height
                 const recHeight = productSpecs.find(
                     (s) =>
                         s.label === "Rec. height" || s.label === "Rec. Height",
                 )?.value;
-
                 const weight = productSpecs.find(
                     (s) => s.label === "Net/Total Weight",
                 )?.value;
 
                 return {
                     id: p.id,
-                    slug: p.slug, // Add slug
+                    slug: p.slug,
                     name: p.name,
                     comment: p.efficiency
                         ? `${p.efficiency}`
-                        : "Alta Eficiencia", // Use efficiency as comment
-                    image: { src: `/src/assets/${p.main_image}.png` }, // Assuming main_image is a URL or path string
+                        : "Alta Eficiencia",
+                    image: { src: `/src/assets/${p.main_image}.png` },
                     watts: p.led_power,
                     lumens: p.max_luminous_flux,
                     description:
                         p.description_short || p.description_long || "",
-                    // Construct specs from available data
                     specs: [
                         p.led_power ? `${p.led_power}` : "",
                         p.efficiency ? `${p.efficiency}` : "",
-                        recHeight || "", // Rec. height
-                        weight || "", // Net/Total Weight
+                        recHeight || "",
+                        weight || "",
                     ].filter(Boolean),
                 };
             }),
         };
     })
-    .filter((group) => group.products.length > 0); // Only show categories with products
+    .filter((group) => group.products.length > 0);
+
+// Banner resolution
+const bannerImageSrc =
+    isCategoryPage && propCategory?.image
+        ? resolveAsset(propCategory.image)
+        : bannerImg.src;
 ---
 
 <section id="productos" class="bg-white">
@@ -103,8 +197,8 @@ const productsByCategory = (dbCategories || [])
     <div class="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
         {/* Background Image */}
         <img
-            src={bannerImg.src}
-            alt="Productos"
+            src={bannerImageSrc}
+            alt={isCategoryPage ? propCategory?.name : "Productos"}
             class="absolute inset-0 w-full h-full object-cover"
         />
     </div>
@@ -116,9 +210,28 @@ const productsByCategory = (dbCategories || [])
             <div
                 class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest"
             >
-                <span>Inicio</span>
+                <a href="/" class="hover:text-[#FF8351] transition-colors"
+                    >Inicio</a
+                >
                 <span class="text-[#FF8351]">/</span>
-                <span class="text-[#FF8351]">Productos</span>
+                {
+                    isCategoryPage ? (
+                        <>
+                            <a
+                                href="/productos"
+                                class="hover:text-[#FF8351] transition-colors"
+                            >
+                                Productos
+                            </a>
+                            <span class="text-[#FF8351]">/</span>
+                            <span class="text-[#FF8351]">
+                                {propCategory?.name}
+                            </span>
+                        </>
+                    ) : (
+                        <span class="text-[#FF8351]">Productos</span>
+                    )
+                }
             </div>
         </div>
     </div>
@@ -136,15 +249,17 @@ const productsByCategory = (dbCategories || [])
                             /* Header Content - Split layout for < xl, stacked for >= xl */
                         }
                         <div
-                            class="flex flex-col md:flex-row xl:flex-col justify-between items-start gap-8 md:gap-24 md:mb-12 mb-6"
+                            class="flex flex-col md:flex-row xl:flex-col justify-between items-start gap-8 md:gap-24 lg:gap-4 lg:mb-6 md:mb-12 mb-6"
                         >
                             <div class="max-w-lg">
                                 <h2
                                     class="text-6xl font-extrabold tracking-tight text-black leading-none mb-6"
                                 >
-                                    Nueva
-                                    <br />
-                                    colección
+                                    {
+                                        isCategoryPage
+                                            ? propCategory?.name
+                                            : "Nueva colección"
+                                    }
                                 </h2>
                                 <div class="h-1 w-16 bg-[#FF8351]"></div>
                             </div>
@@ -153,27 +268,51 @@ const productsByCategory = (dbCategories || [])
                                 <p
                                     class="text-zinc-500 text-sm leading-relaxed"
                                 >
-                                    Descubre las últimas soluciones en
-                                    iluminación LED para proyectos comerciales e
-                                    industriales.
+                                    {
+                                        isCategoryPage
+                                            ? propCategory?.description ||
+                                              "Descubre nuestras soluciones de iluminación."
+                                            : "Descubre las últimas soluciones en iluminación LED para proyectos comerciales e industriales."
+                                    }
                                 </p>
                             </div>
                         </div>
 
-                        {/* Categories List - Grid for < xl, Stack for >= xl */}
                         <div
                             class="hidden md:grid grid-cols-1 md:grid-cols-3 xl:flex xl:flex-col gap-4 xl:gap-1 xl:space-y-1"
                         >
                             {
+                                isCategoryPage && (
+                                    <div class="md:col-span-1 xl:w-full mb-2 xl:mb-4">
+                                        <a
+                                            href="/productos"
+                                            class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none"
+                                        >
+                                            <span class="text-base text-zinc-900 group-hover:text-[#FF8351] transition-all">
+                                                Todos los productos
+                                            </span>
+                                            <span class="text-black font-bold text-sm">
+                                                {dbProducts.length}
+                                            </span>
+                                        </a>
+                                        <div class="h-1 w-16 bg-[#FF8351] mt-1" />
+                                    </div>
+                                )
+                            }
+                            {
                                 categories.map((category) => (
                                     <a
-                                        href={`#category-${category.id}`}
-                                        class="w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none"
+                                        href={`/productos/${category.slug}`}
+                                        class={`w-full flex items-center justify-between text-left py-2 hover:text-[#FF8351] transition-colors group border-b border-zinc-100 xl:border-none ${isCategoryPage && propCategory?.id === category.id ? "text-[#FF8351]" : ""}`}
                                     >
-                                        <span class="text-base text-zinc-900 group-hover:text-[#FF8351] transition-all">
+                                        <span
+                                            class={`text-base group-hover:text-[#FF8351] transition-all ${isCategoryPage && propCategory?.id === category.id ? "text-[#FF8351] font-bold" : "text-zinc-900"}`}
+                                        >
                                             {category.name}
                                         </span>
-                                        <span class="text-black font-bold text-sm">
+                                        <span
+                                            class={`font-bold text-sm ${isCategoryPage && propCategory?.id === category.id ? "text-[#FF8351]" : "text-black"}`}
+                                        >
                                             {category.count}
                                         </span>
                                     </a>
@@ -192,19 +331,36 @@ const productsByCategory = (dbCategories || [])
                             productsByCategory.map((categoryGroup) => (
                                 <>
                                     {/* Category Card */}
-                                    <div
-                                        id={`category-${categoryGroup.id}`}
-                                        class="product-card group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 opacity-0 translate-y-8 ease-out scroll-mt-32"
-                                    >
-                                        <div class="text-center p-8">
-                                            <h3 class="text-white font-bold text-3xl tracking-tight leading-tight">
-                                                {categoryGroup.category}
-                                            </h3>
-                                            <div class="mt-6 inline-flex items-center justify-center w-12 h-12 bg-white text-black group-hover:scale-110 transition-transform">
-                                                <ArrowRight class="w-5 h-5" />
+                                    {isCategoryPage ? (
+                                        <div
+                                            id={`category-${categoryGroup.id}`}
+                                            class="product-card group relative bg-[#FF8351] flex items-center justify-center aspect-square opacity-0 translate-y-8 ease-out scroll-mt-32"
+                                        >
+                                            <div class="text-center p-8">
+                                                <h3 class="text-white font-bold text-3xl tracking-tight leading-tight">
+                                                    {categoryGroup.category}
+                                                </h3>
+                                                <div class="mt-6 inline-flex items-center justify-center w-12 h-12 bg-white text-black transition-transform">
+                                                    <ArrowRight class="w-5 h-5" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <a
+                                            id={`category-${categoryGroup.id}`}
+                                            href={`/productos/${categoryGroup.slug}`}
+                                            class="product-card group relative bg-[#FF8351] cursor-pointer flex items-center justify-center aspect-square hover:bg-[#ff6a31] transition-all duration-300 opacity-0 translate-y-8 ease-out scroll-mt-32"
+                                        >
+                                            <div class="text-center p-8">
+                                                <h3 class="text-white font-bold text-3xl tracking-tight leading-tight">
+                                                    {categoryGroup.category}
+                                                </h3>
+                                                <div class="mt-6 inline-flex items-center justify-center w-12 h-12 bg-white text-black group-hover:scale-110 transition-transform">
+                                                    <ArrowRight class="w-5 h-5" />
+                                                </div>
+                                            </div>
+                                        </a>
+                                    )}
 
                                     {/* Category Products */}
                                     {categoryGroup.products.map((product) => (
@@ -242,7 +398,7 @@ const productsByCategory = (dbCategories || [])
 
                                                 {/* Hover Overlay - Clickable Area */}
                                                 <a
-                                                    href={`/productos/${product.slug}`}
+                                                    href={`/productos/${categoryGroup.slug}/${product.slug}`}
                                                     class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white z-10"
                                                 >
                                                     <p class="text-xs leading-relaxed text-center mb-4 text-white/90">

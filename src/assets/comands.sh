@@ -1,0 +1,10 @@
+mv halo-100-main.png halo-100-main.png
+mv halo-200-main.png halo_200_main.png
+mv halo-300-main.png halo_300_main.png
+mv halo-100.png halo_100.png
+mv halo-200.png halo_200.png
+mv halo-300.png halo_300.png
+mv halo-150-main.png halo_150_main.png
+mv halo-150.png halo_150.png
+mv halo-240.png halo_240.png
+mv halo-240-main.png halo_240_main.png

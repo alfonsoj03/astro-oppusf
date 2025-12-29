@@ -1,0 +1,61 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ProductShowcase from "../../../components/ProductShowcase.astro";
+import { supabase } from "../../../lib/supabase";
+
+export async function getStaticPaths() {
+    // Fetch all categories
+    const { data: categories, error: categoriesError } = await supabase
+        .from("product_categories")
+        .select("*")
+        .order("position", { ascending: true });
+
+    if (categoriesError) {
+        console.error("Error fetching categories:", categoriesError);
+        return [];
+    }
+
+    // Fetch all products
+    const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("*")
+        .order("id");
+
+    if (productsError) {
+        console.error("Error fetching products:", productsError);
+    }
+
+    // Fetch product specs
+    const { data: specs, error: specsError } = await supabase
+        .from("product_specs")
+        .select("*");
+
+    if (specsError) {
+        console.error("Error fetching specs:", specsError);
+    }
+
+    return (categories || []).map((category) => {
+        return {
+            params: { category: category.slug },
+            props: {
+                category,
+                products: products || [],
+                specs: specs || [],
+                allCategories: categories || [],
+            },
+        };
+    });
+}
+
+const { category, products, specs, allCategories } = Astro.props;
+---
+
+<Layout>
+    <ProductShowcase
+        isCategoryPage={true}
+        category={category}
+        products={products}
+        specs={specs}
+        allCategories={allCategories}
+    />
+</Layout>
