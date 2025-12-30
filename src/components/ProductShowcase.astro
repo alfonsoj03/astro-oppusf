@@ -166,7 +166,7 @@ const productsByCategory = categoriesToShow
                     comment: p.efficiency
                         ? `${p.efficiency}`
                         : "Alta Eficiencia",
-                    image: { src: `/src/assets/${p.main_image}.png` },
+                    image: resolveAsset(p.main_image),
                     watts: p.led_power,
                     lumens: p.max_luminous_flux,
                     description:
@@ -389,7 +389,7 @@ const bannerImageSrc =
                                                 </div>
 
                                                 <img
-                                                    src={product.image.src}
+                                                    src={product.image}
                                                     alt={product.name}
                                                     class="w-[180%] h-[180%] object-contain object-bottom drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
                                                 />
