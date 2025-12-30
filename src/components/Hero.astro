@@ -4,7 +4,10 @@ import heroBg from "../assets/b9f87d67fa36b578fc899193ed536f1e87f40b82.png";
 import { HeroInteractive } from "./HeroInteractive";
 ---
 
-<section class="relative h-screen w-full overflow-hidden bg-black text-white">
+<section
+    class="relative h-screen w-full overflow-hidden bg-black text-white"
+    style="isolation: isolate;"
+>
     {/* Background Image */}
     <div class="absolute inset-0 z-0">
         <img
@@ -161,6 +164,16 @@ import { HeroInteractive } from "./HeroInteractive";
             opacity: 1;
             transform: translateX(0);
         }
+    }
+
+    .animate-fade-in-down,
+    .animate-scale-in,
+    .animate-fade-in-up,
+    .animate-fade-in-left,
+    .animate-fade-in-right {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
     }
 
     .animate-fade-in-down {

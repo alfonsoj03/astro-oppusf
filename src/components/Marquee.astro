@@ -1,0 +1,67 @@
+---
+const text =
+    "ENERGÍA SOLAR • ALUMBRADO PÚBLICO • SOSTENIBILIDAD • INNOVACIÓN • EFICIENCIA • ";
+---
+
+<div
+    class="marquee-container bg-black py-6 overflow-hidden border-y border-gray-800 relative"
+>
+    <div class="marquee-content flex w-max">
+        <div class="marquee-item">
+            <span
+                class="text-white text-4xl md:text-6xl font-bold tracking-tighter uppercase opacity-80"
+            >
+                {text}{text}
+            </span>
+        </div>
+        <div class="marquee-item">
+            <span
+                class="text-white text-4xl md:text-6xl font-bold tracking-tighter uppercase opacity-80"
+            >
+                {text}{text}
+            </span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .marquee-container {
+        /* Ensure the container is a stacking context for Safari */
+    }
+
+    .marquee-content {
+        display: flex;
+        width: max-content;
+        animation: marquee 30s linear infinite;
+        will-change: transform;
+        /* Force GPU acceleration */
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+
+    .marquee-item {
+        flex-shrink: 0;
+        padding-right: 2rem;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translate3d(0, 0, 0);
+        }
+        100% {
+            /* Move exactly half of the total width (one set of items) */
+            transform: translate3d(-50%, 0, 0);
+        }
+    }
+
+    /* Safari optimization: prevent sub-pixel jitter */
+    @media not all and (min-resolution: 0.001dpcm) {
+        @supports (-webkit-appearance: none) {
+            .marquee-content {
+                animation-duration: 30.01s; /* Slight offset can sometimes help Safari sync */
+            }
+        }
+    }
+</style>

@@ -306,26 +306,33 @@ const allImages = [
                 }
 
                 {/* Descargas */}
-                <div class="space-y-6">
-                    {
-                        downloads.map((download) => (
-                            <div>
-                                <p class="text-sm font-bold text-zinc-900 mb-4 uppercase tracking-wide">
-                                    {download.title}
-                                </p>
-                                <a
-                                    href={download.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="w-full sm:w-[320px] px-6 py-3 border border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-sm uppercase tracking-widest group"
-                                >
-                                    <Download class="w-4 h-4 group-hover:animate-bounce" />
-                                    Descargar PDF
-                                </a>
+                {
+                    downloads.length > 0 && (
+                        <div class="mb-12">
+                            <h2 class="mb-6 text-4xl font-light font-outfit">
+                                Archivos
+                            </h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {downloads.map((download) => (
+                                    <div>
+                                        <p class="text-sm font-bold text-zinc-900 mb-4 uppercase tracking-wide">
+                                            {download.title}
+                                        </p>
+                                        <a
+                                            href={download.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="w-full px-6 py-3 border border-[#FF8351] text-[#FF8351] rounded-lg hover:bg-[#FF8351] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 font-bold text-sm uppercase tracking-widest group"
+                                        >
+                                            <Download class="w-4 h-4 group-hover:animate-bounce" />
+                                            Descargar PDF
+                                        </a>
+                                    </div>
+                                ))}
                             </div>
-                        ))
-                    }
-                </div>
+                        </div>
+                    )
+                }
             </div>
         </div>
     </div>

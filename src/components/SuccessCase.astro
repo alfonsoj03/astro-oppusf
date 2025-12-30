@@ -135,7 +135,7 @@ const successCases =
         {/* Background Image */}
         <img
             src={bannerImg.src}
-            alt="Productos"
+            alt="Casos de éxito"
             class="absolute inset-0 w-full h-full object-cover"
         />
     </div>
@@ -149,7 +149,7 @@ const successCases =
             >
                 <span>Inicio</span>
                 <span class="text-[#FF8351]">/</span>
-                <span class="text-[#FF8351]">Productos</span>
+                <span class="text-[#FF8351]">Casos de exito</span>
             </div>
         </div>
     </div>
@@ -188,8 +188,8 @@ const successCases =
                 {
                     successCases.map((successCase, index) => (
                         <div
-                            class="success-case-card group flex flex-col animate-slide-up md:bg-zinc-50 lg:bg-transparent md:border md:border-zinc-200 lg:border-none md:hover:border-zinc-300 md:transition-colors md:duration-300"
-                            style={`animation-delay: ${index * 150}ms`}
+                            class="success-case-card group flex flex-col opacity-0 translate-y-8 transition-all duration-700 ease-out md:bg-zinc-50 lg:bg-transparent md:border md:border-zinc-200 lg:border-none md:hover:border-zinc-300"
+                            style={`transition-delay: ${index * 150}ms`}
                         >
                             {/* Image Area */}
                             <div class="relative aspect-[4/3] w-full overflow-hidden rounded-2xl md:rounded-none lg:rounded-2xl lg:mb-6 mb-6 md:mb-0">
@@ -244,21 +244,13 @@ const successCases =
         </div>
     </section>
 
-    <style>
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-slide-up {
-            animation: slideUp 0.8s ease-out forwards;
-            opacity: 0;
-        }
-    </style>
+    <script>
+        // Animar las tarjetas inmediatamente al cargar
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll(".success-case-card");
+            cards.forEach((card) => {
+                card.classList.remove("opacity-0", "translate-y-8");
+            });
+        });
+    </script>
 </section>

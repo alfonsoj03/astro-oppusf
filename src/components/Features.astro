@@ -42,7 +42,9 @@ const features = [
                 </h2>
             </div>
             <div class="max-w-md">
-                <p class="text-zinc-600 text-md lg:text-lg leading-relaxed font-normal">
+                <p
+                    class="text-zinc-600 text-md lg:text-lg leading-relaxed font-normal"
+                >
                     Entendemos que en el mundo de la iluminación, la confianza
                     lo es todo. En Opplux, nuestra misión va más allá de vender
                     productos; nos dedicamos a construir relaciones duraderas
@@ -55,7 +57,7 @@ const features = [
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {
                 features.map((feature, index) => (
-                    <div 
+                    <div
                         class="feature-card group relative aspect-[3/4] overflow-hidden rounded-xl bg-black opacity-0 translate-y-8 transition-all duration-700 ease-out"
                         style={`transition-delay: ${index * 100}ms`}
                     >
@@ -94,20 +96,20 @@ const features = [
 <script>
     const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: "0px",
+        threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.classList.remove('opacity-0', 'translate-y-8');
+                entry.target.classList.remove("opacity-0", "translate-y-8");
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.feature-card').forEach(card => {
+    document.querySelectorAll(".feature-card").forEach((card) => {
         observer.observe(card);
     });
 </script>

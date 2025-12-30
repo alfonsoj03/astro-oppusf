@@ -18,15 +18,18 @@ export function HeroInteractive() {
     useEffect(() => {
         // Initialize in the center
         if (typeof window !== "undefined") {
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
             mouseX.set(window.innerWidth / 2);
             mouseY.set(window.innerHeight / 2);
+
+            if (isSafari) return;
 
             const handleMouseMove = (e: globalThis.MouseEvent) => {
                 const { clientX, clientY } = e;
                 const { innerWidth, innerHeight } = window;
 
                 // Constrain movement to 60% of the screen, centered
-                // Map [0, width] -> [0.2*width, 0.8*width]
                 const constrainedX = innerWidth * 0.2 + (clientX / innerWidth) * (innerWidth * 0.6);
                 const constrainedY = innerHeight * 0.2 + (clientY / innerHeight) * (innerHeight * 0.6);
 
@@ -41,16 +44,18 @@ export function HeroInteractive() {
 
     return (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            {/* Interactive Brand Colors Glow Effect */}
+            {/* Interactive Brand Colors Glow Effect - Using radial gradient instead of blur for Safari performance */}
             <motion.div
-                className="absolute w-[600px] h-[600px] bg-gradient-to-br from-[#FF8351] to-[#922CDC] rounded-full blur-[150px] opacity-15"
+                className="absolute w-[800px] h-[800px] rounded-full opacity-20"
                 style={{
+                    background: "radial-gradient(circle at center, rgba(255, 131, 81, 0.4) 0%, rgba(146, 44, 220, 0.2) 40%, transparent 70%)",
                     left: 0,
                     top: 0,
                     x: springX,
                     y: springY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    willChange: "transform",
                 }}
             />
         </div>

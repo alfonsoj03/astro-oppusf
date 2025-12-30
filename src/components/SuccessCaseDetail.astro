@@ -52,7 +52,9 @@ const productsWithSpecs = products.map((product) => ({
   <div class="container mx-auto px-6">
     <div class="max-w-7xl mx-auto">
       {/* Title */}
-      <div class="mb-14 reveal-on-scroll" data-animation="fade-up">
+      <div
+        class="mb-14 reveal-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0"
+      >
         <p class="text-[#FF8351] text-xs tracking-[0.2em] uppercase mb-4">
           CASO DE ÉXITO
         </p>
@@ -77,8 +79,7 @@ const productsWithSpecs = products.map((product) => ({
         <div class="grid md:grid-cols-2 gap-16 lg:gap-24">
           {/* Right Column - Description (Now first in HTML for mobile) */}
           <div
-            class="space-y-6 text-zinc-600 order-first lg:order-last leading-relaxed reveal-on-scroll"
-            data-animation="fade-left"
+            class="space-y-6 text-zinc-600 order-first lg:order-last leading-relaxed reveal-on-scroll opacity-0 -translate-x-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-x-0"
           >
             <p>
               {description}
@@ -108,8 +109,7 @@ const productsWithSpecs = products.map((product) => ({
 
           {/* Left Column - Stats (Now second in HTML) */}
           <div
-            class="space-y-4 reveal-on-scroll"
-            data-animation="fade-right"
+            class="space-y-4 reveal-on-scroll opacity-0 translate-x-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-x-0"
             style="transition-delay: 200ms"
           >
             <div class="pb-2 border-b border-zinc-200">
@@ -169,10 +169,7 @@ const productsWithSpecs = products.map((product) => ({
           {
             productsWithSpecs && productsWithSpecs.length > 0 ? (
               productsWithSpecs.map((product) => (
-                <div
-                  class="product-card group relative bg-white cursor-pointer opacity-0 translate-y-8 transition-all duration-700 ease-out reveal-on-scroll"
-                  data-animation="fade-up"
-                >
+                <div class="product-card group relative bg-white cursor-pointer reveal-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-y-0">
                   {/* Product Image Container */}
                   <div class="relative aspect-square bg-zinc-50 flex items-end justify-center overflow-hidden">
                     {/* Technical Specs Badges - Top Left */}
@@ -249,38 +246,45 @@ const productsWithSpecs = products.map((product) => ({
   </div>
 </section>
 
-<style>
-  .reveal-on-scroll {
-    opacity: 0;
-    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .reveal-on-scroll[data-animation="fade-up"] {
-    transform: translateY(20px);
-  }
-
-  .reveal-on-scroll[data-animation="fade-left"] {
-    transform: translateX(-20px);
-  }
-
-  .reveal-on-scroll[data-animation="fade-right"] {
-    transform: translateX(20px);
-  }
-
-  .reveal-on-scroll.is-visible {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-</style>
-
 <script>
   function initAnimations() {
-    const elements = document.querySelectorAll(".reveal-on-scroll");
-    elements.forEach((el) => {
+    // Elementos que se animan inmediatamente (título, descripción, stats)
+    const immediateElements = document.querySelectorAll(
+      ".reveal-on-scroll:not(.product-card)",
+    );
+    immediateElements.forEach((el) => {
       // Pequeño delay para asegurar que el estado inicial se aplique antes de la transición
       setTimeout(() => {
         el.classList.add("is-visible");
       }, 100);
+    });
+
+    // Elementos que se animan con scroll (product cards)
+    const scrollElements = document.querySelectorAll(".product-card");
+
+    // Crear Intersection Observer para los productos
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // Agregar un pequeño delay escalonado para cada producto
+            setTimeout(() => {
+              entry.target.classList.add("is-visible");
+            }, index * 100);
+            // Dejar de observar el elemento una vez que se ha animado
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1, // El elemento debe estar al menos 10% visible
+        rootMargin: "0px 0px -50px 0px", // Trigger un poco antes de que llegue al borde inferior
+      },
+    );
+
+    // Observar cada producto
+    scrollElements.forEach((el) => {
+      observer.observe(el);
     });
   }
 
