@@ -1,6 +1,16 @@
 ---
-import { Menu, X, ArrowRight, ShoppingBag, ShoppingCart, Search, Youtube, Facebook } from "lucide-astro";
-import oppluxLogo from "../assets/258df82474b849b69ecba8069ce145ec98c5d6b4.png";
+import {
+    Menu,
+    X,
+    ArrowRight,
+    ShoppingBag,
+    ShoppingCart,
+    Search,
+    Youtube,
+    Facebook,
+} from "lucide-astro";
+import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
+import oppluxLogoWhite from "../assets/opplux_white.png";
 
 interface Props {
     theme?: "transparent" | "black";
@@ -20,25 +30,30 @@ const isBlackTheme = theme === "black";
             : "bg-transparent py-6",
     ]}
     data-theme={theme}
+    data-logo-white={oppluxLogoWhite.src}
+    data-logo-color={oppluxLogoFullColor.src}
 >
-    <div class="container mx-auto px-3 hidden lg:flex items-center justify-between">
+    <div
+        class="container mx-auto px-3 hidden lg:flex items-center justify-between"
+    >
         {/* Logo - Left */}
         <div class="flex-shrink-0 grid">
-            <div class="col-start-1 row-start-1 flex items-center justify-start">
+            <div
+                class="col-start-1 row-start-1 flex items-center justify-start"
+            >
                 <a href="/" class="flex items-center gap-2">
                     <img
-                        src={oppluxLogo.src}
+                        src={oppluxLogoWhite.src}
                         alt="Opplux"
                         id="header-logo"
-                        class:list={[
-                            "h-10 w-auto object-contain transition-all duration-300",
-                            isBlackTheme ? "" : "brightness-200 contrast-100",
-                        ]}
+                        class="h-10 w-auto object-contain transition-all duration-300"
                     />
                 </a>
             </div>
             {/* Hidden Button to synchronize width */}
-            <div class="col-start-1 row-start-1 invisible pointer-events-none flex items-center gap-2 px-5 py-2 text-sm font-bold whitespace-nowrap">
+            <div
+                class="col-start-1 row-start-1 invisible pointer-events-none flex items-center gap-2 px-5 py-2 text-sm font-bold whitespace-nowrap"
+            >
                 <ShoppingCart class="w-4 h-4" />
                 Cotizar Ahora
             </div>
@@ -108,32 +123,36 @@ const isBlackTheme = theme === "black";
                     <ShoppingCart class="w-4 h-4" />
                     Cotizar Ahora
                     <!-- Cart counter badge -->
-                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300">
+                    <span
+                        id="cart-counter"
+                        class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300"
+                    >
                         3
                     </span>
                 </a>
             </div>
             {/* Hidden Logo to synchronize width */}
-            <div class="col-start-1 row-start-1 invisible pointer-events-none flex items-center justify-end">
+            <div
+                class="col-start-1 row-start-1 invisible pointer-events-none flex items-center justify-end"
+            >
                 <div class="flex items-center gap-2">
-                    <img src={oppluxLogo.src} class="h-10 w-auto" />
+                    <img src={oppluxLogoFullColor.src} class="h-10 w-auto" />
                 </div>
             </div>
         </div>
     </div>
 
     {/* Mobile Header */}
-    <div class="container mx-auto px-6 flex lg:hidden items-center justify-between relative z-[70]">
+    <div
+        class="container mx-auto px-6 flex lg:hidden items-center justify-between relative z-[70]"
+    >
         {/* Logo */}
         <a href="/" class="flex items-center gap-2">
             <img
-                src={oppluxLogo.src}
+                src={oppluxLogoWhite.src}
                 alt="Opplux"
                 id="mobile-logo"
-                class:list={[
-                    "h-10 w-auto object-contain transition-all duration-300",
-                    isBlackTheme ? "" : "brightness-200 contrast-100",
-                ]}
+                class="h-10 w-auto object-contain transition-all duration-300"
             />
         </a>
 
@@ -143,12 +162,18 @@ const isBlackTheme = theme === "black";
                 href="/cotizacion"
                 id="mobile-cart-btn"
                 class:list={[
-                    "relative p-2 transition-opacity duration-300",
-                    isBlackTheme ? "text-white" : "text-white",
+                    "relative flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 whitespace-nowrap",
+                    isBlackTheme
+                        ? "bg-white text-black hover:bg-gray-200"
+                        : "bg-white text-black hover:bg-gray-200",
                 ]}
             >
-                <ShoppingCart class="w-6 h-6 transition-all duration-300" />
-                <span id="mobile-cart-counter" class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-300 hidden">
+                <ShoppingCart class="w-4 h-4 transition-all duration-300" />
+                <span>Cotizar</span>
+                <span
+                    id="mobile-cart-counter"
+                    class="absolute -top-1 -right-1 bg-[#FF8351] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center transition-transform duration-300 hidden"
+                >
                     0
                 </span>
             </a>
@@ -163,61 +188,82 @@ const isBlackTheme = theme === "black";
                 aria-label="Menu"
             >
                 <div class="w-6 h-5 flex flex-col justify-between">
-                    <span id="line-1" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
-                    <span id="line-2" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
-                    <span id="line-3" class:list={["w-full h-0.5 transition-all duration-300", isBlackTheme ? "bg-white" : "bg-white"]}></span>
+                    <span
+                        id="line-1"
+                        class:list={[
+                            "w-full h-0.5 transition-all duration-300",
+                            isBlackTheme ? "bg-white" : "bg-white",
+                        ]}></span>
+                    <span
+                        id="line-2"
+                        class:list={[
+                            "w-full h-0.5 transition-all duration-300",
+                            isBlackTheme ? "bg-white" : "bg-white",
+                        ]}></span>
+                    <span
+                        id="line-3"
+                        class:list={[
+                            "w-full h-0.5 transition-all duration-300",
+                            isBlackTheme ? "bg-white" : "bg-white",
+                        ]}></span>
                 </div>
             </button>
         </div>
     </div>
 </header>
 
-{/* Mobile Nav - Slide-in from Right (Outside header to avoid z-index conflicts) */}
+{
+    /* Mobile Nav - Slide-in from Right (Outside header to avoid z-index conflicts) */
+}
 <div
     id="mobile-menu"
     class="fixed inset-0 z-[90] lg:hidden bg-white transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col"
 >
     <div class="container mx-auto px-6 flex flex-col flex-1">
         <nav class="flex flex-col gap-4 pt-24 flex-1">
-            <a href="/" class="text-3xl text-black mobile-link"
-                >Inicio</a
+            <a href="/" class="text-3xl text-black mobile-link">Inicio</a>
+            <a href="/nosotros" class="text-3xl text-black mobile-link"
+                >Nosotros</a
             >
-            <a
-                href="/nosotros"
-                class="text-3xl text-black mobile-link">Nosotros</a
+            <a href="/productos" class="text-3xl text-black mobile-link"
+                >Productos</a
             >
-            <a
-                href="/productos"
-                class="text-3xl text-black mobile-link">Productos</a
+            <a href="/casos-de-exito" class="text-3xl text-black mobile-link"
+                >Casos de éxito</a
             >
-            <a
-                href="/casos-de-exito"
-                class="text-3xl text-black mobile-link">Casos de éxito</a
-            >
-            <a
-                href="/cotizacion"
-                class="text-3xl text-black mobile-link"
-            >
+            <a href="/cotizacion" class="text-3xl text-black mobile-link">
                 <span class="relative inline-block">
                     Carrito de cotización
-                    <span id="menu-cart-counter" class="absolute -top-1 -right-4 translate-x-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                    <span
+                        id="menu-cart-counter"
+                        class="absolute -top-1 -right-4 translate-x-1 bg-[#FF8351] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden"
+                    >
                         0
                     </span>
                 </span>
             </a>
         </nav>
-        
+
         {/* WhatsApp Contact Button */}
         <div class="mb-16">
-            <a 
-                href="https://wa.me/5218112345678" 
-                target="_blank" 
+            <a
+                href="https://wa.me/5218112345678"
+                target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center justify-start gap-3 py-6 text-black hover:bg-gray-50 transition-colors"
             >
                 <span class="text-3xl">Contacto Whatsapp</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#25D366" class="w-8 h-8">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="#25D366"
+                    class="w-8 h-8"
+                >
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                    ></path>
                 </svg>
             </a>
         </div>
@@ -238,6 +284,8 @@ const isBlackTheme = theme === "black";
     const mobileCartBtn = document.getElementById("mobile-cart-btn");
 
     const initialTheme = header?.dataset.theme || "transparent";
+    const logoWhite = header?.dataset.logoWhite || "";
+    const logoColor = header?.dataset.logoColor || "";
 
     function updateHeaderStyle() {
         if (!header) return;
@@ -245,30 +293,54 @@ const isBlackTheme = theme === "black";
         // If menu is open, keep header transparent and elements black
         const isMenuOpen = mobileMenu?.classList.contains("translate-x-0");
         if (isMenuOpen) {
-            header.classList.remove("bg-black", "bg-white/80", "backdrop-blur-md", "border-b", "border-gray-200", "border-gray-800");
+            header.classList.remove(
+                "bg-black",
+                "bg-white/80",
+                "backdrop-blur-md",
+                "border-b",
+                "border-gray-200",
+                "border-gray-800",
+            );
             header.classList.add("bg-transparent");
-            
+
             // Elements should be black on white menu
-            [line1, line2, line3].forEach(line => {
+            [line1, line2, line3].forEach((line) => {
                 line?.classList.remove("bg-white");
                 line?.classList.add("bg-black");
             });
-            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            if (mobileLogo) (mobileLogo as HTMLImageElement).src = logoColor;
             return;
         }
 
         if (initialTheme === "black") {
-            header.classList.add("bg-black", "py-4", "border-b", "border-gray-800");
+            header.classList.add(
+                "bg-black",
+                "py-4",
+                "border-b",
+                "border-gray-800",
+            );
             header.classList.remove("bg-transparent", "py-6");
-            
+
             // Elements should be white on black header
-            [line1, line2, line3].forEach(line => {
+            [line1, line2, line3].forEach((line) => {
                 line?.classList.remove("bg-black");
                 line?.classList.add("bg-white");
             });
-            // The template says isBlackTheme ? "" : "brightness-200 contrast-100"
-            // So for black theme it should NOT have those classes.
-            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            if (logo) (logo as HTMLImageElement).src = logoWhite;
+            if (mobileLogo) (mobileLogo as HTMLImageElement).src = logoWhite;
+
+            if (mobileCartBtn) {
+                mobileCartBtn.classList.add(
+                    "bg-white",
+                    "text-black",
+                    "hover:bg-gray-200",
+                );
+                mobileCartBtn.classList.remove(
+                    "bg-black",
+                    "text-white",
+                    "hover:bg-gray-800",
+                );
+            }
             return;
         }
 
@@ -286,8 +358,8 @@ const isBlackTheme = theme === "black";
                 "duration-0",
             );
 
-            logo?.classList.remove("brightness-200", "contrast-100");
-            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            if (logo) (logo as HTMLImageElement).src = logoColor;
+            if (mobileLogo) (mobileLogo as HTMLImageElement).src = logoColor;
 
             navLinks.forEach((link) => {
                 link.classList.remove("text-white/80", "hover:text-white");
@@ -318,13 +390,20 @@ const isBlackTheme = theme === "black";
                 line2.classList.add("bg-black");
                 line3.classList.add("bg-black");
             }
-            
+
             // Change mobile cart icon color to black on scroll
             if (mobileCartBtn) {
-                mobileCartBtn.classList.remove("text-white");
-                mobileCartBtn.classList.add("text-black");
+                mobileCartBtn.classList.remove(
+                    "bg-white",
+                    "text-black",
+                    "hover:bg-gray-200",
+                );
+                mobileCartBtn.classList.add(
+                    "bg-black",
+                    "text-white",
+                    "hover:bg-gray-800",
+                );
             }
-
         } else {
             header.classList.add("bg-transparent", "py-6");
             header.classList.remove(
@@ -337,8 +416,8 @@ const isBlackTheme = theme === "black";
                 "duration-0",
             );
 
-            logo?.classList.add("brightness-200", "contrast-100");
-            mobileLogo?.classList.add("brightness-200", "contrast-100");
+            if (logo) (logo as HTMLImageElement).src = logoWhite;
+            if (mobileLogo) (mobileLogo as HTMLImageElement).src = logoWhite;
 
             navLinks.forEach((link) => {
                 link.classList.add("text-white/80", "hover:text-white");
@@ -369,11 +448,19 @@ const isBlackTheme = theme === "black";
                 line2.classList.add("bg-white");
                 line3.classList.add("bg-white");
             }
-            
+
             // Change mobile cart icon color back to white when not scrolled
             if (mobileCartBtn) {
-                mobileCartBtn.classList.add("text-white");
-                mobileCartBtn.classList.remove("text-black");
+                mobileCartBtn.classList.add(
+                    "bg-white",
+                    "text-black",
+                    "hover:bg-gray-200",
+                );
+                mobileCartBtn.classList.remove(
+                    "bg-black",
+                    "text-white",
+                    "hover:bg-gray-800",
+                );
             }
         }
     }
@@ -389,30 +476,34 @@ const isBlackTheme = theme === "black";
     let isAnimating = false;
     mobileMenuBtn?.addEventListener("click", async () => {
         if (isAnimating) return;
-        
+
         const isOpen = mobileMenu?.classList.contains("translate-x-0");
 
         if (isOpen) {
             // Close menu
             isAnimating = true;
-            
+
             // Reverse animation: X → Cross → Hamburger
             // Step 1: X to Cross (rotate back to perpendicular)
             line1?.classList.remove("rotate-45");
             line1?.classList.add("-rotate-90");
             line2?.classList.remove("-rotate-45");
             line2?.classList.add("rotate-0");
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-            
+
+            await new Promise((resolve) => setTimeout(resolve, 150));
+
             // Step 2: Cross to Hamburger
-            line1?.classList.remove("-rotate-90", "translate-y-[9px]", "-rotate-45");
+            line1?.classList.remove(
+                "-rotate-90",
+                "translate-y-[9px]",
+                "-rotate-45",
+            );
             line2?.classList.remove("rotate-0", "rotate-45");
             line3?.classList.remove("opacity-0", "scale-0");
-            
+
             // Change lines back to white/black based on scroll
             const isScrolled = window.scrollY > 50;
-            [line1, line2, line3].forEach(line => {
+            [line1, line2, line3].forEach((line) => {
                 if (initialTheme === "black") {
                     line?.classList.remove("bg-black");
                     line?.classList.add("bg-white");
@@ -424,63 +515,73 @@ const isBlackTheme = theme === "black";
                     line?.classList.remove("bg-white");
                 }
             });
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-            
+
+            await new Promise((resolve) => setTimeout(resolve, 150));
+
             // Slide menu out
             mobileMenu?.classList.remove("translate-x-0");
             mobileMenu?.classList.add("translate-x-full");
-            
+
             // Show cart icon after menu has mostly slid out (400ms delay)
             setTimeout(() => {
                 if (mobileCartBtn) {
-                    mobileCartBtn.classList.remove("opacity-0", "pointer-events-none");
+                    mobileCartBtn.classList.remove(
+                        "opacity-0",
+                        "pointer-events-none",
+                    );
                 }
             }, 200);
 
             // Restore header style in close.
             updateHeaderStyle();
-            
+
             document.body.style.overflow = "";
             isAnimating = false;
         } else {
             // Open menu
             isAnimating = true;
-            
+
             // Change lines to black IMMEDIATELY for visibility on white menu
-            [line1, line2, line3].forEach(line => {
+            [line1, line2, line3].forEach((line) => {
                 line?.classList.remove("bg-white");
                 line?.classList.add("bg-black");
             });
-            mobileLogo?.classList.remove("brightness-200", "contrast-100");
+            if (mobileLogo) (mobileLogo as HTMLImageElement).src = logoColor;
 
             // Remove header border when menu is open
             header?.classList.remove("border-b", "border-gray-200");
-            
+
             // Slide menu in
             mobileMenu?.classList.remove("translate-x-full");
             mobileMenu?.classList.add("translate-x-0");
 
             // Make header transparent when menu is open to let menu show through
-            header?.classList.remove("bg-black", "bg-white/80", "backdrop-blur-md", "border-b", "border-gray-200", "border-gray-800");
+            header?.classList.remove(
+                "bg-black",
+                "bg-white/80",
+                "backdrop-blur-md",
+                "border-b",
+                "border-gray-200",
+                "border-gray-800",
+            );
             header?.classList.add("bg-transparent");
 
             // Hide cart icon
             if (mobileCartBtn) {
                 mobileCartBtn.classList.add("opacity-0", "pointer-events-none");
             }
-            
+
             // Step 1: Hamburger to Cross (line 3 disappears, line 1 rotates 90° to be perpendicular to line 2)
             line3?.classList.add("opacity-0", "scale-0");
             line1?.classList.add("-rotate-90", "translate-y-[9px]");
-            
-            await new Promise(resolve => setTimeout(resolve, 300));
-            
+
+            await new Promise((resolve) => setTimeout(resolve, 300));
+
             // Step 2: Rotate the cross 45° to form an X (both lines rotate together in harmony)
             line1?.classList.remove("-rotate-90");
-            line1?.classList.add("-rotate-45");  // -90° + 45° = -45°
-            line2?.classList.add("rotate-45");     // 0° + 45° = 45°
-            
+            line1?.classList.add("-rotate-45"); // -90° + 45° = -45°
+            line2?.classList.add("rotate-45"); // 0° + 45° = 45°
+
             document.body.style.overflow = "hidden";
             isAnimating = false;
         }
@@ -491,21 +592,21 @@ const isBlackTheme = theme === "black";
     mobileLinks.forEach((link) => {
         link.addEventListener("click", async () => {
             if (isAnimating) return;
-            
+
             isAnimating = true;
-            
+
             // Trigger close animation
-            line1?.classList.remove("-rotate-45");  // Remove -45°
-            line1?.classList.add("-rotate-90");     // Back to -90° (cross)
-            line2?.classList.remove("rotate-45");   // Remove 45°
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-            
+            line1?.classList.remove("-rotate-45"); // Remove -45°
+            line1?.classList.add("-rotate-90"); // Back to -90° (cross)
+            line2?.classList.remove("rotate-45"); // Remove 45°
+
+            await new Promise((resolve) => setTimeout(resolve, 150));
+
             line1?.classList.remove("-rotate-90", "translate-y-[9px]");
             line3?.classList.remove("opacity-0", "scale-0");
-            
+
             const isScrolled = window.scrollY > 50;
-            [line1, line2, line3].forEach(line => {
+            [line1, line2, line3].forEach((line) => {
                 if (initialTheme === "black") {
                     line?.classList.remove("bg-black");
                     line?.classList.add("bg-white");
@@ -517,60 +618,66 @@ const isBlackTheme = theme === "black";
                     line?.classList.remove("bg-white");
                 }
             });
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-            
+
+            await new Promise((resolve) => setTimeout(resolve, 150));
+
             mobileMenu?.classList.remove("translate-x-0");
             mobileMenu?.classList.add("translate-x-full");
-            
+
             // Show cart icon after menu has mostly slid out (400ms delay)
             setTimeout(() => {
                 if (mobileCartBtn) {
-                    mobileCartBtn.classList.remove("opacity-0", "pointer-events-none");
+                    mobileCartBtn.classList.remove(
+                        "opacity-0",
+                        "pointer-events-none",
+                    );
                 }
             }, 400);
-            
+
             document.body.style.overflow = "";
             isAnimating = false;
         });
     });
 
     // Cart Counter Animation
-    const cartCounter = document.getElementById('cart-counter');
-    const mobileCartCounter = document.getElementById('mobile-cart-counter');
-    const menuCartCounter = document.getElementById('menu-cart-counter');
-    
+    const cartCounter = document.getElementById("cart-counter");
+    const mobileCartCounter = document.getElementById("mobile-cart-counter");
+    const menuCartCounter = document.getElementById("menu-cart-counter");
+
     function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('opplux_cart') || '[]');
-        const totalItems = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
-        
+        const cart = JSON.parse(localStorage.getItem("opplux_cart") || "[]");
+        const totalItems = cart.reduce(
+            (acc: number, item: any) => acc + item.quantity,
+            0,
+        );
+
         // Update desktop counter
         if (cartCounter) {
             cartCounter.textContent = totalItems.toString();
             if (totalItems === 0) {
-                cartCounter.classList.add('hidden');
+                cartCounter.classList.add("hidden");
             } else {
-                cartCounter.classList.remove('hidden');
+                cartCounter.classList.remove("hidden");
             }
         }
-        
+
         // Update mobile counter (icon)
         if (mobileCartCounter) {
             mobileCartCounter.textContent = totalItems.toString();
             if (totalItems === 0) {
-                mobileCartCounter.classList.add('hidden');
+                mobileCartCounter.classList.add("hidden");
             } else {
-                mobileCartCounter.classList.remove('hidden');
+                mobileCartCounter.classList.remove("hidden");
             }
         }
-        
+
         // Update menu cart counter (text link)
         if (menuCartCounter) {
             menuCartCounter.textContent = totalItems.toString();
             if (totalItems === 0) {
-                menuCartCounter.classList.add('hidden');
+                menuCartCounter.classList.add("hidden");
             } else {
-                menuCartCounter.classList.remove('hidden');
+                menuCartCounter.classList.remove("hidden");
             }
         }
     }
@@ -578,20 +685,20 @@ const isBlackTheme = theme === "black";
     // Initial load
     updateCartCount();
 
-    window.addEventListener('add-to-cart', () => {
+    window.addEventListener("add-to-cart", () => {
         updateCartCount();
 
         // Add pop animation to both counters
         if (cartCounter) {
-            cartCounter.classList.remove('animate-pop');
+            cartCounter.classList.remove("animate-pop");
             void cartCounter.offsetWidth;
-            cartCounter.classList.add('animate-pop');
+            cartCounter.classList.add("animate-pop");
         }
-        
+
         if (mobileCartCounter) {
-            mobileCartCounter.classList.remove('animate-pop');
+            mobileCartCounter.classList.remove("animate-pop");
             void mobileCartCounter.offsetWidth;
-            mobileCartCounter.classList.add('animate-pop');
+            mobileCartCounter.classList.add("animate-pop");
         }
     });
 </script>

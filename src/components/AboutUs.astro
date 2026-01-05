@@ -1,4 +1,6 @@
 ---
+import teamwork from "../assets/teamwork.png";
+
 interface CoreValue {
     number: number;
     title: string;
@@ -10,43 +12,43 @@ const coreValues: CoreValue[] = [
         number: 1,
         title: "Innovación constante",
         description:
-            "Nos mantenemos a la vanguardia de la tecnología LED, investigando y desarrollando soluciones que superen las expectativas del mercado.",
+            "Siempre vamos un paso adelante, aplicando tecnología de vanguardia que supere las expectativas de nuestros clientes y eleve la eficiencia de tus soluciones de iluminación.",
     },
     {
         number: 2,
         title: "Calidad sin compromisos",
         description:
-            "Cada luminaria pasa por rigurosos controles de calidad. No aceptamos menos que la excelencia en cada producto que entregamos.",
+            "Cada luminaria que entregamos pasa por estrictos controles y pruebas acreditadas, buscamos ofrecerte productos confiables y consistentes.",
     },
     {
         number: 3,
-        title: "Sostenibilidad activa",
+        title: "Disponibilidad inmediata",
         description:
-            "Diseñamos pensando en el futuro del planeta. Eficiencia energética y materiales sostenibles son el corazón de nuestro desarrollo.",
+            "Sabemos como funciona el sector, por eso trabajamos para mantener inventario permanente y procesos ágiles que reducen demoras y aceleran tu avance.",
     },
     {
         number: 4,
         title: "Cercanía con el cliente",
         description:
-            "Tu proyecto es nuestro proyecto. Trabajamos codo a codo contigo para entender tus necesidades y superarlas.",
+            "Tu éxito es nuestro éxito. Primero comprendemos tus necesidades reales para adaptar soluciones que realmente funcionen en tu contexto.",
     },
     {
         number: 5,
         title: "Transparencia total",
         description:
-            "Comunicación clara, precios justos y procesos transparentes. Lo que ves es lo que obtienes, sin sorpresas.",
+            "Comunicación clara, procesos honestos y precios competitivos en el mercado para que puedas tomar decisiones con confianza.",
     },
     {
         number: 6,
-        title: "Soluciones personalizadas",
+        title: "Cumplimiento y respaldo normativo",
         description:
-            "No hay dos proyectos iguales. Adaptamos nuestra tecnología a tus necesidades específicas con flexibilidad total.",
+            "Nuestros productos cumplen normas oficiales mexicanas y estándares internacionales, incluyendo certificaciones para áreas peligrosas.",
     },
     {
         number: 7,
         title: "Compromiso a largo plazo",
         description:
-            "No terminamos con la instalación. Estamos contigo con soporte, garantías extensas y un compromiso que perdura en el tiempo.",
+            "No termina en la compra ni instalación. Te brindamos soporte y garantías extendidas para que tu inversión esté segura a lo largo del tiempo.",
     },
 ];
 ---
@@ -59,34 +61,34 @@ const coreValues: CoreValue[] = [
                 <h2
                     class="text-5xl lg:text-6xl lg:text-7xl mb-8 leading-tight font-bold"
                 >
-                    Lo que nos hace <span class="italic text-[#FF8351]">diferentes</span>
+                    Lo que nos hace <span class="italic text-[#FF8351]"
+                        >diferentes</span
+                    >
                 </h2>
                 <div
                     class="max-w-3xl mx-auto space-y-6 text-lg lg:text-xl text-zinc-700 leading-relaxed"
                 >
                     <p>
-                        En Opplux, combinamos innovación tecnológica con un
-                        profundo compromiso por la sostenibilidad. Desde
-                        nuestros inicios, hemos trabajado para transformar la
-                        manera en que las empresas e instituciones entienden la
-                        iluminación profesional.
+                        En <b>Opplux</b> no solo creamos soluciones de iluminación
+                        profesional: <b>somos tu aliado estratégico</b> para proyectos
+                        que no pueden esperar.
                     </p>
                     <p>
-                        No solo ofrecemos productos de alta calidad, sino
-                        soluciones integrales que se adaptan a las necesidades
-                        específicas de cada proyecto. Nuestro equipo de
-                        ingenieros y especialistas trabaja día a día para
-                        garantizar que cada luminaria cumpla con los más altos
-                        estándares de eficiencia energética y durabilidad.
+                        Nuestra visión se basa en mantener un amplio stock
+                        permanente para brindarte <b>disponibilidad inmediata</b
+                        >, y en ofrecer un compromiso contigo a través de <b
+                            >respaldo técnico y garantías confiables</b
+                        >, para asegurarnos de que tu proyecto se lleve a cabo a
+                        tiempo, de forma segura y con tranquilidad operativa.
                     </p>
                     <p>
-                        Creemos que la iluminación va más allá de proporcionar
-                        luz: crea ambientes, mejora la productividad y
-                        contribuye al bienestar de las personas. Por eso, cada
-                        diseño que desarrollamos está pensado para marcar la
-                        diferencia en el mundo real, acompañándote en cada paso
-                        del camino con soporte técnico personalizado y un
-                        compromiso que perdura en el tiempo.
+                        Nuestra experiencia forma parte del ecosistema <b
+                            >Oppus Global LLC</b
+                        >, donde nuestro equipo técnico pone en marcha
+                        soluciones de ingeniería para parques solares,
+                        impulsando así la eficiencia operativa y la
+                        confiabilidad de las instalaciones, asegurando
+                        resultados sostenibles y de alto desempeño.
                     </p>
                 </div>
             </div>
@@ -97,7 +99,7 @@ const coreValues: CoreValue[] = [
                 data-delay="200"
             >
                 <img
-                    src="https://images.unsplash.com/photo-1758873268851-feebbfb1d037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjB0ZWFtJTIwY29sbGFib3JhdGlvbnxlbnwxfHx8fDE3NjUzODU2OTF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                    src={teamwork.src}
                     alt="Equipo Opplux"
                     class="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
                 />
@@ -135,23 +137,27 @@ const coreValues: CoreValue[] = [
                 >
                     NUESTROS VALORES
                 </p>
-                <h2 class="text-4xl md:text-5xl lg:text-6xl leading-tight font-bold">
+                <h2
+                    class="text-4xl md:text-5xl lg:text-6xl leading-tight font-bold"
+                >
                     Lo que más importa para nosotros.
                 </h2>
             </div>
 
             <!-- Values Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:gap-x-16 gap-x-16 md:gap-x-8 gap-y-12">
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:gap-x-16 gap-x-16 md:gap-x-8 gap-y-12"
+            >
                 {
                     coreValues.map((value, index) => {
                         const colors = [
-                            '#3b82f6', // blue
-                            '#10b981', // green
-                            '#f59e0b', // amber
-                            '#ef4444', // red
-                            '#8b5cf6', // purple
-                            '#ec4899', // pink
-                            '#14b8a6', // teal
+                            "#3b82f6", // blue
+                            "#10b981", // green
+                            "#f59e0b", // amber
+                            "#ef4444", // red
+                            "#8b5cf6", // purple
+                            "#ec4899", // pink
+                            "#14b8a6", // teal
                         ];
                         const color = colors[index % colors.length];
                         return (
@@ -161,7 +167,7 @@ const coreValues: CoreValue[] = [
                             >
                                 {/* Number Circle */}
                                 <div class="flex-shrink-0">
-                                    <div 
+                                    <div
                                         class="w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold"
                                         style={`border-color: ${color}; color: ${color};`}
                                     >
@@ -169,16 +175,16 @@ const coreValues: CoreValue[] = [
                                     </div>
                                 </div>
 
-                            {/* Content */}
-                            <div class="flex-1">
-                                <h3 class="text-xl lg:text-2xl mb-3 text-white font-bold">
-                                    {value.title}
-                                </h3>
-                                <p class="text-zinc-400 md:text-[14px] lg:text-[16px] leading-relaxed">
-                                    {value.description}
-                                </p>
+                                {/* Content */}
+                                <div class="flex-1">
+                                    <h3 class="text-xl lg:text-2xl mb-3 text-white font-bold">
+                                        {value.title}
+                                    </h3>
+                                    <p class="text-zinc-400 md:text-[14px] lg:text-[16px] leading-relaxed">
+                                        {value.description}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
                         );
                     })
                 }
@@ -286,9 +292,8 @@ const coreValues: CoreValue[] = [
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 const delay =
-                    parseInt(
-                        entry.target.getAttribute("data-delay") || "0",
-                    ) || 0;
+                    parseInt(entry.target.getAttribute("data-delay") || "0") ||
+                    0;
                 setTimeout(() => {
                     entry.target.classList.add("visible");
                 }, delay);

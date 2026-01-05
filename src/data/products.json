@@ -1,30 +1,21 @@
 [
   {
-    "slug": "oppus-orbi-50w",
-    "name": "Orbi 50",
-    "warranty": "5 años",
-    "led_power": "50W",
-    "max_luminous_flux": "7000 Lumens",
-    "efficiency": "140 Lm/W",
-    "main_image": "orbi-50"
-  },
-  {
     "slug": "opp-halo-240w",
     "name": "Halo 240",
     "warranty": "5 años",
     "led_power": "240W",
     "max_luminous_flux": "40800 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "halo-240"
+    "main_image": "halo_240"
   },
   {
-    "slug": "opp-halo-200w",
-    "name": "Halo 200",
+    "slug": "oppus-orbi-50w",
+    "name": "Orbi 50",
     "warranty": "5 años",
-    "led_power": "200W",
-    "max_luminous_flux": "34000 Lumens",
-    "efficiency": "170 Lm/W",
-    "main_image": "halo-200"
+    "led_power": "50W",
+    "max_luminous_flux": "7000 Lumens",
+    "efficiency": "140 Lm/W",
+    "main_image": "orbi_50"
   },
   {
     "slug": "opp-halo-150w",
@@ -33,43 +24,25 @@
     "led_power": "150W",
     "max_luminous_flux": "25500 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "halo-150"
+    "main_image": "halo_150"
   },
   {
-    "slug": "opp-orbi-60w",
-    "name": "Orbi 60",
+    "slug": "opp-halo-200w",
+    "name": "Halo 200",
     "warranty": "5 años",
-    "led_power": "60W",
-    "max_luminous_flux": "Up to 8400 Lumens",
-    "efficiency": "140 Lm/W",
-    "main_image": "orbi-60"
-  },
-  {
-    "slug": "opp-sunpro-100w",
-    "name": "Sunpro 100",
-    "warranty": "5 años",
-    "led_power": "100W",
-    "max_luminous_flux": "17000 Lm",
+    "led_power": "200W",
+    "max_luminous_flux": "34000 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "sunpro-100"
+    "main_image": "halo_200"
   },
   {
-    "slug": "opp-sunpro-120w",
-    "name": "Sunpro 120",
-    "warranty": "5 años",
-    "led_power": "120W",
-    "max_luminous_flux": "20400 Lm",
-    "efficiency": "170 Lm/W",
-    "main_image": "sunpro-120"
-  },
-  {
-    "slug": "opp-halo-100w",
-    "name": "Halo 100",
-    "warranty": "5 años",
+    "slug": "opp-duke-100",
+    "name": "Duke 100",
+    "warranty": null,
     "led_power": "100W",
     "max_luminous_flux": "17000 Lumens",
-    "efficiency": "170Lm/W",
-    "main_image": "halo-100"
+    "efficiency": "170 Lm/W",
+    "main_image": "duke_100"
   },
   {
     "slug": "opp-halo-300w",
@@ -78,42 +51,168 @@
     "led_power": "300W",
     "max_luminous_flux": "51000 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "halo-300"
+    "main_image": "halo_300"
   },
   {
-    "slug": "opp-sunpro-60w",
-    "name": "Sunpro 60",
+    "slug": "opp-orbi-60w",
+    "name": "Orbi 60",
     "warranty": "5 años",
     "led_power": "60W",
-    "max_luminous_flux": "10200 Lm",
+    "max_luminous_flux": "Hasta 8400 Lumens",
+    "efficiency": "140 Lm/W",
+    "main_image": "orbi_60"
+  },
+  {
+    "slug": "opp-aura-300",
+    "name": "Aura 300",
+    "warranty": "5 años",
+    "led_power": "300W",
+    "max_luminous_flux": "45000 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_300"
+  },
+  {
+    "slug": "opp-halo-100w",
+    "name": "Halo 100",
+    "warranty": "5 años",
+    "led_power": "100W",
+    "max_luminous_flux": "17000 Lumens",
+    "efficiency": "170Lm/W",
+    "main_image": "halo_100"
+  },
+  {
+    "slug": "opp-sunpro-120w",
+    "name": "Sunpro 120",
+    "warranty": "5 años",
+    "led_power": "120W",
+    "max_luminous_flux": "20400 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "sunpro-60"
+    "main_image": "sunpro_120"
+  },
+  {
+    "slug": "opp-sunpro-100w",
+    "name": "Sunpro 100",
+    "warranty": "5 años",
+    "led_power": "100W",
+    "max_luminous_flux": "17000 Lumens",
+    "efficiency": "170 Lm/W",
+    "main_image": "sunpro_100"
+  },
+  {
+    "slug": "opp-holo-80-120W",
+    "name": "Holo 80-120",
+    "warranty": "5 años",
+    "led_power": "80-120W ajustable",
+    "max_luminous_flux": "Hasta 16000 Lumens",
+    "efficiency": "140 Lm/W",
+    "main_image": "holo_80_120"
+  },
+  {
+    "slug": "opp-duke-200",
+    "name": "Duke 200",
+    "warranty": null,
+    "led_power": "200W",
+    "max_luminous_flux": "34000 Lumens",
+    "efficiency": "170 Lm/W",
+    "main_image": "duke_200"
   },
   {
     "slug": "opp-sunpro-80w",
     "name": "Sunpro 80",
     "warranty": "5 años",
     "led_power": "80W",
-    "max_luminous_flux": "13200 Lm",
+    "max_luminous_flux": "13200 Lumens",
     "efficiency": "170 Lm/W",
-    "main_image": "sunpro-80"
-  },
-  {
-    "slug": "opp-solus-60w",
-    "name": "Solus 60",
-    "warranty": "3 años",
-    "led_power": "60W",
-    "max_luminous_flux": "8 400 Lumens",
-    "efficiency": "140 Lm/W",
-    "main_image": "solus-60"
+    "main_image": "sunpro_80"
   },
   {
     "slug": "opp-solus-80w",
     "name": "Solus 80",
     "warranty": "3 años",
     "led_power": "80W",
-    "max_luminous_flux": "11 200 Lumens",
+    "max_luminous_flux": "11200 Lumens",
     "efficiency": "140 Lm/W",
-    "main_image": "solus-80"
+    "main_image": "solus_80"
+  },
+  {
+    "slug": "opp-blackhawk-185",
+    "name": "Blackhawk 185",
+    "warranty": null,
+    "led_power": "185W",
+    "max_luminous_flux": "24050 Lumens",
+    "efficiency": "140 Lm/W",
+    "main_image": "blackhawk_185"
+  },
+  {
+    "slug": "opp-sunpro-60w",
+    "name": "Sunpro 60",
+    "warranty": "5 años",
+    "led_power": "60W",
+    "max_luminous_flux": "10200 Lumens",
+    "efficiency": "170 Lm/W",
+    "main_image": "sunpro_60"
+  },
+  {
+    "slug": "opp-solus-60w",
+    "name": "Solus 60",
+    "warranty": "3 años",
+    "led_power": "60W",
+    "max_luminous_flux": "8400 Lumens",
+    "efficiency": "140 Lm/W",
+    "main_image": "solus_60"
+  },
+  {
+    "slug": "opp-aura-130",
+    "name": "Aura 130",
+    "warranty": "5 años",
+    "led_power": "130W",
+    "max_luminous_flux": "19500 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_130"
+  },
+  {
+    "slug": "opp-aura-175",
+    "name": "Aura 175",
+    "warranty": "5 años",
+    "led_power": "175W",
+    "max_luminous_flux": "26250 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_175"
+  },
+  {
+    "slug": "opp-aura-210",
+    "name": "Aura 210",
+    "warranty": "5 años",
+    "led_power": "210W",
+    "max_luminous_flux": "31500 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_210"
+  },
+  {
+    "slug": "opp-aura-270",
+    "name": "Aura 270",
+    "warranty": "5 años",
+    "led_power": "270W",
+    "max_luminous_flux": "40500 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_270"
+  },
+  {
+    "slug": "opp-aura-400",
+    "name": "Aura 400",
+    "warranty": "5 años",
+    "led_power": "400W",
+    "max_luminous_flux": "60000 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_400"
+  },
+  {
+    "slug": "opp-aura-90",
+    "name": "Aura 90",
+    "warranty": "5 años",
+    "led_power": "90W",
+    "max_luminous_flux": "13500 Lumens",
+    "efficiency": "150 Lm/W",
+    "main_image": "aura_90"
   }
 ]

@@ -1,7 +1,7 @@
 ---
 import { ArrowRight, MapPin, Sun } from "lucide-astro";
 import heroBg from "../assets/b9f87d67fa36b578fc899193ed536f1e87f40b82.png";
-import { HeroInteractive } from "./HeroInteractive";
+import { HeroInteractive } from "./react-components/HeroInteractive";
 ---
 
 <section
@@ -55,7 +55,9 @@ import { HeroInteractive } from "./HeroInteractive";
         </div>
 
         {/* Bottom CTA */}
-        <div class="absolute bottom-20 md:bottom-24 animate-fade-in-up">
+        <div
+            class="absolute bottom-20 md:bottom-24 animate-fade-in-up flex flex-col items-center gap-3"
+        >
             <a
                 href="/productos"
                 class="relative group flex items-center gap-4 bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-full overflow-hidden transition-all duration-500"
@@ -70,7 +72,7 @@ import { HeroInteractive } from "./HeroInteractive";
                     <span
                         class="font-bold tracking-wider uppercase text-sm group-hover:text-white transition-colors"
                     >
-                        Ver Catálogo 2025
+                        Selecciona tus productos
                     </span>
                     <div
                         class="bg-white text-black rounded-full p-1 group-hover:bg-white/20 group-hover:text-white transition-colors"
@@ -79,6 +81,10 @@ import { HeroInteractive } from "./HeroInteractive";
                     </div>
                 </div>
             </a>
+            <p class="text-xs text-zinc-600 font-medium tracking-wide mt-2">
+                *Cotización rápida y liberación el mismo día si pagas antes del
+                mediodía.
+            </p>
         </div>
 
         {/* Floating Details */}
@@ -92,7 +98,7 @@ import { HeroInteractive } from "./HeroInteractive";
                 </div>
                 <div class="flex items-center gap-2">
                     <Sun size={12} className="text-[#FF8351]" />
-                    <span>Autonomía Solar 12h+</span>
+                    <span>Garantía de hasta 5 años</span>
                 </div>
             </div>
         </div>
@@ -103,8 +109,8 @@ import { HeroInteractive } from "./HeroInteractive";
             <div
                 class="flex flex-col gap-2 text-xs text-white/60 font-mono uppercase"
             >
-                <p>Serie Opplux Pro</p>
-                <p>Modelo: OX-200W</p>
+                <p>Línea: All In One</p>
+                <p>Modelo: Solus 60</p>
             </div>
         </div>
     </div>

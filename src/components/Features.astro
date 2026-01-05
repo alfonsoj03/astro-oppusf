@@ -1,28 +1,34 @@
 ---
+import oppluxInventory from "../assets/opplux_inventory.png";
+import transport from "../assets/transport.png";
+import consultancy from "../assets/consultancy.png";
+import handshake from "../assets/handshake.png";
+import { ArrowRight } from "lucide-astro";
+
 const features = [
     {
-        title: "AMPLIO INVENTARIO PERMANENTE",
+        title: "DISPONIBILIDAD INMEDIATA",
         description:
-            "Tu pides, nosotros despachamos. Stock disponible para entrega inmediata.",
-        image: "https://images.unsplash.com/photo-1747085040719-55282cc206b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwd2FyZWhvdXNlJTIwaW50ZXJpb3IlMjBsb2dpc3RpY3MlMjBtb2Rlcm58ZW58MXx8fHwxNzY0NDQ5Mjg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "Stock real y despacho el mismo día si el pago se confirma antes del mediodía — para que no esperes demoras de importación.",
+        image: oppluxInventory.src,
     },
     {
-        title: "ENVIAMOS A NIVEL NACIONAL",
+        title: "CUMPLIMOS NORMAS Y CERTIFICACIONES",
         description:
-            "Desde Leticia hasta Riohacha. Llevamos la luz a cada rincón del país.",
-        image: "https://images.unsplash.com/photo-1609520113718-8c9068f23666?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxpdmVyeSUyMHRydWNrJTIwc2hpcHBpbmclMjBsb2dpc3RpY3MlMjBuaWdodCUyMGhpZ2h3YXl8ZW58MXx8fHwxNzY0NDQ5Mjg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "Nuestros equipos están certificados con NOM, UL, ANCE y estándares para Clase I y II, asegurando operación confiable y legal incluso en áreas peligrosas.",
+        image: transport.src,
     },
     {
-        title: "ASESORÍA PROFESIONAL",
+        title: "GARANTIA DE 5 AÑOS Y SOPORTE TECNICO",
         description:
-            "Te acompañamos en los aspectos técnicos para garantizar el éxito de tu proyecto.",
-        image: "https://images.unsplash.com/photo-1600869009558-c0dca8dcbc37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXN0b21lciUyMHN1cHBvcnQlMjBlbmdpbmVlciUyMGFyY2hpdGVjdCUyMG1lZXRpbmd8ZW58MXx8fHwxNzY0NDQ5Mjg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "Garantía + soporte técnico directo 24/7. Documentación completa para auditorías y cumplimiento regulatorio.",
+        image: consultancy.src,
     },
     {
-        title: "GARANTÍA Y RESPALDO",
+        title: "COBERTURA NACIONAL Y ASESORIA EXPERTA",
         description:
-            "Seguridad total en tu inversión con nuestro respaldo directo de fábrica.",
-        image: "https://images.unsplash.com/photo-1649562065680-fa7a5a1c4318?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJyYW50eSUyMHF1YWxpdHklMjBzZWFsJTIwaGFuZHNoYWtlJTIwYnVzaW5lc3N8ZW58MXx8fHwxNzY0NDQ5Mjg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "Entregamos en toda la República Mexicana y te asesoramos técnicamente en cada fase de tu proyecto de iluminación.",
+        image: handshake.src,
     },
 ];
 ---
@@ -45,10 +51,10 @@ const features = [
                 <p
                     class="text-zinc-600 text-md lg:text-lg leading-relaxed font-normal"
                 >
-                    Entendemos que en el mundo de la iluminación, la confianza
-                    lo es todo. En Opplux, nuestra misión va más allá de vender
-                    productos; nos dedicamos a construir relaciones duraderas
-                    basadas en la calidad, el servicio y el respaldo.
+                    Entendemos el sector: cada día sin luz genera costos y
+                    riesgos. En Opplux somos tu socio estratégico; ofrecemos
+                    disponibilidad, cumplimiento normativo y respaldo total para
+                    asegurar tu proyecto.
                 </p>
             </div>
         </div>
@@ -89,6 +95,29 @@ const features = [
                     </div>
                 ))
             }
+        </div>
+
+        {/* CTA Section */}
+        <div
+            class="mt-20 pt-12 border-t border-zinc-200 flex flex-col items-center justify-center text-center gap-8"
+        >
+            <p
+                class="text-zinc-500 text-lg md:text-xl max-w-3xl leading-relaxed"
+            >
+                Si buscas un proveedor sólido, transparente y con disponibilidad
+                inmediata, agrega los productos al carrito de cotización y
+                cotiza ahora mismo.
+            </p>
+            <a
+                href="/productos"
+                class="flex items-center gap-2 text-zinc-900 hover:text-[#FF8351] transition-all duration-300 font-bold group text-lg border-b-2 border-[#FF8351]/20 hover:border-[#FF8351] pb-1"
+            >
+                <span>Ver Catálogo de Productos</span>
+                <ArrowRight
+                    size={20}
+                    class="group-hover:translate-x-1 transition-transform"
+                />
+            </a>
         </div>
     </div>
 </section>

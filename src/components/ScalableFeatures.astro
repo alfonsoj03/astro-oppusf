@@ -1,24 +1,24 @@
 ---
-import { Zap, Shield, Users } from "lucide-astro";
+import { Settings, Package, ClipboardCheck } from "lucide-astro";
 
 const features = [
     {
-        icon: Zap,
-        title: "Soluciones Escalables",
+        icon: Settings,
+        title: "Programación y personalización real",
         description:
-            "Diseñamos sistemas de iluminación que crecen con tu negocio, adaptándose a tus necesidades actuales y futuras sin complicaciones.",
+            "Adaptamos cada modelo a tus requerimientos exactos. Ajusta precisión y distribución lumínica sin sacrificar disponibilidad.",
     },
     {
-        icon: Shield,
-        title: "Garantía Extendida",
+        icon: Package,
+        title: "Stock planeado y directo con fábrica",
         description:
-            "Respaldo técnico completo con garantías extendidas en todos nuestros productos y soporte post-venta continuo.",
+            "Inventario listo para entrega inmediata. Minimizamos tiempos y aseguramos tu continuidad operativa.",
     },
     {
-        icon: Users,
-        title: "Equipo Especializado",
+        icon: ClipboardCheck,
+        title: "Productos probados en laboratorios acreditados ante la EMA",
         description:
-            "Profesionales certificados en iluminación industrial y arquitectónica listos para asesorarte en cada etapa de tu proyecto.",
+            "Equipos probados en laboratorios acreditados. Evidencia técnica y respaldo para las auditorías más exigentes.",
     },
 ];
 ---
@@ -33,19 +33,21 @@ const features = [
                 <p
                     class="text-[#FF8351] tracking-[0.2em] uppercase text-sm mb-4"
                 >
-                    CRECIMIENTO INTELIGENTE
+                    SOLUCIONES ESCALABLES
                 </p>
                 <h2
                     class="md:text-4xl text-7xl lg:text-7xl font-semibold tracking-tighter leading-[0.9]"
                 >
-                    Una experiencia que crece con tu escala.
+                    Operación contínua, sin fricción
                 </h2>
             </div>
             <div class="max-w-md md:max-w-sm lg:max-w-md">
-                <p class="text-zinc-400 md:text-md lg:text-lg text-lg leading-relaxed">
-                    Implementamos soluciones de iluminación diseñadas para
-                    negocios en crecimiento con sistemas modulares y gestión
-                    simplificada de proyectos.
+                <p
+                    class="text-zinc-400 md:text-md lg:text-lg text-lg leading-relaxed"
+                >
+                    En Opplux ponemos a disposición nuestra experiencia para
+                    ofrecer soluciones a <b>precios competitivos</b> que te acompañan
+                    en el crecimiento de tu operación. Evita tener fricción o sorpresas:
                 </p>
             </div>
         </div>
@@ -56,7 +58,7 @@ const features = [
                 features.map((feature, index) => {
                     const Icon = feature.icon;
                     return (
-                        <div 
+                        <div
                             class="feature-item group opacity-0 translate-y-8 transition-all duration-700 ease-out"
                             style={`transition-delay: ${index * 150}ms`}
                         >
@@ -85,20 +87,20 @@ const features = [
 <script>
     const observerOptions = {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: "0px",
+        threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.classList.remove('opacity-0', 'translate-y-8');
+                entry.target.classList.remove("opacity-0", "translate-y-8");
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.feature-item').forEach(item => {
+    document.querySelectorAll(".feature-item").forEach((item) => {
         observer.observe(item);
     });
 </script>
