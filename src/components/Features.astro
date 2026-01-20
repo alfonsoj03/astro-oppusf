@@ -83,10 +83,10 @@ const features = [
                                 {feature.title}
                             </h3>
 
-                            {/* Description reveals on hover */}
-                            <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-300">
-                                <div class="overflow-hidden">
-                                    <p class="text-white font-normal text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                            {/* Description reveals on hover - Optimized for Safari */}
+                            <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-in-out">
+                                <div class="overflow-hidden min-h-0">
+                                    <p class="text-white font-normal text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 px-2">
                                         {feature.description}
                                     </p>
                                 </div>
@@ -142,3 +142,28 @@ const features = [
         observer.observe(card);
     });
 </script>
+
+<style>
+    .feature-card {
+        /* Force hardware acceleration for smoother animations in Safari */
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
+
+    /* Safari specific fix for grid-template-rows animation */
+    @supports (-webkit-hyphens: none) {
+        .feature-card .grid {
+            will-change: grid-template-rows;
+        }
+    }
+
+    .feature-card h3,
+    .feature-card p {
+        -webkit-font-smoothing: antialiased;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+</style>

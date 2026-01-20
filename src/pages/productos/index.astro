@@ -3,6 +3,55 @@ import Layout from "../../layouts/Layout.astro";
 import ProductShowcase from "../../components/ProductShowcase.astro";
 ---
 
+<!--
+    Mode Logic:
+    - Landing mode is activated via ?mode=bienvenida query parameter (ALWAYS forces landing mode)
+    - User stays in landing mode until they visit Home (/)
+    - Once Home is visited, user transitions to e-commerce mode
+    - Re-entering ?mode=bienvenida will force landing mode again
+-->
 <Layout>
-	<ProductShowcase />
+	<!-- 
+        Render BOTH variants for SSG.
+        Client-side JS determines which to show based on mode state.
+        Default to catalog (hidden landing) to avoid flash for e-commerce users.
+        Uses Tailwind's group pattern: parent has 'group' and data-mode, children use group-data-[mode=...]
+    -->
+	<div id="product-showcase-wrapper" class="group/mode" data-mode="catalog">
+		<!-- Landing Variant - Hidden by default, shown when parent data-mode="landing" -->
+		<div
+			class="hidden group-data-[mode=landing]/mode:block"
+			data-variant="landing"
+		>
+			<ProductShowcase variant="landing" />
+		</div>
+
+		<!-- Catalog Variant - Shown by default, hidden when parent data-mode="landing" -->
+		<div
+			class="block group-data-[mode=landing]/mode:hidden"
+			data-variant="catalog"
+		>
+			<ProductShowcase variant="catalog" />
+		</div>
+	</div>
 </Layout>
+
+<script>
+	import { resolveMode, cleanModeFromUrl } from "../../lib/mode";
+
+	document.addEventListener("DOMContentLoaded", () => {
+		const wrapper = document.getElementById("product-showcase-wrapper");
+		if (!wrapper) return;
+
+		const currentUrl = new URL(window.location.href);
+		const mode = resolveMode(currentUrl);
+
+		// Set the mode on wrapper - Tailwind data variants will handle visibility
+		wrapper.setAttribute("data-mode", mode);
+
+		// If we resolved to catalog but had mode param, clean the URL
+		if (mode === "catalog" && currentUrl.searchParams.has("mode")) {
+			cleanModeFromUrl();
+		}
+	});
+</script>

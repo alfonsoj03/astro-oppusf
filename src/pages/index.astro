@@ -22,3 +22,17 @@ import Categories from "../components/Categories.astro";
 	<MediaPresence />
 	<Categories />
 </Layout>
+
+<!--
+    Mode Transition Logic:
+    When user visits Home, they transition from landing to e-commerce mode.
+    This is the "gate" that allows access to e-commerce features.
+-->
+<script>
+	import { markHomeVisited } from "../lib/mode";
+
+	// Mark that user has visited Home - this transitions them to e-commerce mode
+	document.addEventListener("DOMContentLoaded", () => {
+		markHomeVisited();
+	});
+</script>

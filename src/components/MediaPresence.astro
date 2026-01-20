@@ -1,34 +1,36 @@
 ---
 import { Instagram, ArrowUpRight } from "lucide-astro";
+import { Image } from "astro:assets";
+import reels1 from "../assets/reels_1.png";
+import reels2 from "../assets/reels_2.png";
+import reels3 from "../assets/reels_3.png";
+import reels4 from "../assets/reels_4.png";
+import logoIcon from "../assets/logo_instagram.png";
 
 const reels = [
     {
         id: 1,
-        thumbnail:
-            "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop",
+        thumbnail: reels1,
         views: "1.2K",
-        link: "https://www.instagram.com",
+        link: "https://www.instagram.com/opplux_mx/reel/DTJeba8gfVI/",
     },
     {
         id: 2,
-        thumbnail:
-            "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?q=80&w=1000&auto=format&fit=crop",
+        thumbnail: reels2,
         views: "2.5K",
-        link: "https://www.instagram.com",
+        link: "https://www.instagram.com/opplux_mx/reel/DTB0-JBgdaz/",
     },
     {
         id: 3,
-        thumbnail:
-            "https://images.unsplash.com/photo-1611162618071-eead1eaacd95?q=80&w=1000&auto=format&fit=crop",
+        thumbnail: reels3,
         views: "856",
-        link: "https://www.instagram.com",
+        link: "https://www.instagram.com/opplux_mx/reel/DTT0eCogdDc/",
     },
     {
         id: 4,
-        thumbnail:
-            "https://images.unsplash.com/photo-1611262588024-d12430b98920?q=80&w=1000&auto=format&fit=crop",
+        thumbnail: reels4,
         views: "3.1K",
-        link: "https://www.instagram.com",
+        link: "https://www.instagram.com/opplux_mx/reel/DTbdjB1AfGw/",
     },
 ];
 ---
@@ -39,7 +41,7 @@ const reels = [
     <div class="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div
-            class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8"
+            class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8"
         >
             <div>
                 <div class="flex items-center gap-3 mb-4">
@@ -57,7 +59,7 @@ const reels = [
 
             <div class="flex items-center gap-4">
                 <a
-                    href="https://www.instagram.com"
+                    href="https://www.instagram.com/opplux_mx?igsh=YWJkYnhhcHVzc2E5"
                     target="_blank"
                     class="w-14 h-14 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-2xl border border-white/20 shadow-lg hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
                     aria-label="Instagram"
@@ -130,16 +132,16 @@ const reels = [
 
         {/* Main Glassmorphism Card (The "Widget") */}
         <div class="relative">
-            {/* Glow Effect behind the card */}
+            {/* Glow Effect behind the card - Brand Accents as Shadows */}
             <div
-                class="absolute -inset-1 bg-gradient-to-r from-[#FF8351]/30 to-purple-600/30 rounded-[2.5rem] blur-xl opacity-75 pointer-events-none"
+                class="absolute -inset-4 bg-gradient-to-tr from-[#FF8351]/15 via-transparent to-purple-600/15 rounded-[3rem] blur-3xl opacity-50 pointer-events-none"
             >
             </div>
 
             <div
-                class="relative p-8 md:p-10 rounded-[2.5rem] bg-white/10 border border-white/20 backdrop-blur-2xl shadow-2xl overflow-hidden"
+                class="relative p-8 md:p-10 rounded-[2.5rem] bg-zinc-900/60 border border-zinc-800/50 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
             >
-                {/* Inner Glow */}
+                {/* Subtle Inner Glow for depth */}
                 <div
                     class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"
                 >
@@ -157,8 +159,8 @@ const reels = [
                             <div
                                 class="w-full h-full rounded-full bg-black border-2 border-black overflow-hidden"
                             >
-                                <img
-                                    src="https://ui-avatars.com/api/?name=Opplux&background=000&color=fff"
+                                <Image
+                                    src={logoIcon}
                                     alt="Opplux Logo"
                                     class="w-full h-full object-cover"
                                 />
@@ -168,7 +170,7 @@ const reels = [
                             <h3
                                 class="text-white font-bold text-xl leading-none mb-1"
                             >
-                                opplux_colombia
+                                opplux_mx
                             </h3>
                             <p class="text-zinc-400 text-xs font-medium">
                                 Iluminación Profesional
@@ -178,7 +180,7 @@ const reels = [
 
                     {/* Top Right: Open Instagram Button */}
                     <a
-                        href="https://www.instagram.com"
+                        href="https://www.instagram.com/opplux_mx?igsh=YWJkYnhhcHVzc2E5"
                         target="_blank"
                         class="group flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
                     >
@@ -205,7 +207,7 @@ const reels = [
                                 class="group relative aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 hover:border-[#FF8351]/50 transition-all duration-500"
                             >
                                 {/* Image */}
-                                <img
+                                <Image
                                     src={reel.thumbnail}
                                     alt="Instagram Reel"
                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
@@ -218,22 +220,22 @@ const reels = [
                                 <div class="absolute top-4 left-4 flex items-center gap-2 z-20">
                                     <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[1px]">
                                         <div class="w-full h-full rounded-full bg-black overflow-hidden">
-                                            <img
-                                                src="https://ui-avatars.com/api/?name=Opplux&background=000&color=fff"
+                                            <Image
+                                                src={logoIcon}
                                                 alt="Opplux"
                                                 class="w-full h-full object-cover"
                                             />
                                         </div>
                                     </div>
                                     <span class="text-white/90 text-[10px] font-bold drop-shadow-md">
-                                        opplux_colombia
+                                        opplux_mx
                                     </span>
                                 </div>
 
                                 {/* Play Icon Overlay */}
                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-50 group-hover:scale-100">
                                     <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-lg">
-                                        <Instagram class="w-6 h-6 text-white fill-white" />
+                                        <ArrowUpRight class="w-7 h-7 text-white" />
                                     </div>
                                 </div>
 
