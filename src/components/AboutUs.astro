@@ -1,5 +1,6 @@
 ---
 import teamwork from "../assets/teamwork.png";
+import Breadcrumb from "./Breadcrumb.astro";
 
 interface CoreValue {
     number: number;
@@ -51,11 +52,18 @@ const coreValues: CoreValue[] = [
             "No termina en la compra ni instalación. Te brindamos soporte y garantías extendidas para que tu inversión esté segura a lo largo del tiempo.",
     },
 ];
+
+const breadcrumbItems = [{ label: "Inicio", href: "/" }, { label: "Nosotros" }];
 ---
 
 <section class="pt-32 pb-12 bg-white text-zinc-950">
     <div class="container mx-auto px-6">
         <div class="max-w-6xl mx-auto">
+            {/* Breadcrumb */}
+            <div class="mb-8">
+                <Breadcrumb items={breadcrumbItems} />
+            </div>
+
             <!-- Header Section -->
             <div class="text-center mb-16 animate-on-scroll" data-delay="0">
                 <h2

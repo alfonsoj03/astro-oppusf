@@ -1,6 +1,7 @@
 ---
 import { ArrowLeft, ArrowRight } from "lucide-astro";
 import bannerImg from "../assets/products_banner.png";
+import Breadcrumb from "./Breadcrumb.astro";
 
 import { supabase } from "../lib/supabase";
 
@@ -190,6 +191,15 @@ const bannerImageSrc =
     isCategoryPage && propCategory?.image
         ? resolveAsset(propCategory.image)
         : bannerImg.src;
+
+// Build breadcrumb items dynamically
+const breadcrumbItems = isCategoryPage
+    ? [
+          { label: "Inicio", href: "/" },
+          { label: "Productos", href: "/productos" },
+          { label: propCategory?.name || "Categoría" },
+      ]
+    : [{ label: "Inicio", href: "/" }, { label: "Productos" }];
 ---
 
 <section id="productos" class="bg-white">
@@ -207,32 +217,7 @@ const bannerImageSrc =
     <div class="container mx-auto px-6 relative z-10">
         <div class="mb-4 mt-12 animate-fade-in-up">
             {/* Breadcrumb */}
-            <div
-                class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest"
-            >
-                <a href="/" class="hover:text-[#FF8351] transition-colors"
-                    >Inicio</a
-                >
-                <span class="text-[#FF8351]">/</span>
-                {
-                    isCategoryPage ? (
-                        <>
-                            <a
-                                href="/productos"
-                                class="hover:text-[#FF8351] transition-colors"
-                            >
-                                Productos
-                            </a>
-                            <span class="text-[#FF8351]">/</span>
-                            <span class="text-[#FF8351]">
-                                {propCategory?.name}
-                            </span>
-                        </>
-                    ) : (
-                        <span class="text-[#FF8351]">Productos</span>
-                    )
-                }
-            </div>
+            <Breadcrumb items={breadcrumbItems} />
         </div>
     </div>
 

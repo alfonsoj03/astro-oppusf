@@ -1,6 +1,7 @@
 ---
 import { X, Minus, Plus } from "lucide-astro";
 import productsData from "../data/products.json";
+import Breadcrumb from "./Breadcrumb.astro";
 
 const initialMessage =
     "Quiero hacer una cotización con respecto a los productos en mi carrito...";
@@ -17,18 +18,17 @@ const imageMap = Object.fromEntries(
 );
 
 const FORM_API_KEY = import.meta.env.FORM_API_KEY;
+
+const breadcrumbItems = [
+    { label: "Inicio", href: "/" },
+    { label: "Cotización" },
+];
 ---
 
 <section class="bg-white pb-12 pt-32">
     <div class="max-w-7xl mx-auto px-6">
         {/* Breadcrumb */}
-        <div
-            class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest mb-6"
-        >
-            <span>Inicio</span>
-            <span class="text-[#FF8351]">/</span>
-            <span class="text-[#FF8351]">Productos</span>
-        </div>
+        <Breadcrumb items={breadcrumbItems} />
 
         {/* Header: Shopping Cart Title */}
         <div class="mb-8 flex items-end justify-between">

@@ -3,6 +3,7 @@ import { ArrowRight, MapPin } from "lucide-astro";
 import bannerImg from "../assets/success_cases_banner.png";
 import placeholderImg from "../assets/cedis-1.png";
 import { supabase } from "../lib/supabase";
+import Breadcrumb from "./Breadcrumb.astro";
 
 // Import all images from assets directory
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -127,6 +128,11 @@ const successCases =
               };
           })
         : mockSuccessCases;
+
+const breadcrumbItems = [
+    { label: "Inicio", href: "/" },
+    { label: "Casos de Éxito" },
+];
 ---
 
 <section id="productos" class="bg-white">
@@ -144,13 +150,7 @@ const successCases =
     <div class="container mx-auto px-6 relative z-10">
         <div class="mb-4 mt-12 animate-fade-in-up">
             {/* Breadcrumb */}
-            <div
-                class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest"
-            >
-                <span>Inicio</span>
-                <span class="text-[#FF8351]">/</span>
-                <span class="text-[#FF8351]">Casos de exito</span>
-            </div>
+            <Breadcrumb items={breadcrumbItems} />
         </div>
     </div>
 

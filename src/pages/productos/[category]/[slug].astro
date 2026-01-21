@@ -147,6 +147,7 @@ function resolvePdf(fileName: string | null) {
 
 const productData = {
     category: categoryName,
+    categorySlug: category,
     slug: product.slug,
     title: product.name,
     seriesTitle: product.led_power ? `${product.led_power}` : "", // RDX -> Watts

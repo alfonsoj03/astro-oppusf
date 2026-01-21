@@ -1,0 +1,81 @@
+---
+/**
+ * Breadcrumb Component with SEO JSON-LD Schema
+ * Follows Google's structured data guidelines for breadcrumbs
+ * https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
+ */
+
+interface BreadcrumbItem {
+    label: string;
+    href?: string; // If no href, it's the current page
+}
+
+interface Props {
+    items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+// Generate JSON-LD structured data for SEO
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.label,
+        ...(item.href
+            ? {
+                  item: new URL(
+                      item.href,
+                      Astro.site || "https://opplux.com",
+                  ).toString(),
+              }
+            : {}),
+    })),
+};
+---
+
+<!-- JSON-LD Structured Data for SEO -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<!-- Visual Breadcrumb -->
+<nav aria-label="Breadcrumb" class="mb-4">
+    <ol
+        class="flex items-center gap-3 text-zinc-500 text-xs uppercase tracking-widest flex-wrap"
+        itemscope
+        itemtype="https://schema.org/BreadcrumbList"
+    >
+        {
+            items.map((item, index) => (
+                <>
+                    <li
+                        itemprop="itemListElement"
+                        itemscope
+                        itemtype="https://schema.org/ListItem"
+                    >
+                        {item.href ? (
+                            <a
+                                href={item.href}
+                                itemprop="item"
+                                class="hover:text-[#FF8351] transition-colors"
+                            >
+                                <span itemprop="name">{item.label}</span>
+                            </a>
+                        ) : (
+                            <span itemprop="name" class="text-[#FF8351]">
+                                {item.label}
+                            </span>
+                        )}
+                        <meta itemprop="position" content={String(index + 1)} />
+                    </li>
+                    {index < items.length - 1 && (
+                        <li aria-hidden="true" class="text-[#FF8351]">
+                            /
+                        </li>
+                    )}
+                </>
+            ))
+        }
+    </ol>
+</nav>
