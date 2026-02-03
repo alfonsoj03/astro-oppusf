@@ -50,7 +50,7 @@ export async function getStaticPaths() {
 const { category, products, specs, allCategories } = Astro.props;
 ---
 
-<Layout>
+<Layout title={`${category?.name || "Categoría"} | Opplux`}>
     <ProductShowcase
         isCategoryPage={true}
         category={category}

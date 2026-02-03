@@ -30,7 +30,8 @@ const { data: featuredCategories, error } = await supabase
             id,
             name,
             title,
-            description
+            description,
+            slug
         )
     `,
     )
@@ -58,6 +59,7 @@ if (featuredCategories && featuredCategories.length > 0) {
                 "Solución de iluminación solar de alta eficiencia con tecnología LED avanzada y panel fotovoltaico integrado.",
             image: resolveAsset(featured.category_card_image),
             tag: index === 0 ? "Best Seller" : index === 1 ? "Nuevo" : "Pro",
+            slug: cat.slug,
         };
     });
 } else {
@@ -65,7 +67,7 @@ if (featuredCategories && featuredCategories.length > 0) {
     console.log("No featured categories found, using fallback");
     const { data: dbCategories, error: catError } = await supabase
         .from("product_categories")
-        .select("id, name, title, description")
+        .select("id, name, title, description, slug")
         .limit(3);
 
     if (catError) {
@@ -81,6 +83,7 @@ if (featuredCategories && featuredCategories.length > 0) {
             "Solución de iluminación solar de alta eficiencia con tecnología LED avanzada y panel fotovoltaico integrado.",
         image: "", // No image available in fallback
         tag: index === 0 ? "Best Seller" : index === 1 ? "Nuevo" : "Pro",
+        slug: cat.slug,
     }));
 }
 ---
@@ -141,7 +144,7 @@ if (featuredCategories && featuredCategories.length > 0) {
                             </p>
 
                             <a
-                                href={`/productos#category-${product.id}`}
+                                href={`/productos/${product.slug}`}
                                 class="md:text-zinc-400 lg:text-[#FF8351] inline-flex items-center gap-2 text-[#FF8351] hover:text-[#ff6a31] transition-colors text-xs font-bold uppercase tracking-wider group/btn"
                             >
                                 Ver Detalles

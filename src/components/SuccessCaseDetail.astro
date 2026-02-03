@@ -7,6 +7,7 @@ interface Props {
   title: string;
   slug: string;
   description: string;
+  descriptionLong: string;
   location: string;
   projectType: string;
   imgOrientation: string;
@@ -14,6 +15,7 @@ interface Props {
     name: string;
     quantity: number;
     slug: string;
+    categorySlug?: string;
     ledPower: string;
     mainImage: string;
     efficiency: string;
@@ -21,17 +23,20 @@ interface Props {
     warranty: string;
   }[];
   content: { title: string; resource: string; contentType: string }[];
+  attributes: { key: string; value: string }[];
 }
 
 const {
   title,
   slug,
   description,
+  descriptionLong,
   location,
   projectType,
   imgOrientation,
   products,
   content,
+  attributes,
 } = Astro.props;
 
 const totalQuantity = products.reduce(
@@ -93,29 +98,8 @@ const breadcrumbItems = [
           <div
             class="space-y-6 text-zinc-600 order-first lg:order-last leading-relaxed reveal-on-scroll opacity-0 -translate-x-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-x-0"
           >
-            <p>
-              {description}
-            </p>
-            <p>
-              Nuestra solución integró 450 luminarias Highbay de alta eficiencia
-              para las áreas de almacenamiento, 1,200 paneles LED para oficinas
-              y áreas administrativas, y 85 luminarias solares para el
-              estacionamiento exterior, eliminando completamente la necesidad de
-              cableado en esa zona.
-            </p>
-            <p>
-              El resultado fue extraordinario: reducción del 68% en el consumo
-              energético, mejora significativa en la seguridad laboral gracias a
-              una iluminación uniforme y de calidad, y prácticamente cero costos
-              de mantenimiento durante el primer año de operación.
-            </p>
-            <p class="text-zinc-950 italic">
-              "La inversión se pagó por sí misma más rápido de lo esperado. La
-              calidad de la iluminación mejoró notablemente la productividad de
-              nuestros equipos y la satisfacción del personal."
-            </p>
-            <p class="text-sm text-zinc-500">
-              — Carlos Mendoza, Director de Operaciones, Tech Corp International
+            <p class="whitespace-pre-line">
+              {descriptionLong || description}
             </p>
           </div>
 
@@ -124,40 +108,106 @@ const breadcrumbItems = [
             class="space-y-4 reveal-on-scroll opacity-0 translate-x-8 transition-all duration-700 ease-out will-change-[transform,opacity] [&.is-visible]:opacity-100 [&.is-visible]:translate-x-0"
             style="transition-delay: 200ms"
           >
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Cliente</p>
-              <p class="text-zinc-950 text-xl">Tech Corp International</p>
-            </div>
+            {
+              (() => {
+                // 1. Specific Keys we look for
+                const specificKeys = [
+                  "Cliente",
+                  "Área total",
+                  "Ahorro Energético (%)",
+                  "Ahorro Económico Anual (MXN)",
+                ];
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Ubicación</p>
-              <p class="text-zinc-950 text-xl">{location}</p>
-            </div>
+                // Helper to find attribute
+                const findAttr = (key: string) =>
+                  attributes?.find((a) => a.key === key);
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Tipo de proyecto</p>
-              <p class="text-zinc-950 text-xl">{projectType}</p>
-            </div>
+                // Extract specific attributes
+                const clientAttr = findAttr("Cliente");
+                const areaAttr = findAttr("Área total");
+                const energyAttr = findAttr("Ahorro Energético (%)");
+                const economyAttr = findAttr("Ahorro Económico Anual (MXN)");
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Área total</p>
-              <p class="text-zinc-950 text-xl">45,000 m²</p>
-            </div>
+                // Filter "Rest" attributes (those not in specific keys)
+                const otherAttributes =
+                  attributes?.filter((a) => !specificKeys.includes(a.key)) ||
+                  [];
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Luminarias instaladas</p>
-              <p class="text-zinc-950 text-xl">{totalQuantity} unidades</p>
-            </div>
+                return (
+                  <>
+                    {/* 1. Cliente */}
+                    {clientAttr && (
+                      <div class="pb-2 border-b border-zinc-200">
+                        <p class="text-zinc-500 text-sm mb-2">
+                          {clientAttr.key}
+                        </p>
+                        <p class="text-zinc-950 text-xl">{clientAttr.value}</p>
+                      </div>
+                    )}
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">Ahorro energético</p>
-              <p class="text-[#FF8351] text-xl">68% mensual</p>
-            </div>
+                    {/* 2. Ubicación (Prop) */}
+                    <div class="pb-2 border-b border-zinc-200">
+                      <p class="text-zinc-500 text-sm mb-2">Ubicación</p>
+                      <p class="text-zinc-950 text-xl">{location}</p>
+                    </div>
 
-            <div class="pb-2 border-b border-zinc-200">
-              <p class="text-zinc-500 text-sm mb-2">ROI estimado</p>
-              <p class="text-[#FF8351] text-xl">24 meses</p>
-            </div>
+                    {/* 3. Tipo de proyecto (Prop) */}
+                    <div class="pb-2 border-b border-zinc-200">
+                      <p class="text-zinc-500 text-sm mb-2">Tipo de Proyecto</p>
+                      <p class="text-zinc-950 text-xl">{projectType}</p>
+                    </div>
+
+                    {/* 4. Luminarias Instaladas (Prop/Calc) */}
+                    <div class="pb-2 border-b border-zinc-200">
+                      <p class="text-zinc-500 text-sm mb-2">
+                        Luminarias Instaladas
+                      </p>
+                      <p class="text-zinc-950 text-xl">
+                        {totalQuantity} unidades
+                      </p>
+                    </div>
+
+                    {/* 5. Área total */}
+                    {areaAttr && (
+                      <div class="pb-2 border-b border-zinc-200">
+                        <p class="text-zinc-500 text-sm mb-2">{areaAttr.key}</p>
+                        <p class="text-zinc-950 text-xl">{areaAttr.value}</p>
+                      </div>
+                    )}
+
+                    {/* 6. Other attributes dynamically inserted here */}
+                    {otherAttributes.map((attr) => (
+                      <div class="pb-2 border-b border-zinc-200">
+                        <p class="text-zinc-500 text-sm mb-2">{attr.key}</p>
+                        <p class="text-zinc-950 text-xl">{attr.value}</p>
+                      </div>
+                    ))}
+
+                    {/* 7. Ahorro Energético (Orange) */}
+                    {energyAttr && (
+                      <div class="pb-2 border-b border-zinc-200">
+                        <p class="text-zinc-500 text-sm mb-2">
+                          {energyAttr.key}
+                        </p>
+                        <p class="text-[#FF8351] text-xl">{energyAttr.value}</p>
+                      </div>
+                    )}
+
+                    {/* 8. Ahorro Económico (Orange) */}
+                    {economyAttr && (
+                      <div class="pb-2 border-b border-zinc-200">
+                        <p class="text-zinc-500 text-sm mb-2">
+                          {economyAttr.key}
+                        </p>
+                        <p class="text-[#FF8351] text-xl">
+                          {economyAttr.value}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                );
+              })()
+            }
           </div>
         </div>
       </div>
@@ -209,7 +259,7 @@ const breadcrumbItems = [
 
                     {/* Hover Overlay - Clickable Area */}
                     <a
-                      href={`/productos/${product.slug}`}
+                      href={`/productos/${product.categorySlug || "unknown"}/${product.slug}`}
                       class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-white z-10"
                     >
                       <div class="flex flex-wrap gap-2 justify-center mb-5">

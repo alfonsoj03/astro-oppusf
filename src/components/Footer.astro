@@ -10,6 +10,17 @@ import {
 } from "lucide-astro";
 import iconOnly from "../assets/icon_only.png";
 import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
+import { supabase } from "../lib/supabase";
+
+// Fetch categories for the footer
+const { data: categories, error } = await supabase
+    .from("product_categories")
+    .select("name, slug")
+    .order("position", { ascending: true });
+
+if (error) {
+    console.error("Error fetching categories for footer:", error);
+}
 ---
 
 <footer class="bg-white text-zinc-900 xl:py-20 py-10 border-t border-zinc-100">
@@ -42,8 +53,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                             class="w-4 h-4 text-[#FF8351] shrink-0 mt-0.5"
                         />
                         <p class="text-zinc-500 text-xs leading-relaxed">
-                            Av. Principal 123, Col. Industrial<br />
-                            Monterrey, Nuevo León, CP 64000
+                            Monterrey, Nuevo León
                         </p>
                     </div>
                     <div class="flex items-center gap-3">
@@ -51,7 +61,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                         <a
                             href="tel:+5218123773237"
                             class="text-zinc-500 text-xs hover:text-black transition-colors"
-                            >+52 81 1234 5678</a
+                            >+52 81 2377 3237</a
                         >
                     </div>
                 </div>
@@ -67,48 +77,18 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                         Productos
                     </h4>
                     <ul class="space-y-4">
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >Todo en Uno</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >Halo HB</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >ATEX</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >Orbi Poste</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >Aura HB Lineal</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                href="/productos"
-                                class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
-                                >Holo Wall Pack</a
-                            >
-                        </li>
+                        {
+                            categories?.map((category) => (
+                                <li>
+                                    <a
+                                        href={`/productos/${category.slug}`}
+                                        class="text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
+                                    >
+                                        {category.name}
+                                    </a>
+                                </li>
+                            ))
+                        }
                     </ul>
                 </div>
 
@@ -122,7 +102,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                     <ul class="space-y-4">
                         <li>
                             <a
-                                href="#"
+                                href="https://www.instagram.com/opplux_mx?igsh=YWJkYnhhcHVzc2E5"
                                 class="flex items-center gap-3 text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
                             >
                                 <Instagram class="w-5 h-5" />
@@ -131,7 +111,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                         </li>
                         <li>
                             <a
-                                href="#"
+                                href="https://www.youtube.com/channel/UC6xTAsB4nMyxLiEXIXUVy3w"
                                 class="flex items-center gap-3 text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
                             >
                                 <Youtube class="w-5 h-5" />
@@ -140,7 +120,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                         </li>
                         <li>
                             <a
-                                href="#"
+                                href="https://www.facebook.com/people/OPPlux-Luminarias-M%C3%A9xico/61584469463565/#"
                                 class="flex items-center gap-3 text-zinc-600 text-sm hover:text-[#FF8351] transition-colors"
                             >
                                 <Facebook class="w-5 h-5" />
@@ -160,7 +140,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                     <ul class="space-y-4">
                         <li>
                             <a
-                                href="https://wa.me/528112345678"
+                                href="https://wa.me/528123773237"
                                 class="flex items-center gap-3 text-zinc-600 text-sm hover:text-[#FF8351] transition-colors group"
                             >
                                 <span>WhatsApp Directo</span>
@@ -196,8 +176,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                         Ubicación
                     </p>
                     <p class="text-zinc-600 text-base leading-relaxed">
-                        Av. Principal 123, Col. Industrial<br />
-                        Monterrey, Nuevo León, CP 64000
+                        Monterrey, Nuevo León
                     </p>
                 </div>
             </div>
@@ -212,7 +191,7 @@ import oppluxLogoFullColor from "../assets/opplux_fullcolor.png";
                     <a
                         href="tel:+5218123773237"
                         class="text-zinc-600 text-base hover:text-[#FF8351] transition-colors"
-                        >+52 81 1234 5678</a
+                        >+52 81 2377 3237</a
                     >
                 </div>
             </div>

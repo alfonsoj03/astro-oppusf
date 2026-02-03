@@ -42,7 +42,10 @@ export async function getStaticPaths() {
                     main_image,
                     led_power,
                     efficiency,
-                    warranty
+                    warranty,
+                    product_categories (
+                        slug
+                    )
                 )
             `,
                 )
@@ -100,6 +103,7 @@ export async function getStaticPaths() {
                     name: prod.name,
                     quantity: cp.quantity,
                     slug: prod.slug,
+                    categorySlug: prod.product_categories?.slug || "unknown",
                     ledPower: prod.led_power,
                     mainImage: prodImage,
                     efficiency: prod.efficiency,
@@ -131,17 +135,41 @@ export async function getStaticPaths() {
                 };
             });
 
+            // Fetch attributes for this case
+            const { data: caseAttributes, error: attributesError } =
+                await supabase
+                    .from("success_case_attributes")
+                    .select("key, value")
+                    .eq("success_case_id", successCase.id);
+
+            if (attributesError) {
+                console.error(
+                    `Error fetching attributes for case ${successCase.id}:`,
+                    attributesError,
+                );
+            }
+
+            // Transform attributes data
+            const attributes = (caseAttributes || [])
+                .filter((attr) => attr.value) // Only include attributes with values
+                .map((attr) => ({
+                    key: attr.key,
+                    value: attr.value,
+                }));
+
             return {
                 params: { slug: successCase.slug },
                 props: {
                     title: successCase.title,
                     slug: successCase.slug,
                     description: successCase.description,
+                    descriptionLong: successCase.description_long,
                     location: successCase.location,
                     projectType: successCase.project_types?.name || "Unknown",
                     imgOrientation: successCase.img_orientation || "horizontal",
                     products,
                     content,
+                    attributes,
                 },
             };
         }),
@@ -159,18 +187,22 @@ const {
     imgOrientation,
     products,
     content,
+    descriptionLong,
+    attributes,
 } = Astro.props;
 ---
 
-<Layout headerTheme="black">
+<Layout title={`${title} | Opplux`} headerTheme="black">
     <SuccessCaseDetail
         title={title}
         slug={slug}
         description={description}
+        descriptionLong={descriptionLong}
         location={location}
         projectType={projectType}
         imgOrientation={imgOrientation}
         products={products}
         content={content}
+        attributes={attributes}
     />
 </Layout>

@@ -204,7 +204,10 @@ const breadcrumbItems = isCategoryPage
 
 <section id="productos" class="bg-white">
     {/* Banner Hero Section - Just the image */}
-    <div class="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
+    <div
+        id="product-hero-banner"
+        class="relative h-[80vh] min-h-[600px] w-full overflow-hidden"
+    >
         {/* Background Image */}
         <img
             src={bannerImageSrc}
@@ -568,5 +571,45 @@ const breadcrumbItems = isCategoryPage
                 el.classList.add("visible");
             }, delay);
         });
+
+        // Auto-scroll logic for mobile/tablet
+        const autoScroll = () => {
+            // Only run if viewport width is less than 1024px (lg breakpoint)
+            if (window.innerWidth >= 1024) return;
+
+            // Try to prevent browser scroll restoration from overriding us
+            if ("scrollRestoration" in history) {
+                history.scrollRestoration = "manual";
+            }
+
+            // Find all potential banner elements and get the one that's visible
+            const banners = document.querySelectorAll("#product-hero-banner");
+            let banner = null;
+
+            for (const el of banners) {
+                // Check if this element is visible and has a non-zero height
+                if (el.offsetHeight > 0 && el.offsetWidth > 0) {
+                    banner = el;
+                    break;
+                }
+            }
+
+            if (banner) {
+                // Scroll down 75% of the banner's height
+                // This leaves the bottom 25% of the banner visible at the top of the screen
+                const scrollTarget = banner.offsetHeight * 0.75;
+                window.scrollTo({
+                    top: scrollTarget,
+                    behavior: "smooth",
+                });
+            }
+        };
+
+        // Run on load to ensure images/layout are ready
+        if (document.readyState === "complete") {
+            autoScroll();
+        } else {
+            window.addEventListener("load", autoScroll);
+        }
     });
 </script>
