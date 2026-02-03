@@ -1,11 +1,12 @@
 ---
-
+import allProductsImg from "../assets/all_products.png";
+import successCasesImg from "../assets/success_cases.png";
 ---
 
 <section class="flex flex-col md:flex-row min-h-[600px]">
     <div class="relative flex-1 group overflow-hidden bg-black">
         <img
-            src="/src/assets/all_products.png"
+            src={allProductsImg.src}
             alt="Energía"
             class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-105"
         />
@@ -34,7 +35,7 @@
         class="relative flex-1 group overflow-hidden bg-black border-l border-white/10"
     >
         <img
-            src="/src/assets/success_cases.png"
+            src={successCasesImg.src}
             alt="Iluminación"
             class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-105"
         />
